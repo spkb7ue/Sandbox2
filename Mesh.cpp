@@ -9,9 +9,9 @@ Mesh::Mesh(std::string fileName)
 {
     ifstream infile;
     infile.open(fileName.c_str());
-    if(infile.bad())
+    if(infile.fail())
     {
-        throw std::runtime_error("Unable to open mesh file");
+        throw std::runtime_error("Unable to open mesh file:" + fileName);
     }
     Point P0, P1, P2;
     while(infile >> P0.x >> P0.y >> P0.z
