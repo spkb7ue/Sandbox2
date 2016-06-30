@@ -11,18 +11,29 @@ namespace
 }
 
 
-BOOST_AUTO_TEST_CASE(TestMesh_TestCtor)
+BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV1)
 {
     try
     {
         Mesh mesh(fileName);
-        //std::vector<Triangle>& meshTriangles = mesh.GetTriangles();
-
     }
     catch(...)
     {
         std::string error = "Mesh constructor failed while loading file: " + fileName;
         BOOST_FAIL(error.c_str());
     }
+}
 
+BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV2)
+{
+    try
+    {
+        Mesh mesh("DummyFile");
+        std::string error = "Mesh constructor failed while loading file: " + fileName;
+        BOOST_FAIL(error.c_str());
+    }
+    catch(...)
+    {
+
+    }
 }
