@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace rabbit
 {
     class Mesh
@@ -7,6 +9,5 @@ namespace rabbit
     public:
         Mesh();
 
-        int x;
     };
 }
