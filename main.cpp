@@ -8,10 +8,14 @@ struct Point{
     float x,y,z;
 };
 
+namespace
+{
+    const std::string fileName = "rabbit.triangles";
+}
+
 int main()
 {
-    rabbit::Mesh m;
-	cout<<"Hellp\n";
+    rabbit::Mesh mesh(fileName);
 	ifstream infile;
     infile.open("rabbit.triangles");
     std::vector<Point> points;

@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
-
 project(Rabbit C CXX)
+set(CMAKE_CXX_STANDARD 11)
 
 file(GLOB Rabbit_Src "*.h" "*.cpp")
 
