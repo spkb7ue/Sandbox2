@@ -14,7 +14,7 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 
 add_executable(scratch main.cpp)
 
-add_custom_command(TARGET scratch PRE_BUILD 
-  COMMAND "${CMAKE_COMMAND}" -E copy 
-     "${CMAKE_SOURCE_DIR}/runTests"
+add_custom_command(TARGET scratch PRE_BUILD
+  COMMAND "${CMAKE_COMMAND}" -E copy
+     "${CMAKE_SOURCE_DIR}/rabbit.triangles"
      "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin")
