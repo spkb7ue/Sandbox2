@@ -15,6 +15,8 @@ find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
 add_definitions(-DBOOST_TEST_DYN_LINK)
 
 add_executable(scratch ${Rabbit_Src})
+add_library(Rabbit ${Rabbit_Src})
+set_target_properties(Rabbit PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${STATIC_LIBRARY_OUTPUT_DIR})
 
 add_custom_command(TARGET scratch PRE_BUILD COMMAND "${CMAKE_COMMAND}" -E copy
      "${CMAKE_SOURCE_DIR}/rabbit.triangles"
