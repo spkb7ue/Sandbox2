@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include "Mesh.h"
 using namespace std;
 struct Point{
     float x,y,z;
@@ -9,6 +10,7 @@ struct Point{
 
 int main()
 {
+    rabbit::Mesh m;
 	cout<<"Hellp\n";
 	ifstream infile;
     infile.open("rabbit.triangles");
