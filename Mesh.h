@@ -18,6 +18,5 @@ namespace rabbit
         std::vector<Triangle>& GetTriangles();
     private:
         std::vector<Triangle> m_triangles;
-
     };
 }
