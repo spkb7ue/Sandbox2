@@ -3,6 +3,7 @@ project(Rabbit C CXX)
 set(CMAKE_CXX_STANDARD 11)
 
 file(GLOB Rabbit_Src "*.h" "*.cpp")
+file(GLOB Rabbit_Inc "*.h")
 
 set(CMAKE_BUILD_TYPE debug)
 set(STATIC_LIBRARY_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/lib)
@@ -17,6 +18,7 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 add_executable(scratch ${Rabbit_Src})
 add_library(Rabbit ${Rabbit_Src})
 set_target_properties(Rabbit PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${STATIC_LIBRARY_OUTPUT_DIR})
+file(COPY ${Rabbit_Inc} DESTINATION ${STATIC_LIBRARY_HEADERS_DIR})
 
 add_custom_command(TARGET scratch PRE_BUILD COMMAND "${CMAKE_COMMAND}" -E copy
      "${CMAKE_SOURCE_DIR}/rabbit.triangles"

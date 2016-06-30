@@ -1,28 +1,28 @@
 #include <vector>
-#define BOOST_TEST_MODULE TEST_Mesh
+#include "Mesh.h"
+#define BOOST_TEST_MODULE Test_Mesh
 #include <boost/test/unit_test.hpp>
 
 using namespace std;
-
+using namespace rabbit;
 namespace
 {
-struct SomeData
-{
-    SomeData()
-    {
-        x = 20.0;
-        y = 2;
-        z = nullptr;
-    }
-  double x;
-  int y;
-  char *z;
-};
-
+    const std::string fileName = "rabbit.triangles";
 }
 
-// Tests that the Foo::Bar() method does Abc.
-BOOST_AUTO_TEST_CASE(TestDCTree_TestCtor)
+
+BOOST_AUTO_TEST_CASE(TestMesh_TestCtor)
 {
-	int i = 1;
+    try
+    {
+        Mesh mesh(fileName);
+        //std::vector<Triangle>& meshTriangles = mesh.GetTriangles();
+
+    }
+    catch(...)
+    {
+        std::string error = "Mesh constructor failed while loading file: " + fileName;
+        BOOST_FAIL(error.c_str());
+    }
+
 }
