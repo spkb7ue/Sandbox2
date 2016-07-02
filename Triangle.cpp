@@ -21,7 +21,7 @@ bool Triangle::IsPointWithinExtrudedTriangle(const Point& p)
     return true;
 }
 
-std::pair<Point,float> Triangle::ProjectPointOntoTrianglePlane(const Point& p)
+std::pair<Point,float> Triangle::ProjectPointOntoTrianglePlane(const Point& p) const
 {
     const auto p_P0 = P0-p;
     auto signedDist = Vec3::dotProduct(p_P0, Normal);

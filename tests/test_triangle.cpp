@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
     auto real_rand = std::bind(std::uniform_real_distribution<float>(0,1), mt19937(seed));
 
     // Generate random point within a triangle
-    auto generateExtrudedPoint = [&real_rand](const Triangle& t)->std::pair<Point,float>
+    auto generateExtrudedPointData = [&real_rand](const Triangle& t)->std::tuple<Point, Point,float>
     {
         // Point (p) internal to triangle can be calculated using
         // p = P0 + s*(P0_P1) + r*(PO_P2) where 0 <= (s,r) <= 1 and
@@ -52,10 +52,15 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
         float distance = DIST_SCALE * real_rand() * sign;
         auto PointWithinTriangle = t.P0 + t.P0_P1*s + t.P0_P2*r;
         auto ExtrudedPoint = PointWithinTriangle + t.Normal*distance;
-        return std::make_pair(ExtrudedPoint, distance);
+        return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
     };
 
-    std::for_each(triangles.begin(), triangles.end(),[](const Triangle& t){
+    std::for_each(triangles.begin(), triangles.end(),[&generateExtrudedPointData](const Triangle& t){
+        auto testPointData = generateExtrudedPointData(t);
+        auto generatedData = t.ProjectPointOntoTrianglePlane(std::get<1>(testPointData));
+
+            cout<<std::get<2>(testPointData)<<"\t"<< generatedData.second<<endl;
+
 
     });
 }

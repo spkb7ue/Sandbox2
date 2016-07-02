@@ -16,7 +16,7 @@ namespace rabbit
 
         bool IsPointWithinExtrudedTriangle(const Point& p);
 
-        std::pair<Point,float> ProjectPointOntoTrianglePlane(const Point& p);
+        std::pair<Point,float> ProjectPointOntoTrianglePlane(const Point& p) const;
 
         Triangle(const Point& p0, const Point& p1, const Point& p2);
     };
