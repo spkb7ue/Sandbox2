@@ -67,7 +67,8 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
         BOOST_ASSERT_MSG(Sign(std::get<2>(testPointData)) == Sign(generatedData.second),
                          "Signs of the computed distance don't match expected value");
 
-        BOOST_ASSERT_MSG(std::abs(std::get<2>(testPointData) - generatedData.second) < Vec3::EPSILON,
+        bool isCalculatedDistanceWithinTolerance = std::abs(std::get<2>(testPointData) - generatedData.second) < Vec3::EPSILON;
+        BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
                         "The distance from point to triangle does not match expected data");
 
     });
