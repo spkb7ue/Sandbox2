@@ -110,6 +110,17 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 
             }
         }
+
+        for(unsigned i = 0; i<100; ++i)
+        {
+            const auto testPointData = GenerateExtrudedPointData(t);
+            const Point& expectedProjectedPoint = std::get<0>(testPointData);
+            const Point& expectedExtrudedPoint = std::get<1>(testPointData);
+
+            std::tie(u,v) = t.CalcBarycentricCoords(expectedExtrudedPoint);
+            Point calculatedProjectedPoint = t.P0 + t.P0_P1*u + t.P0_P2*v*3.0;
+            BOOST_ASSERT(calculatedProjectedPoint.isSameAs(expectedProjectedPoint));
+        }
     }
 }
 
@@ -133,19 +144,21 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
             const Point& expectedExtrudedPoint = std::get<1>(testPointData);
             const float& expectedExtrudeDist = std::get<2>(testPointData);
 
-            const auto calculatedData = t.ProjectPointOntoTrianglePlane(expectedExtrudedPoint);
-            const auto calculatedProjectedPoint = calculatedData.first;
-            const auto calculatedDist = calculatedData.second;
+            {   // Calculate using ProjectPointOntoTrianglePlane
+                const auto calculatedData = t.ProjectPointOntoTrianglePlane(expectedExtrudedPoint);
+                const auto calculatedProjectedPoint = calculatedData.first;
+                const auto calculatedDist = calculatedData.second;
 
-            BOOST_ASSERT_MSG(Sign(expectedExtrudeDist) == Sign(calculatedDist),
-                             "Signs of the computed distance don't match expected value");
+                BOOST_ASSERT_MSG(Sign(expectedExtrudeDist) == Sign(calculatedDist),
+                                 "Signs of the computed distance don't match expected value");
 
-            bool isCalculatedDistanceWithinTolerance = std::abs(expectedExtrudeDist - calculatedDist) < 1.e-5;
-            BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
-                            "The distance from point to triangle does not match expected data");
+                bool isCalculatedDistanceWithinTolerance = std::abs(expectedExtrudeDist - calculatedDist) < 1.e-5;
+                BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
+                                "The distance from point to triangle does not match expected data");
 
-            bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(expectedProjectedPoint);
-            BOOST_ASSERT_MSG(areProjectedPointsIdentical,"Projected point onto the triangle plane is incorrect");
+                bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(expectedProjectedPoint);
+                BOOST_ASSERT_MSG(areProjectedPointsIdentical,"Projected point onto the triangle plane is incorrect");
+            }
         }
     }
 }
