@@ -24,6 +24,7 @@ namespace rabbit
         std::pair<float,float> CalcBarycentricCoords(const Point& p)const;
 
         Point CalcPointFromBarycentricCoords(const float u, const float v) const;
+        Point CalcPointFromBarycentricCoords(std::pair<float,float> coords)const;
 
         Triangle(const Point& p0, const Point& p1, const Point& p2);
     };

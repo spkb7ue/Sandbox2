@@ -45,6 +45,12 @@ namespace
         auto ExtrudedPoint = PointWithinTriangle + t.Normal*distance;
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
     };
+
+    Point GeneratePointOutsideExtrudedTriangle(const Triangle& t)
+    {
+        Point withinTriangle = std::get<1>(GenerateExtrudedPointData(t));
+        return withinTriangle + t.P0_P1*(1.0f + std::max(real_rand(),0.01f));
+    }
 }
 
 BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
@@ -177,7 +183,10 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
             }
             const auto testPointData = GenerateExtrudedPointData(t);
             const Point& extrudedPoint = std::get<1>(testPointData);
+
             BOOST_ASSERT(t.IsPointWithinExtrudedTriangle(extrudedPoint));
+            BOOST_ASSERT(!t.IsPointWithinExtrudedTriangle(GeneratePointOutsideExtrudedTriangle(t)));
+
         }
     }
 }

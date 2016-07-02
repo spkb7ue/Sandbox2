@@ -61,3 +61,8 @@ Point Triangle::CalcPointFromBarycentricCoords(const float u, const float v) con
 {
     return P0 + P0_P1*u + P0_P2*v;
 }
+
+Point Triangle::CalcPointFromBarycentricCoords(std::pair<float,float> coords)const
+{
+    return P0 + P0_P1*coords.first + P0_P2*coords.second;
+}
