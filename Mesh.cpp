@@ -14,9 +14,9 @@ Mesh::Mesh(std::string fileName)
         throw std::runtime_error("Unable to open mesh file:" + fileName);
     }
     Point P0, P1, P2;
-    while(infile >> P0.x >> P0.y >> P0.z
-                 >> P1.x >> P1.y >> P1.z
-                 >> P2.x >> P2.y >> P2.z
+    while(infile >> P0.X() >> P0.Y() >> P0.Z()
+                 >> P1.X() >> P1.Y() >> P1.Z()
+                 >> P2.X() >> P2.Y() >> P2.Z()
           )
     {
         m_triangles.emplace_back(Triangle(P0, P1, P2));

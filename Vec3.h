@@ -1,9 +1,11 @@
 #pragma once
+#include <iostream>
+#include <math.h>
 
-namespace ThirdParty
+namespace rabbit
 {
 
-template <class T> class Vec3
+template <class T> class Vec3_
 {
     private:
         // A Vec3 simply has three properties called x, y and z
@@ -13,15 +15,19 @@ template <class T> class Vec3
         // ------------ Constructors ------------
 
         // Default constructor
-        Vec3() { x = y = z = 0; };
+        Vec3_() { x = y = z = 0; };
 
         // Three parameter constructor
-        Vec3(T xValue, T yValue, T zValue)
+        Vec3_(T xValue, T yValue, T zValue)
         {
             x = xValue;
             y = yValue;
             z = zValue;
         }
+
+        Vec3_(const Vec3_<T>& vec):
+        x(vec.X()),y(vec.Y()),z(vec.Z())
+        {}
 
         // ------------ Getters and setters ------------
 
@@ -32,13 +38,14 @@ template <class T> class Vec3
             z = zValue;
         }
 
-        T getX() const { return x; }
-        T getY() const { return y; }
-        T getZ() const { return z; }
+        T& X() { return x; }
+        const T& X() const {return x;}
 
-        void setX(const T &xValue) { x = xValue; }
-        void setY(const T &yValue) { y = yValue; }
-        void setZ(const T &zValue) { z = zValue; }
+        T& Y() { return y;}
+        const T& Y() const  { return y; }
+
+        T& Z() { return z; }
+        const T& Z() const  { return z; }
 
         // ------------ Helper methods ------------
 
@@ -49,7 +56,7 @@ template <class T> class Vec3
         }
 
         // Method to normalise a vector
-        void normalise()
+        Vec3_<T>& normalise()
         {
             // Calculate the magnitude of our vector
             T magnitude = sqrt((x * x) + (y * y) + (z * z));
@@ -62,6 +69,7 @@ template <class T> class Vec3
                 y /= magnitude;
                 z /= magnitude;
             }
+            return *this;
         }
 
         // Static method to calculate and return the scalar dot product of two vectors
@@ -73,7 +81,7 @@ template <class T> class Vec3
         // or if they're pointing in opposite directions then the dot product will be -1.
         //
         // Usage example: double foo = Vec3<double>::dotProduct(vectorA, vectorB);
-        static T dotProduct(const Vec3 &vec1, const Vec3 &vec2)
+        static T dotProduct(const Vec3_ &vec1, const Vec3_ &vec2)
         {
             return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
         }
@@ -81,18 +89,15 @@ template <class T> class Vec3
         // Non-static method to calculate and return the scalar dot product of this vector and another vector
         //
         // Usage example: double foo = vectorA.dotProduct(vectorB);
-        T dotProduct(const Vec3 &vec) const
+        T dotProduct(const Vec3_ &vec) const
         {
             return x * vec.x + y * vec.y + z * vec.z;
         }
-
-        // Static method to calculate and return a vector which is the cross product of two vectors
-        // Further reading: http://en.wikipedia.org/wiki/Cross_product
-        //
+        
         // Usage example: Vec3<double> crossVect = Vec3<double>::crossProduct(vectorA, vectorB);
-        static Vec3 crossProduct(const Vec3 &vec1, const Vec3 &vec2)
+        static Vec3_ crossProduct(const Vec3_ &vec1, const Vec3_ &vec2)
         {
-            return Vec3(vec1.y * vec2.z - vec1.z * vec2.y,
+            return Vec3_(vec1.y * vec2.z - vec1.z * vec2.y,
                         vec1.z * vec2.x - vec1.x * vec2.z,
                         vec1.x * vec2.y - vec1.y * vec2.x);
         }
@@ -103,7 +108,7 @@ template <class T> class Vec3
         void addZ(T value) { z += value; }
 
         // Method to return the distance between two vectors in 3D space
-        static T getDistance(const Vec3 &v1, const Vec3 &v2)
+        static T getDistance(const Vec3_ &v1, const Vec3_ &v2)
         {
             T dx = v2.x - v1.x;
             T dy = v2.y - v1.y;
@@ -119,9 +124,9 @@ template <class T> class Vec3
         }
 
         // Overloaded multiply operator to multiply a vector by a scalar
-        Vec3 operator*(const T &value) const
+        Vec3_ operator*(const T &value) const
         {
-            return Vec3<T>(x * value, y * value, z * value);
+            return Vec3_<T>(x * value, y * value, z * value);
         }
 
         // Overloaded multiply and assign operator to multiply a vector by a scalar
@@ -132,10 +137,23 @@ template <class T> class Vec3
             z *= value;
         }
 
-        // Overloaded multiply operator to multiply a vector by a scalar
-        Vec3 operator/(const T &value) const
+        Vec3_<T> operator-(const Vec3_<T>& vec)const
         {
-            return Vec3<T>(x / value, y / value, z / value);
+            return Vec3_<T>(x - vec.X(), y - vec.Y(), z - vec.Z());
+        }
+
+        Vec3_<T>& operator=(const Vec3_<T>& vec)
+        {
+            x = vec.X();
+            y = vec.Y();
+            z = vec.Z();
+            return *this;
+        }
+
+        // Overloaded multiply operator to multiply a vector by a scalar
+        Vec3_ operator/(const T &value) const
+        {
+            return Vec3_<T>(x / value, y / value, z / value);
         }
 
         // Overloaded multiply and assign operator to multiply a vector by a scalar
@@ -146,5 +164,8 @@ template <class T> class Vec3
             z /= value;
         }
 };
+
+typedef Vec3_<float> Point;
+typedef Vec3_<float> Vec3;
 
 }

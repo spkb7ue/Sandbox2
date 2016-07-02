@@ -2,13 +2,12 @@
 
 #include <vector>
 #include <string>
-#include <boost/noncopyable.hpp>
 
 #include "Triangle.h"
 
 namespace rabbit
 {
-    class Mesh : boost::noncopyable
+    class Mesh 
     {
     public:
 
