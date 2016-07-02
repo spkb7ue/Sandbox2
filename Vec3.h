@@ -15,7 +15,7 @@ template <class T> class Vec3_
         // ------------ Constructors ------------
 
         // Default constructor
-        Vec3_() { x = y = z = T(0); };
+        Vec3_():x(T(0)),y(T(0)),z(T(0)){}
 
         // Three parameter constructor
         Vec3_(T xValue, T yValue, T zValue)
