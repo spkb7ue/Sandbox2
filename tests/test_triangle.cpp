@@ -90,15 +90,20 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
             BOOST_ASSERT(std::abs(v-1.0f)<Vec3::EPSILON);
         }
 
-        const float TOLERANCE = 0.001f;
+        const float TOLERANCE = 0.01f;
 
-        for(unsigned i = 0; i < 100; ++i)
+        for(unsigned i = 0; i < 10000; ++i)
         {
             Point internalPoint = GenerateTriangleInternalPoint(t);
             std::tie(u,v) = t.CalcBarycentricCoords(internalPoint);
-            BOOST_ASSERT(u >= 0.0f && u <= 1.0f + TOLERANCE);
-            BOOST_ASSERT(v >= 0.0f && v <= 1.0f);
-            BOOST_ASSERT(u + v < 1.0f + TOLERANCE);
+            {   // Assert that the calculated coordinates obey the constraints for
+                // a point internal to a triangle
+                std::stringstream error_msg;
+                error_msg << "u:"<<u<<"\tv:"<<v;
+                BOOST_ASSERT_MSG(u >= 0.0f - TOLERANCE && u <= 1.0f + TOLERANCE, error_msg.str().c_str());
+                BOOST_ASSERT_MSG(v >= 0.0f - TOLERANCE && v <= 1.0f + TOLERANCE, error_msg.str().c_str());
+                BOOST_ASSERT_MSG(u + v < 1.0f + TOLERANCE, error_msg.str().c_str());
+            }
         }
     }
 }
