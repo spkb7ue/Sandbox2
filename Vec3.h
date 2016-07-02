@@ -71,7 +71,7 @@ template <class T> class Vec3_
 
         T magnitude()const
         {
-            return (x * x) + (y * y) + (z * z);
+            return sqrt((x * x) + (y * y) + (z * z));
         }
 
         static T dotProduct(const Vec3_ &vec1, const Vec3_ &vec2)

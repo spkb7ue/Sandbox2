@@ -66,3 +66,40 @@ Point Triangle::CalcPointFromBarycentricCoords(std::pair<float,float> coords)con
 {
     return P0 + P0_P1*coords.first + P0_P2*coords.second;
 }
+
+std::pair<Point, float> Triangle::CalcInPlaneDistanceToTriangle(const Point& P)const
+{
+    // Calculate distance from point p to P0_P1
+    const Vec3 normal_P0_P1 = (Vec3::crossProduct(Normal,P0_P1)).normalise();
+    const Vec3 P_P0 = P0 - P;
+    float distToP0P1 = Vec3::dotProduct(normal_P0_P1, P_P0);
+    const Vec3 Px = P + normal_P0_P1*distToP0P1;
+    const Vec3 P0_Px = Px - P0;
+    const Vec3 unit_P0_P1 = P0_P1.normalise();
+    float alongP0P1 = Vec3::dotProduct(unit_P0_P1, P0_Px);
+    if(alongP0P1 > 0.0f and alongP0P1 <= P0_P1.magnitude())
+    {
+        return std::make_pair(Px, distToP0P1);
+    }
+}
+
+boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
+                                                   const Vec3& seg,
+                                                   const Vec3& P)
+{
+    const Vec3 normalSeg = (Vec3::crossProduct(Normal,seg)).normalise();
+    const Vec3 P_origin = origin - P;
+    float distToSeg = Vec3::dotProduct(normalSeg, P_origin);
+    const Vec3 Px = P + normalSeg*distToSeg;
+    const Vec3 origin_Px = Px - origin;
+    const Vec3 unitVecAlongSeg = seg.normalise();
+    float alongSeg = Vec3::dotProduct(unitVecAlongSeg, origin_Px);
+    if(alongSeg >= 0.0f && alongSeg <= seg.magnitude())
+    {
+        return Px;
+    }
+    else
+    {
+        return boost::none;
+    }
+}

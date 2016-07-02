@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec3.h"
+#include <boost/optional.hpp>
 
 namespace rabbit
 {
@@ -23,8 +24,14 @@ namespace rabbit
 
         std::pair<float,float> CalcBarycentricCoords(const Point& p)const;
 
+        std::pair<Point, float> CalcInPlaneDistanceToTriangle(const Point& p)const;
+
         Point CalcPointFromBarycentricCoords(const float u, const float v) const;
         Point CalcPointFromBarycentricCoords(std::pair<float,float> coords)const;
+
+        boost::optional<Point> CheckPointSegDist(const Vec3& origin,
+                                                 const Vec3& seg,
+                                                 const Vec3& P);
 
         Triangle(const Point& p0, const Point& p1, const Point& p2);
     };
