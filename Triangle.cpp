@@ -1,4 +1,5 @@
 #include "Triangle.h"
+#include <memory>
 
 using namespace rabbit;
 
@@ -17,8 +18,10 @@ Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
 
 bool Triangle::IsPointWithinExtrudedTriangle(const Point& p)
 {
-
-    return true;
+    float u,v;
+    std::tie(u,v) = CalcBarycentricCoords(p);
+    const float TOL = 0.01f;
+    return ( u >= -TOL && v >= -TOL && u+v <= 1.0f + TOL);
 }
 
 std::pair<Point,float> Triangle::ProjectPointOntoTrianglePlane(const Point& p) const
