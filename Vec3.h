@@ -136,6 +136,11 @@ template <class T> class Vec3_
             return Vec3_<T>(x - vec.X(), y - vec.Y(), z - vec.Z());
         }
 
+        Vec3_<T> operator+(const Vec3_<T>& vec)const
+        {
+            return Vec3_<T>(x + vec.X(), y + vec.Y(), z + vec.Z());
+        }
+
         Vec3_<T>& operator=(const Vec3_<T>& vec)
         {
             x = vec.X();

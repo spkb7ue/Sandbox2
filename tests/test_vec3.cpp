@@ -37,3 +37,11 @@ BOOST_AUTO_TEST_CASE(TestVec3_CrossProduct)
     BOOST_ASSERT(Vec3::dotProduct(v1CrossV2, v1) < Vec3::EPSILON);
     BOOST_ASSERT(Vec3::dotProduct(v1CrossV2, v2) < Vec3::EPSILON);
 }
+
+BOOST_AUTO_TEST_CASE(TestVec3_Addition)
+{
+    auto v3 = v1 + v2;
+    BOOST_ASSERT(v3.X() == 3.0f);
+    BOOST_ASSERT(v3.Y() == 5.0f);
+    BOOST_ASSERT(v3.Z() == 4.3f);
+}
