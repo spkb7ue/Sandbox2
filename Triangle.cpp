@@ -14,7 +14,7 @@ Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
  Normal((Vec3::crossProduct(P0_P1,P0_P2)).normalise()),
  Centroid((P0+P1+P2)*1.0f/3.0f),
  Area((Vec3::crossProduct(P0_P1,P0_P2)).magnitude()*0.5f),
-IsDegenerate(Area < 1.0E-5f)
+IsDegenerate(Area < 1.0E-4f)
 {
 
 }

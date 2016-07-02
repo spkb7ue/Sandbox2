@@ -45,14 +45,6 @@ template <class T> class Vec3_
         T& Z() { return z; }
         const T& Z() const  { return z; }
 
-        // ------------ Helper methods ------------
-
-        // Method to reset a vector to zero
-        void zero()
-        {
-            x = y = z = 0;
-        }
-
         // Method to normalise a vector
         Vec3_<T> normalise()const
         {
@@ -79,9 +71,6 @@ template <class T> class Vec3_
             return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
         }
 
-        // Non-static method to calculate and return the scalar dot product of this vector and another vector
-        //
-        // Usage example: double foo = vectorA.dotProduct(vectorB);
         T dotProduct(const Vec3_ &vec) const
         {
             return x * vec.x + y * vec.y + z * vec.z;
@@ -103,11 +92,6 @@ template <class T> class Vec3_
                         vec1.x * vec2.y - vec1.y * vec2.x);
         }
 
-        // Easy adders
-        void addX(T value) { x += value; }
-        void addY(T value) { y += value; }
-        void addZ(T value) { z += value; }
-
         // Method to return the distance between two vectors in 3D space
         static T getDistance(const Vec3_ &v1, const Vec3_ &v2)
         {
@@ -116,12 +100,6 @@ template <class T> class Vec3_
             T dz = v2.z - v1.z;
 
             return sqrt(dx * dx + dy * dy + dz * dz);
-        }
-
-        // Method to display the vector so you can easily check the values
-        void display()
-        {
-            std::cout << "X: " << x << "\t Y: " << y << "\t Z: " << z << std::endl;
         }
 
         // Overloaded multiply operator to multiply a vector by a scalar
@@ -160,14 +138,6 @@ template <class T> class Vec3_
         Vec3_ operator/(const T &value) const
         {
             return Vec3_<T>(x / value, y / value, z / value);
-        }
-
-        // Overloaded multiply and assign operator to multiply a vector by a scalar
-        void operator/=(const T &value)
-        {
-            x /= value;
-            y /= value;
-            z /= value;
         }
 };
 
