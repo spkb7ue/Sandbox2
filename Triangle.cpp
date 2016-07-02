@@ -27,5 +27,5 @@ std::pair<Point,float> Triangle::ProjectPointOntoTrianglePlane(const Point& p) c
     auto signedDist = Vec3::dotProduct(p_P0, Normal);
 
 
-    return std::make_pair(Point(p + Normal*signedDist), signedDist);
+    return std::make_pair(Point(p + Normal*signedDist), -signedDist);
 }

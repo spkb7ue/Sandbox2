@@ -12,6 +12,11 @@ namespace
 {
     const std::string FILE_NAME = "rabbit.triangles"; ///< File with the triangulated mesh
     const unsigned NUM_TRIANGLES = 2204;    ///< Number of triangles in the mesh
+    template <typename T>
+    T Sign(T value)
+    {
+        return value > T(0) ? T(1) : T(-1);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
@@ -46,7 +51,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
         float s = real_rand();
         float r = std::min(1.0f-s, real_rand());
         const float DIST_SCALE = 10.0f;
-        BOOST_ASSERT(s + r <= 1.0f);
+        BOOST_ASSERT_MSG(s + r <= 1.0f, "The triangles internal generated parameters are invalid. Cannot proceed");
 
         float sign = real_rand() > 0.5f ? 1.0f : -1.0f;
         float distance = DIST_SCALE * real_rand() * sign;
@@ -59,8 +64,12 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
         auto testPointData = generateExtrudedPointData(t);
         auto generatedData = t.ProjectPointOntoTrianglePlane(std::get<1>(testPointData));
 
-            cout<<std::get<2>(testPointData)<<"\t"<< generatedData.second<<endl;
+        BOOST_ASSERT_MSG(Sign(std::get<2>(testPointData)) == Sign(generatedData.second),
+                         "Signs of the computed distance don't match expected value");
 
+        BOOST_ASSERT_MSG(std::abs(std::get<2>(testPointData) - generatedData.second) < Vec3::EPSILON,
+                        "The distance from point to triangle does not match expected data");
 
     });
+
 }

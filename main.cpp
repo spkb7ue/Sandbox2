@@ -16,15 +16,4 @@ namespace
 int main()
 {
     rabbit::Mesh mesh(fileName);
-	ifstream infile;
-    infile.open("rabbit.triangles");
-    std::vector<Point> points;
-
-    Point tmp;
-    while(infile >> tmp.x >> tmp.y >> tmp.z)
-    {
-        points.push_back(tmp);
-    }
-    infile.close();
-    cout<<points.size()<<endl;
 }
