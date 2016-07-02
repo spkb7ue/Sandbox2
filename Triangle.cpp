@@ -109,6 +109,7 @@ boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
         cout<<alongSeg<<endl;
         cout<<seg.magnitude()<<endl;
         cout<<Area<<endl;
+        cout<<Vec3::getDistance(Centroid, Px)<<endl;
         cin.get();
         return boost::none;
     }
