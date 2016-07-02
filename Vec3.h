@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <math.h>
+#include <system_error>
 
 namespace rabbit
 {
@@ -8,11 +9,11 @@ namespace rabbit
 template <class T> class Vec3_
 {
     private:
-        // A Vec3 simply has three properties called x, y and z
         T x, y, z;
 
     public:
-        // ------------ Constructors ------------
+
+        static constexpr T EPSILON = T(1.0E-6);
 
         // Default constructor
         Vec3_():x(T(0)),y(T(0)),z(T(0)){}
@@ -54,20 +55,24 @@ template <class T> class Vec3_
         }
 
         // Method to normalise a vector
-        Vec3_<T>& normalise()
+        Vec3_<T> normalise()const
         {
             // Calculate the magnitude of our vector
             T magnitude = sqrt((x * x) + (y * y) + (z * z));
 
-            // As long as the magnitude isn't zero, divide each element by the magnitude
-            // to get the normalised value between -1 and +1
-            if (magnitude != 0)
+            if (magnitude > EPSILON)
             {
-                x /= magnitude;
-                y /= magnitude;
-                z /= magnitude;
+                return Vec3_<T>(x/magnitude, y/magnitude, z/magnitude);
             }
-            return *this;
+            else
+            {
+                throw std::runtime_error("Attempted to normalise zero vector");
+            }
+        }
+
+        T magnitude()const
+        {
+            return (x * x) + (y * y) + (z * z);
         }
 
         static T dotProduct(const Vec3_ &vec1, const Vec3_ &vec2)
@@ -153,6 +158,14 @@ template <class T> class Vec3_
             z /= value;
         }
 };
+
+template<typename T>
+std::ostream& operator << (std::ostream& os, const Vec3_<T>& v)
+{
+    os << "["; os << v.X()<<", "<<v.Y()<<", "<<v.Z();
+    os << "]";
+    return os;
+}
 
 typedef Vec3_<float> Point;
 typedef Vec3_<float> Vec3;
