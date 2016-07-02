@@ -11,17 +11,19 @@ Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
  P0_P1(p1-p0),
  P0_P2(p2-p0),
  P1_P2(p2-p1),
- Normal((Vec3::crossProduct(P0_P1,P0_P2)).normalise())
+ Normal((Vec3::crossProduct(P0_P1,P0_P2)).normalise()),
+ Area((Vec3::crossProduct(P0_P1,P0_P2)).magnitude()*0.5f),
+IsDegenerate(Area < 1.0E-6f)
 {
 
 }
 
-bool Triangle::IsPointWithinExtrudedTriangle(const Point& p)
+bool Triangle::IsPointWithinExtrudedTriangle(const Point& p)const
 {
     float u,v;
     std::tie(u,v) = CalcBarycentricCoords(p);
-    const float TOL = 0.01f;
-    return ( u >= -TOL && v >= -TOL && u+v <= 1.0f + TOL);
+    const float tol = 0.01f;
+    return ( u >= -tol && v >= -tol && u+v <= 1.0f + tol);
 }
 
 std::pair<Point,float> Triangle::ProjectPointOntoTrianglePlane(const Point& p) const
@@ -38,7 +40,7 @@ std::pair<float,float> Triangle::CalcBarycentricCoords(const Point& P)const
     // of equations which can then be solved.
     //  |x| = |a, b||u|
     //  |y| = |c, d||v|
-    //
+
     const auto P0_P = P - P0;
     const auto x = Vec3::dotProduct(P0_P1,P0_P);
     const auto y = Vec3::dotProduct(P0_P2,P0_P);
@@ -52,4 +54,9 @@ std::pair<float,float> Triangle::CalcBarycentricCoords(const Point& P)const
     const auto u = inverseDet * (d*x - b*y);
     const auto v = inverseDet * (-c*x + a*y);
     return std::make_pair(u,v);
+}
+
+Point Triangle::CalcPointFromBarycentricCoords(const float u, const float v) const
+{
+    return P0 + P0_P1*u + P0_P2*v;
 }
