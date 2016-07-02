@@ -61,21 +61,25 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
     };
 
-    for(const auto& t : triangles)
+    for(unsigned i=0;i<10;++i)
     {
-        const auto testPointData = generateExtrudedPointData(t);
-        const auto calculatedData = t.ProjectPointOntoTrianglePlane(std::get<1>(testPointData));
-        const auto calculatedProjectedPoint = calculatedData.first;
-        const auto calculatedDist = calculatedData.second;
+        // We repeat the test 10 times just to get sufficient coverage of tested points
+        for(const auto& t : triangles)
+        {
+            const auto testPointData = generateExtrudedPointData(t);
+            const auto calculatedData = t.ProjectPointOntoTrianglePlane(std::get<1>(testPointData));
+            const auto calculatedProjectedPoint = calculatedData.first;
+            const auto calculatedDist = calculatedData.second;
 
-        BOOST_ASSERT_MSG(Sign(std::get<2>(testPointData)) == Sign(calculatedDist),
-                         "Signs of the computed distance don't match expected value");
+            BOOST_ASSERT_MSG(Sign(std::get<2>(testPointData)) == Sign(calculatedDist),
+                             "Signs of the computed distance don't match expected value");
 
-        bool isCalculatedDistanceWithinTolerance = std::abs(std::get<2>(testPointData) - calculatedDist) < 1.e-5;
-        BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
-                        "The distance from point to triangle does not match expected data");
+            bool isCalculatedDistanceWithinTolerance = std::abs(std::get<2>(testPointData) - calculatedDist) < 1.e-5;
+            BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
+                            "The distance from point to triangle does not match expected data");
 
-        bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(std::get<0>(testPointData));
-        BOOST_ASSERT_MSG(areProjectedPointsIdentical,"Projected point onto the triangle plane is incorrect");
+            bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(std::get<0>(testPointData));
+            BOOST_ASSERT_MSG(areProjectedPointsIdentical,"Projected point onto the triangle plane is incorrect");
+        }
     }
 }
