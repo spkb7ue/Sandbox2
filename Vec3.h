@@ -15,7 +15,7 @@ template <class T> class Vec3_
         // ------------ Constructors ------------
 
         // Default constructor
-        Vec3_() { x = y = z = 0; };
+        Vec3_() { x = y = z = T(0); };
 
         // Three parameter constructor
         Vec3_(T xValue, T yValue, T zValue)
@@ -28,8 +28,6 @@ template <class T> class Vec3_
         Vec3_(const Vec3_<T>& vec):
         x(vec.X()),y(vec.Y()),z(vec.Z())
         {}
-
-        // ------------ Getters and setters ------------
 
         void set(const T &xValue, const T &yValue, const T &zValue)
         {
@@ -72,15 +70,6 @@ template <class T> class Vec3_
             return *this;
         }
 
-        // Static method to calculate and return the scalar dot product of two vectors
-        //
-        // Note: The dot product of two vectors tell us things about the angle between
-        // the vectors. That is, it tells us if they are pointing in the same direction
-        // (i.e. are they parallel? If so, the dot product will be 1), or if they're
-        // perpendicular (i.e. at 90 degrees to each other) the dot product will be 0,
-        // or if they're pointing in opposite directions then the dot product will be -1.
-        //
-        // Usage example: double foo = Vec3<double>::dotProduct(vectorA, vectorB);
         static T dotProduct(const Vec3_ &vec1, const Vec3_ &vec2)
         {
             return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
@@ -93,7 +82,7 @@ template <class T> class Vec3_
         {
             return x * vec.x + y * vec.y + z * vec.z;
         }
-        
+
         // Usage example: Vec3<double> crossVect = Vec3<double>::crossProduct(vectorA, vectorB);
         static Vec3_ crossProduct(const Vec3_ &vec1, const Vec3_ &vec2)
         {
