@@ -13,6 +13,7 @@ namespace rabbit
         Vec3 P0_P2; ///< P0 to P2 Vector;
         Vec3 P1_P2; ///< P1 to P2 Vector
         Vec3 Normal; ///< Normal to the Triangle's plane
+        Vec3 Centroid;
         float Area;
         bool IsDegenerate;
 

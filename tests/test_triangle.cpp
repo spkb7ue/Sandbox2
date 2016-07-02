@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
             BOOST_ASSERT(std::abs(v-1.0f)<Vec3::EPSILON);
         }
 
-        const float TOLERANCE = 0.01f;
+        const float TOLERANCE = 0.005f;
 
         for(unsigned i = 0; i < 100; ++i)
         {
@@ -170,20 +170,13 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
     {
         for(const Triangle& t : triangles)
         {
+            if(t.IsDegenerate)
+            {
+                // Treat the triangle like a point
+                continue;
+            }
             const auto testPointData = GenerateExtrudedPointData(t);
             const Point& extrudedPoint = std::get<1>(testPointData);
-            bool passed = t.IsPointWithinExtrudedTriangle(extrudedPoint);
-            if(!passed)
-            {
-                auto bcCoords = t.CalcBarycentricCoords(extrudedPoint);
-                cout<<std::get<0>(testPointData)<<endl;
-                cout<<t.CalcPointFromBarycentricCoords(bcCoords.first, bcCoords.second)<<endl;
-                cout<<bcCoords.first<<", "<<bcCoords.second<<endl;
-                cout<<t.P0_P1<<endl;
-                cout<<t.P0_P2<<endl;
-                cout<<(Vec3::crossProduct(t.P0_P1, t.P0_P2)).magnitude()*0.5f<<endl;
-                cin.get();
-            }
             BOOST_ASSERT(t.IsPointWithinExtrudedTriangle(extrudedPoint));
         }
     }
