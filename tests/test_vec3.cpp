@@ -53,3 +53,11 @@ BOOST_AUTO_TEST_CASE(TestVec3_ScalarMultiplication)
     BOOST_ASSERT(v3.Y() == 4.0f);
     BOOST_ASSERT(v3.Z() == 6.6f);
 }
+
+BOOST_AUTO_TEST_CASE(TestVec3_IsSame)
+{
+    Vec3 v3 = v1*2.0f;
+    Vec3 v4 = v1;
+    BOOST_ASSERT(!v3.isSameAs(v1));
+    BOOST_ASSERT(v4.isSameAs(v1));
+}

@@ -87,11 +87,11 @@ template <class T> class Vec3_
             return x * vec.x + y * vec.y + z * vec.z;
         }
 
-        bool isSameAs(const Vec3_& vec, const T tol = T(EPSILON))const
+        bool isSameAs(const Vec3_& vec, const T tol = EPSILON)const
         {
-            return  abs(x-vec.X()) < tol &&
-                    abs(y-vec.Y()) < tol &&
-                    abs(z-vec.Z()) < tol;
+            return  fabs(x-vec.X()) < tol &&
+                    fabs(y-vec.Y()) < tol &&
+                    fabs(z-vec.Z()) < tol;
         }
 
 

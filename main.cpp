@@ -4,11 +4,9 @@
 #include <algorithm>
 #include <random>
 #include "Mesh.h"
+#include "Triangle.h"
 using namespace std;
-struct Point{
-    float x,y,z;
-};
-
+using namespace rabbit;
 namespace
 {
     const std::string fileName = "rabbit.triangles";
@@ -43,6 +41,7 @@ namespace
 
 int main()
 {
+    cout<<"Hello World\n"<<endl;
     rabbit::Mesh mesh(fileName);
     const auto& triangles = mesh.GetTriangles();
     for(const Triangle& t: triangles)
@@ -55,8 +54,12 @@ int main()
             const Point& expectedExtrudedPoint = std::get<1>(testPointData);
 
             std::tie(u,v) = t.CalcBarycentricCoords(expectedExtrudedPoint);
-            Point calculatedProjectedPoint = t.P0 + t.P0_P1*u + t.P0_P2*v*3.0;
-            BOOST_ASSERT(calculatedProjectedPoint.isSameAs(expectedProjectedPoint));
+            Point calculatedProjectedPoint = t.P0 + t.P0_P1*u + t.P0_P2*(v*3.0);
+            cout<<calculatedProjectedPoint<<endl;
+            cout<<expectedProjectedPoint<<endl;
+            cout<<std::boolalpha<<calculatedProjectedPoint.isSameAs(expectedProjectedPoint)<<endl;
+            cout<<"---------------\n";
+            cin.get();
         }
     }
 }

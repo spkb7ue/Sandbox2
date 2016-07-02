@@ -105,21 +105,21 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
             }
 
             {   // Make sure that the Barycentric coordinates actually give us the internal point
-                Point calculatedPoint = t.P0 + t.P0_P1*u + t.P0_P2*v;
-                BOOST_ASSERT(calculatedPoint.isSameAs(internalPoint));
+                const Point calculatedPoint = t.P0 + t.P0_P1*u + t.P0_P2*v;
+                BOOST_ASSERT(calculatedPoint.isSameAs(internalPoint, 1.0e-3));
 
             }
         }
 
-        for(unsigned i = 0; i<100; ++i)
+        for(unsigned i = 0; i<1000; ++i)
         {
             const auto testPointData = GenerateExtrudedPointData(t);
             const Point& expectedProjectedPoint = std::get<0>(testPointData);
             const Point& expectedExtrudedPoint = std::get<1>(testPointData);
 
             std::tie(u,v) = t.CalcBarycentricCoords(expectedExtrudedPoint);
-            Point calculatedProjectedPoint = t.P0 + t.P0_P1*u + t.P0_P2*v*3.0;
-            BOOST_ASSERT(calculatedProjectedPoint.isSameAs(expectedProjectedPoint));
+            Point calculatedProjectedPoint = t.P0 + t.P0_P1*u + t.P0_P2*v;
+            BOOST_ASSERT(calculatedProjectedPoint.isSameAs(expectedProjectedPoint, 1.0e-3));
         }
     }
 }
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
                 BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
                                 "The distance from point to triangle does not match expected data");
 
-                bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(expectedProjectedPoint);
+                bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(expectedProjectedPoint, 1.e-5);
                 BOOST_ASSERT_MSG(areProjectedPointsIdentical,"Projected point onto the triangle plane is incorrect");
             }
         }
