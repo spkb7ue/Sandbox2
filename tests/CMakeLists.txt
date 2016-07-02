@@ -14,3 +14,8 @@ add_executable(TestVec3 test_vec3.cpp)
 target_link_libraries(TestVec3
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
+
+add_executable(TestTriangle test_triangle.cpp)
+target_link_libraries(TestTriangle
+                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                      ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
