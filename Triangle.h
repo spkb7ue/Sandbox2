@@ -31,7 +31,7 @@ namespace rabbit
 
         boost::optional<Point> CheckPointSegDist(const Vec3& origin,
                                                  const Vec3& seg,
-                                                 const Vec3& P);
+                                                 const Vec3& P)const;
 
         Triangle(const Point& p0, const Point& p1, const Point& p2);
     };

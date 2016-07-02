@@ -68,6 +68,25 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
     }
 }
 
+BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist)
+{
+    // Create test triangles
+    rabbit::Mesh mesh(FILE_NAME);
+    const auto& triangles = mesh.GetTriangles();
+
+    for(const Triangle& t : triangles)
+    {
+        Point p = GenerateTriangleInternalPoint(t);
+        boost::optional<Vec3> px = t.CheckPointSegDist(t.P0, t.P0_P1, p);
+        bool pass = px.is_initialized();
+        if(!pass)
+        {
+
+        }
+        BOOST_ASSERT(px.is_initialized());
+    }
+}
+
 BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 {
     // Create test triangles

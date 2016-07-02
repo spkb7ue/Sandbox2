@@ -2,6 +2,7 @@
 #include <memory>
 
 using namespace rabbit;
+using namespace std;
 
 
 Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
@@ -85,21 +86,30 @@ std::pair<Point, float> Triangle::CalcInPlaneDistanceToTriangle(const Point& P)c
 
 boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
                                                    const Vec3& seg,
-                                                   const Vec3& P)
+                                                   const Vec3& P)const
 {
     const Vec3 normalSeg = (Vec3::crossProduct(Normal,seg)).normalise();
     const Vec3 P_origin = origin - P;
-    float distToSeg = Vec3::dotProduct(normalSeg, P_origin);
+    auto distToSeg = Vec3::dotProduct(normalSeg, P_origin);
     const Vec3 Px = P + normalSeg*distToSeg;
     const Vec3 origin_Px = Px - origin;
     const Vec3 unitVecAlongSeg = seg.normalise();
-    float alongSeg = Vec3::dotProduct(unitVecAlongSeg, origin_Px);
-    if(alongSeg >= 0.0f && alongSeg <= seg.magnitude())
+    auto alongSeg = Vec3::dotProduct(unitVecAlongSeg, origin_Px);
+    if(alongSeg >= 0.0f && alongSeg <= seg.magnitude() + 0.01)
     {
         return Px;
     }
     else
     {
+        cout<<P<<endl;
+        cout<<P0_P1<<endl;
+        cout<<P0_P2<<endl;
+        cout<<P1_P2<<endl;
+        cout<<origin_Px<<endl;
+        cout<<alongSeg<<endl;
+        cout<<seg.magnitude()<<endl;
+        cout<<Area<<endl;
+        cin.get();
         return boost::none;
     }
 }
