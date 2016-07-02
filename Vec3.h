@@ -10,7 +10,6 @@ template <class T> class Vec3_
 {
     private:
         T x, y, z;
-
     public:
 
         static constexpr T EPSILON = T(1.0E-6);
@@ -87,6 +86,14 @@ template <class T> class Vec3_
         {
             return x * vec.x + y * vec.y + z * vec.z;
         }
+
+        bool isSameAs(const Vec3_& vec, const T tol = T(EPSILON))const
+        {
+            return  abs(x-vec.X()) < tol &&
+                    abs(y-vec.Y()) < tol &&
+                    abs(z-vec.Z()) < tol;
+        }
+
 
         // Usage example: Vec3<double> crossVect = Vec3<double>::crossProduct(vectorA, vectorB);
         static Vec3_ crossProduct(const Vec3_ &vec1, const Vec3_ &vec2)
