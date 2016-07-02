@@ -11,7 +11,6 @@ using namespace rabbit;
 namespace
 {
     const std::string FILE_NAME = "rabbit.triangles"; ///< File with the triangulated mesh
-    const unsigned NUM_TRIANGLES = 2204;    ///< Number of triangles in the mesh
     template <typename T>
 
     T Sign(T value)
@@ -92,7 +91,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 
         const float TOLERANCE = 0.01f;
 
-        for(unsigned i = 0; i < 100; ++i)
+        for(unsigned i = 0; i < 1000; ++i)
         {
             Point internalPoint = GenerateTriangleInternalPoint(t);
             std::tie(u,v) = t.CalcBarycentricCoords(internalPoint);
@@ -103,6 +102,12 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
                 BOOST_ASSERT_MSG(u >= 0.0f - TOLERANCE && u <= 1.0f + TOLERANCE, error_msg.str().c_str());
                 BOOST_ASSERT_MSG(v >= 0.0f - TOLERANCE && v <= 1.0f + TOLERANCE, error_msg.str().c_str());
                 BOOST_ASSERT_MSG(u + v < 1.0f + TOLERANCE, error_msg.str().c_str());
+            }
+
+            {   // Make sure that the Barycentric coordinates actually give us the internal point
+                Point calculatedPoint = t.P0 + t.P0_P1*u + t.P0_P2*v;
+                BOOST_ASSERT(calculatedPoint.isSameAs(internalPoint));
+
             }
         }
     }
