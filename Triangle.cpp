@@ -101,15 +101,11 @@ boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
     }
     else
     {
-        cout<<P<<endl;
-        cout<<P0_P1<<endl;
-        cout<<P0_P2<<endl;
-        cout<<P1_P2<<endl;
-        cout<<origin_Px<<endl;
-        cout<<alongSeg<<endl;
-        cout<<seg.magnitude()<<endl;
         cout<<Area<<endl;
         cout<<Vec3::getDistance(Centroid, Px)<<endl;
+        cout<<Vec3::getDistance(Centroid, P0)<<endl;
+        cout<<Vec3::getDistance(Centroid, P1)<<endl;
+        cout<<Vec3::getDistance(Centroid, P2)<<endl;
         cin.get();
         return boost::none;
     }
