@@ -92,11 +92,11 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 
         const float TOLERANCE = 0.01f;
 
-        for(unsigned i = 0; i < 10000; ++i)
+        for(unsigned i = 0; i < 100; ++i)
         {
             Point internalPoint = GenerateTriangleInternalPoint(t);
             std::tie(u,v) = t.CalcBarycentricCoords(internalPoint);
-            {   // Assert that the calculated coordinates obey the constraints for
+            {   // Assert that the calculated Barycentric coordinates obey the constraints for
                 // a point internal to a triangle
                 std::stringstream error_msg;
                 error_msg << "u:"<<u<<"\tv:"<<v;
