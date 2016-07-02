@@ -45,3 +45,11 @@ BOOST_AUTO_TEST_CASE(TestVec3_Addition)
     BOOST_ASSERT(v3.Y() == 5.0f);
     BOOST_ASSERT(v3.Z() == 4.3f);
 }
+
+BOOST_AUTO_TEST_CASE(TestVec3_ScalarMultiplication)
+{
+    auto v3 = v1*2.0f;
+    BOOST_ASSERT(v3.X() == 2.0f);
+    BOOST_ASSERT(v3.Y() == 4.0f);
+    BOOST_ASSERT(v3.Z() == 6.6f);
+}
