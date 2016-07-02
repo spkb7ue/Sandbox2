@@ -25,15 +25,16 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
     rabbit::Mesh mesh(FILE_NAME);
     const auto& triangles = mesh.GetTriangles();
 
-    std::for_each(triangles.begin(), triangles.end(),[](const Triangle& t){
+    for(const auto& t : triangles)
+    {
         BOOST_ASSERT(Vec3::dotProduct(t.Normal, t.P0_P1) < Vec3::EPSILON);
         BOOST_ASSERT(Vec3::dotProduct(t.Normal, t.P0_P2) < Vec3::EPSILON);
         BOOST_ASSERT(Vec3::dotProduct(t.Normal, t.P1_P2) < Vec3::EPSILON);
         BOOST_ASSERT(std::abs(t.Normal.magnitude()-1.0f) < Vec3::EPSILON);
-    });
+    }
 }
 
-BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
+BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 {
     // Load test triangles from file
     rabbit::Mesh mesh(FILE_NAME);
@@ -60,17 +61,16 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
     };
 
-    std::for_each(triangles.begin(), triangles.end(),[&generateExtrudedPointData](const Triangle& t){
+    for(const auto& t : triangles)
+    {
         auto testPointData = generateExtrudedPointData(t);
-        auto generatedData = t.ProjectPointOntoTrianglePlane(std::get<1>(testPointData));
+        auto calculatedData = t.ProjectPointOntoTrianglePlane(std::get<1>(testPointData));
 
-        BOOST_ASSERT_MSG(Sign(std::get<2>(testPointData)) == Sign(generatedData.second),
+        BOOST_ASSERT_MSG(Sign(std::get<2>(testPointData)) == Sign(calculatedData.second),
                          "Signs of the computed distance don't match expected value");
 
-        bool isCalculatedDistanceWithinTolerance = std::abs(std::get<2>(testPointData) - generatedData.second) < Vec3::EPSILON;
+        bool isCalculatedDistanceWithinTolerance = std::abs(std::get<2>(testPointData) - calculatedData.second) < 1.e-5;
         BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
                         "The distance from point to triangle does not match expected data");
-
-    });
-
+    }
 }
