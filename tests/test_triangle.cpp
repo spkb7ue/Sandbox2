@@ -183,10 +183,36 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
             }
             const auto testPointData = GenerateExtrudedPointData(t);
             const Point& extrudedPoint = std::get<1>(testPointData);
-
+            {
+                bool pass = t.IsPointWithinExtrudedTriangle(extrudedPoint);
+                if(!pass)
+                {
+                    auto bc = t.CalcBarycentricCoords(extrudedPoint);
+                    cout<<extrudedPoint<<endl;
+                    cout<<bc.first<<", "<<bc.second<<endl;
+                    cout<<t.CalcPointFromBarycentricCoords(bc)<<endl;
+                    cout<<t.ProjectPointOntoTrianglePlane(extrudedPoint).first<<endl;
+                    cout<<t.Area<<endl;
+                    cout<<"hEre"<<endl;
+                    cin.get();
+                }
+            }
             BOOST_ASSERT(t.IsPointWithinExtrudedTriangle(extrudedPoint));
-            BOOST_ASSERT(!t.IsPointWithinExtrudedTriangle(GeneratePointOutsideExtrudedTriangle(t)));
 
+            {
+                Point p = GeneratePointOutsideExtrudedTriangle(t);
+                bool pass = !t.IsPointWithinExtrudedTriangle(p);
+                if(!pass)
+                {
+                    auto bc = t.CalcBarycentricCoords(p);
+                    cout<<p<<endl;
+                    cout<<bc.first<<", "<<bc.second<<endl;
+                    cout<<t.CalcPointFromBarycentricCoords(bc)<<endl;
+                    cout<<t.ProjectPointOntoTrianglePlane(p).first<<endl;
+                    cin.get();
+                }
+                BOOST_ASSERT(!t.IsPointWithinExtrudedTriangle(GeneratePointOutsideExtrudedTriangle(t)));
+            }
         }
     }
 }

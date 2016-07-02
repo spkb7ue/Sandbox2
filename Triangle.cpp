@@ -14,7 +14,7 @@ Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
  Normal((Vec3::crossProduct(P0_P1,P0_P2)).normalise()),
  Centroid((P0+P1+P2)*1.0f/3.0f),
  Area((Vec3::crossProduct(P0_P1,P0_P2)).magnitude()*0.5f),
-IsDegenerate(Area < 1.0E-6f)
+IsDegenerate(Area < 1.0E-5f)
 {
 
 }
@@ -23,7 +23,7 @@ bool Triangle::IsPointWithinExtrudedTriangle(const Point& p)const
 {
     float u,v;
     std::tie(u,v) = CalcBarycentricCoords(p);
-    const float tol = 0.005f;
+    const float tol = 0.01f;
     return ( u >= -tol && v >= -tol && u+v <= 1.0f + tol);
 }
 
