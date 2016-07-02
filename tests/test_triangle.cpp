@@ -47,16 +47,19 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
     auto generateExtrudedPointData = [&real_rand](const Triangle& t)->std::tuple<Point, Point,float>
     {
         // Point (p) internal to triangle can be calculated using
-        // p = P0 + s*(P0_P1) + r*(PO_P2) where 0 <= (s,r) <= 1 and
-        // s + r <= 1
-        float s = real_rand();
-        float r = std::min(1.0f-s, real_rand());
+        // Barycentric Coordinates can be represented as r0*P0 + r1*P1 + rs2*P3
+        // where r0 + r1 + r2 = 1;
+        float r0 = real_rand();
+        float r1 = real_rand();
+        float r2 = real_rand();
+        auto mag = r0 + r1 + r2;
+        r0 /= mag;
+        r1 /= mag;
+        r2 /= mag;
         const float DIST_SCALE = 10.0f;
-        BOOST_ASSERT_MSG(s + r <= 1.0f, "The triangles internal generated parameters are invalid. Cannot proceed");
-
         float sign = real_rand() > 0.5f ? 1.0f : -1.0f;
         float distance = DIST_SCALE * real_rand() * sign;
-        auto PointWithinTriangle = t.P0 + t.P0_P1*s + t.P0_P2*r;
+        auto PointWithinTriangle = t.P0*r0 + t.P1*r1 + t.P2*r2;
         auto ExtrudedPoint = PointWithinTriangle + t.Normal*distance;
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
     };

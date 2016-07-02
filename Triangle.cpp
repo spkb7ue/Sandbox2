@@ -25,7 +25,28 @@ std::pair<Point,float> Triangle::ProjectPointOntoTrianglePlane(const Point& p) c
 {
     const auto p_P0 = P0-p;
     auto signedDist = Vec3::dotProduct(p_P0, Normal);
-
-
     return std::make_pair(Point(p + Normal*signedDist), -signedDist);
+}
+
+std::pair<float,float> Triangle::CalcBarycentricCoords(const Point& P)const
+{
+    // Assume P = P0 + u*P0_P1 + v*P0_P2, goal is to calculate u and v
+    // Project this equation along P0_P1 and P0_P2 and we obtain a set
+    // of equations which can then be solved.
+    //  |x| = |a, b||u|
+    //  |y| = |c, d||v|
+    //
+    const auto P0_P = P - P0;
+    const auto x = Vec3::dotProduct(P0_P1,P0_P);
+    const auto y = Vec3::dotProduct(P0_P2,P0_P);
+
+    const auto a = Vec3::dotProduct(P0_P1,P0_P1);
+    const auto b = Vec3::dotProduct(P0_P1,P0_P2);
+    const auto c = Vec3::dotProduct(P0_P2,P0_P1);
+    const auto d = Vec3::dotProduct(P0_P2,P0_P2);
+
+    const auto inverseDet = 1.0f/(a*d - c*b);
+    const auto u = inverseDet * (d*x - b*y);
+    const auto v = inverseDet * (-c*x + a*y);
+    return std::make_pair(u,v);
 }

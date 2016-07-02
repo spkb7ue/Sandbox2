@@ -18,6 +18,8 @@ namespace rabbit
 
         std::pair<Point,float> ProjectPointOntoTrianglePlane(const Point& p) const;
 
+        std::pair<float,float> CalcBarycentricCoords(const Point& p)const;
+
         Triangle(const Point& p0, const Point& p1, const Point& p2);
     };
 }
