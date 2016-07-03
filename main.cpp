@@ -62,5 +62,4 @@ int main()
     FlexibleTriangle t(p,q,p);
     p = q*4.0;
     t.Vert(TriangleProps3D::VertIndices::eP0) = q*4.0;
-
 }

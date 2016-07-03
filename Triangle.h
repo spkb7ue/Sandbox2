@@ -58,10 +58,52 @@ public:
         return static_cast<Derived*>(this)->IsPointWithinShapeExtrudedAlongNormal(point);
     }
 
+    typename ShapeProps::PointIntersectionResult CalcShortestDistanceFrom(const T& point) const{
+        return static_cast<Derived*>(this)->CalcShortestDistanceFrom(point);
+    }
+
+    typename ShapeProps::PointIntersectionResult CheckPointSegDist(const T& origin,
+                                                                   const T& seg,
+                                                                   const T& P);
+
     VertType m_verts[ShapeProps::NUM_VERTICES];
     VecType m_edges[ShapeProps::NUM_VERTICES];
     VecType m_normal;
 };
+
+template<typename T,
+         bool isDeformable,
+         typename Derived,
+         typename ShapeProps>
+typename ShapeProps::PointIntersectionResult
+IShape<T,isDeformable,Derived,ShapeProps>::CheckPointSegDist(const T& origin,
+                                                             const T& seg,
+                                                             const T& P)
+{
+    const auto origin_P = P - origin;
+    const T unitVecAlongSeg = seg.normalise();
+
+    const auto Px = origin + unitVecAlongSeg*T::dotProduct(unitVecAlongSeg,origin_P);
+    const auto origin_Px = Px - origin;
+    auto alongSeg = T::dotProduct(unitVecAlongSeg, origin_Px);
+    static const T EPSILON = T(1.0e-12);
+    if(alongSeg >= -EPSILON && alongSeg <= seg.magnitude() + EPSILON)
+    {
+        return ShapeProps::PointIntersectionResult(Px, (P-Px).magnitude());
+    }
+    else
+    {
+        if(alongSeg < 0.0)
+        {
+            return ShapeProps::PointIntersectionResult(origin,origin_P.magnitude());
+        }
+        else
+        {
+            auto otherEnd = origin + seg;
+            return ShapeProps::PointIntersectionResult(otherEnd, (otherEnd - P).magnitude());
+        }
+    }
+}
 
 struct TriangleProps3D
 {
@@ -114,7 +156,63 @@ public:
     TriangleProps3D::BarycentricCoords CalcBarycentricCoords(const Point& P)const;
 
     TriangleProps3D::PointIntersectionResult ProjectPointOntoShapePlane(const Point& p)const;
+
+    TriangleProps3D::PointIntersectionResult CalcShortestDistanceFrom(const Point& point) const;
 };
+
+template<bool isDeformable>
+TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestDistanceFrom(const Point& p) const
+{
+    /*
+    auto projectedPointData = ProjectPointOntoShapePlane(p);
+    const auto pDist = projectedPointData.Dist;
+    const Point& projectedPoint = projectedPointData.P;
+    if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
+    {
+        // If the point was within the extruded triangle, there is nothing else
+        // to do here and we have already found the right triangle.
+        return projectedPointData;
+    }
+    else
+    {
+        // Lets check intersection with the other edges now.
+        auto P0_P1_Data = CheckPointSegDist(m_verts[0],m_edges[0],projectedPoint);
+        auto d0 = std::get<1>(P0_P1_Data);
+
+        auto P0_P2_Data = CheckPointSegDist(P0,P0_P2,projectedPoint);
+        auto d1 = std::get<1>(P0_P2_Data);
+
+        auto P1_P2_Data = CheckPointSegDist(P1,P1_P2,projectedPoint);
+        auto d2 = std::get<1>(P1_P2_Data);
+        if(d0 < d1)
+        {
+            if(d0 < d2)
+            {
+                auto dist = sqrt(d0*d0 + pDist*pDist);
+                return std::make_pair(std::get<0>(P0_P1_Data), dist);
+            }
+            else
+            {
+                auto dist = sqrt(d2*d2 + pDist*pDist);
+                return std::make_pair(std::get<0>(P1_P2_Data), dist);
+            }
+        }
+        else
+        {
+            if(d1 < d2)
+            {
+                auto dist = sqrt(d1*d1 + pDist*pDist);
+                return std::make_pair(std::get<0>(P0_P2_Data), dist);
+            }
+            else
+            {
+                auto dist = sqrt(d2*d2 + pDist*pDist);
+                return std::make_pair(std::get<0>(P1_P2_Data), dist);
+            }
+        }
+    }
+    */
+}
 
 template<bool isDeformable>
 TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::ProjectPointOntoShapePlane(const Point& p)const
@@ -177,9 +275,9 @@ struct Triangle
 
     std::pair<Point, double> CalcShortestDistanceFrom(const Point&)const;
 
+    // Debug functions
     Point CalcPointFromBarycentricCoords(const double u, const double v) const;
     Point CalcPointFromBarycentricCoords(std::pair<double,double> coords)const;
-
     std::tuple<Point, double, bool> CheckPointSegDist(const Vec3& origin,
                                                       const Vec3& seg,
                                                       const Vec3& P)const;
