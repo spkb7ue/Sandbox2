@@ -2,14 +2,16 @@
 #include <iostream>
 #include <math.h>
 #include <system_error>
-
+#include <array>
 namespace rabbit
 {
 
-template <class T> class Vec3_
+template <class T>
+class Vec3_
 {
     private:
         T x, y, z;
+        std::array<T, 3> m_coords;
     public:
 
         static constexpr T EPSILON = T(1.0E-12);
@@ -18,7 +20,8 @@ template <class T> class Vec3_
         Vec3_():x(T(0)),y(T(0)),z(T(0)){}
 
         // Three parameter constructor
-        Vec3_(T xValue, T yValue, T zValue)
+        Vec3_(const T& xValue, const T& yValue, const T& zValue)
+        :m_coords{xValue, yValue, zValue}
         {
             x = xValue;
             y = yValue;
