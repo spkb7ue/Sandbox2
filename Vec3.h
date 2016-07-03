@@ -69,7 +69,7 @@ class Vec3_
 
         T dotProduct(const Vec3_ &vec) const
         {
-            return x * vec.X + y * vec.Y + z * vec.Z;
+            return X() * vec.X() + Y() * vec.Y() + Z() * vec.Z();
         }
 
         bool isSameAs(const Vec3_& vec, const T tol = EPSILON)const
