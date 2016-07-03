@@ -28,9 +28,9 @@ namespace rabbit
         Point CalcPointFromBarycentricCoords(const double u, const double v) const;
         Point CalcPointFromBarycentricCoords(std::pair<double,double> coords)const;
 
-        boost::optional<Point> CheckPointSegDist(const Vec3& origin,
-                                                 const Vec3& seg,
-                                                 const Vec3& P)const;
+        std::tuple<Point, double, bool> CheckPointSegDist(const Vec3& origin,
+                                                          const Vec3& seg,
+                                                          const Vec3& P)const;
 
         Triangle(const Point& p0, const Point& p1, const Point& p2);
     };

@@ -84,7 +84,7 @@ std::pair<Point, double> Triangle::CalcInPlaneDistanceToTriangle(const Point& P)
     }
 }
 
-boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
+std::tuple<Point, double, bool> Triangle::CheckPointSegDist(const Vec3& origin,
                                                    const Vec3& seg,
                                                    const Vec3& P)const
 {
@@ -96,10 +96,18 @@ boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
     auto alongSeg = Vec3::dotProduct(unitVecAlongSeg, origin_Px);
     if(alongSeg >= -Vec3::EPSILON && alongSeg <= seg.magnitude() + Vec3::EPSILON)
     {
-        return Px;
+        return std::make_tuple(Px, (P-Px).magnitude(),  true);
     }
     else
     {
-        return boost::none;
+        if(alongSeg < 0.0)
+        {
+            return std::make_tuple(origin,origin_P.magnitude(), false);
+        }
+        else
+        {
+            auto otherEnd = origin + seg;
+            return std::make_tuple(otherEnd, (otherEnd - P).magnitude(), false);
+        }
     }
 }

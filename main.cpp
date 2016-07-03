@@ -49,7 +49,5 @@ int main()
     cout<<"Hello World\n"<<endl;
     cout<<boolalpha;
     auto pt = t.CheckPointSegDist(p0, p1-p0, p);
-    bool pass = pt.is_initialized();
-    cout<<pass<<endl;
 
 }

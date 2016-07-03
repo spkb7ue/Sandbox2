@@ -230,24 +230,24 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
             int numSegs = 0;
 
             {   // Check internal P0_P1
-                boost::optional<Vec3> px = t.CheckPointSegDist(t.P0, t.P0_P1, p);
-                if(px.is_initialized())
+                auto px = t.CheckPointSegDist(t.P0, t.P0_P1, p);
+                if(std::get<2>(px))
                 {
                     ++numSegs;
                 }
             }
 
             {   // Check internal P0_P2
-                boost::optional<Vec3> px = t.CheckPointSegDist(t.P0, t.P0_P2, p);
-                if(px.is_initialized())
+                auto px = t.CheckPointSegDist(t.P0, t.P0_P2, p);
+                if(std::get<2>(px))
                 {
                     ++numSegs;
                 }
             }
 
             {   // Check internal P0_P2
-                boost::optional<Vec3> px = t.CheckPointSegDist(t.P1, t.P1_P2, p);
-                if(px.is_initialized())
+                auto px = t.CheckPointSegDist(t.P1, t.P1_P2, p);
+                if(std::get<2>(px))
                 {
                     ++numSegs;
                 }
