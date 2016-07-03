@@ -65,22 +65,6 @@ Point Triangle::CalcPointFromBarycentricCoords(std::pair<double,double> coords)c
     return P0 + P0_P1*coords.first + P0_P2*coords.second;
 }
 
-std::pair<Point, double> Triangle::CalcInPlaneDistanceToTriangle(const Point& P)const
-{
-    // Calculate distance from point p to P0_P1
-    const Vec3 normal_P0_P1 = (Vec3::crossProduct(Normal,P0_P1)).normalise();
-    const Vec3 P_P0 = P0 - P;
-    double distToP0P1 = Vec3::dotProduct(normal_P0_P1, P_P0);
-    const Vec3 Px = P + normal_P0_P1*distToP0P1;
-    const Vec3 P0_Px = Px - P0;
-    const Vec3 unit_P0_P1 = P0_P1.normalise();
-    double alongP0P1 = Vec3::dotProduct(unit_P0_P1, P0_Px);
-    if(alongP0P1 > 0.0f and alongP0P1 <= P0_P1.magnitude())
-    {
-        return std::make_pair(Px, distToP0P1);
-    }
-}
-
 std::tuple<Point, double, bool> Triangle::CheckPointSegDist(const Vec3& origin,
                                                    const Vec3& seg,
                                                    const Vec3& P)const

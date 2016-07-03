@@ -175,8 +175,6 @@ struct Triangle
 
     std::pair<double,double> CalcBarycentricCoords(const Point& p)const;
 
-    std::pair<Point, double> CalcInPlaneDistanceToTriangle(const Point& p)const;
-
     std::pair<Point, double> CalcShortestDistanceFrom(const Point&)const;
 
     Point CalcPointFromBarycentricCoords(const double u, const double v) const;
