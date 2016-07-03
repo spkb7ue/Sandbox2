@@ -32,24 +32,23 @@ class Vec3_
         x(vec.X()),y(vec.Y()),z(vec.Z()),m_coords({vec.X(), vec.Y(), vec.Z()})
         {}
 
-        T& X() { return x; }
-        const T& X() const {return x;}
+        T& X() { return m_coords[0]; }
+        const T& X() const {return m_coords[0];}
 
-        T& Y() { return y;}
-        const T& Y() const  { return y; }
+        T& Y() { return m_coords[1];}
+        const T& Y() const  { return m_coords[1]; }
 
-        T& Z() { return z; }
-        const T& Z() const  { return z; }
+        T& Z() { return m_coords[2]; }
+        const T& Z() const  { return m_coords[2]; }
 
         // Method to normalise a vector
         Vec3_<T> normalise()const
         {
-            // Calculate the magnitude of our vector
-            T magnitude = sqrt((x * x) + (y * y) + (z * z));
+            T mag = magnitude();
 
-            if (magnitude > EPSILON)
+            if (mag > EPSILON)
             {
-                T oneOverMag = 1.0/magnitude;
+                T oneOverMag = 1.0/mag;
                 return Vec3_<T>(x*oneOverMag, y*oneOverMag, z*oneOverMag);
             }
             else
@@ -60,7 +59,7 @@ class Vec3_
 
         T magnitude()const
         {
-            return sqrt((x * x) + (y * y) + (z * z));
+            return sqrt((X() * X()) + (Y() * Y()) + (Z() * Z()));
         }
 
         static T dotProduct(const Vec3_ &vec1, const Vec3_ &vec2)
