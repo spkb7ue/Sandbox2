@@ -38,18 +38,11 @@ public:
     typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
     typedef typename Indices::VertIndices VertIndices;
 
-    IShape(std::initializer_list<T> verts){
-        std::copy(verts.begin(), verts.end(), const_cast<T*>(m_verts));
-        T* edges = const_cast<T*>(m_edges);
-        edges[Indices::EdgeIndices::eP0P1] = m_verts[Indices::VertIndices::eP1] - m_verts[Indices::VertIndices::eP0];
-        edges[Indices::EdgeIndices::eP0P2] = m_verts[Indices::VertIndices::eP2] - m_verts[Indices::VertIndices::eP0];
-        edges[Indices::EdgeIndices::eP1P2] = m_verts[Indices::VertIndices::eP2] - m_verts[Indices::VertIndices::eP1];
-
-        T* normal = const_cast<T*>(&m_normal);
-        *normal =(T::crossProduct(m_edges[Indices::EdgeIndices::eP0P1],
-                         m_edges[Indices::EdgeIndices::eP0P2])).normalise();
+    IShape(const T& v0, const T& v1, const T& v2):
+        m_verts({v0, v1, v2}),
+        m_edges({v1-v0, v2-v0, v2-v1}),
+        m_normal((T::crossProduct(m_edges[0],m_edges[1])).normalise()){
     }
-
 
     VertType& Vert(VertIndices index){
         return m_verts[index];
@@ -91,7 +84,7 @@ public:
     TriangleV1():IShape<Vec3,
                         isDeformable,
                         TriangleV1<isDeformable>,
-                        TriangleProps3D>({Vec3(), Vec3(), Vec3()}){}
+                        TriangleProps3D>(Vec3(), Vec3(), Vec3()){}
 };
 
 typedef TriangleV1<false> RigidTriangle;
