@@ -28,18 +28,38 @@ struct IsPropertyModifiable<T,false>
 };
 
 template<typename T,
-         typename Derived,
          bool isDeformable,
+         class Derived,
          size_t NUM_VERTICES>
 class IShape
 {
 public:
     typedef typename IsPropertyModifiable<T,isDeformable>::type VertType;
     typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
+
+    void Vertadsf(){
+        //static_cast<Derived*>(this)->Vert::eP0;
+        typedef typename Derived::Vert v;
+        v::eP0;
+    }
+
 protected:
     VertType m_verts[NUM_VERTICES];
 };
 
+template<bool isDeformable>
+class TriangleV1:
+    public IShape<Vec3, isDeformable, TriangleV1<isDeformable>, 3>
+{
+public:
+    enum Vert
+    {
+        eP0 = 0,    ///< Refers to Vertex P0
+        eP1 = 1,    ///< Refers to Vertex P1
+        eP2 = 2     ///< Refers to Vertex P2
+    };
+};
+/*
 template<bool isDeformable = false>
 class TriangleV1 : public IShape<float, TriangleV1<isDeformable>,true , 3>
 {
@@ -48,7 +68,7 @@ public:
     static const size_t NUM_VERTICES = 3;
 };
 
-
+*/
 template<typename T, bool isTriangleDeformable = false>
 class Tri
 {
@@ -96,7 +116,10 @@ int main()
 {
     Point p;
     Point q; q.Y() = 10.0f;
-    TriangleV1<false> t;
+    TriangleV1<true> t;
+    t.Vertadsf();
+    cout<<TriangleV1<true>::Vert::eP0<<endl;
+    //t.m_data;
 //    TriangleProps<Tri<Vec3,true>> t(p,q,p);
     // t.m_data.Vert(1) = q*3.0f;
     // cout<<t.m_data.Vert(1)<<endl;
