@@ -30,8 +30,7 @@ struct IsPropertyModifiable<T,false>
 template<typename T,
          bool isDeformable,
          typename Derived,
-         typename Indices,
-         size_t NUM_VERTICES>
+         typename Indices>
 class IShape
 {
 public:
@@ -46,7 +45,7 @@ public:
     }
 
 protected:
-    VertType m_verts[NUM_VERTICES];
+    VertType m_verts[Indices::NUM_VERTICES];
 };
 
 struct TriangleIndices
@@ -57,6 +56,8 @@ struct TriangleIndices
         eP1 = 1,    ///< Refers to Vertex P1
         eP2 = 2     ///< Refers to Vertex P2
     };
+
+    static const unsigned NUM_VERTICES = 3;
 };
 
 template<bool isDeformable = false>
@@ -64,14 +65,13 @@ class TriangleV1:
     public IShape<  Vec3,
                     isDeformable,
                     TriangleV1<isDeformable>,
-                    TriangleIndices,
-                    3>
+                    TriangleIndices>
 {
 public:
     TriangleV1():IShape<Vec3,
                         isDeformable,
                         TriangleV1<isDeformable>,
-                        TriangleIndices, 3>(){}
+                        TriangleIndices>(){}
 };
 
 
