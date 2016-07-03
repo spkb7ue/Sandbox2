@@ -64,12 +64,12 @@ class Vec3_
 
         static T dotProduct(const Vec3_ &vec1, const Vec3_ &vec2)
         {
-            return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
+            return vec1.X() * vec2.X() + vec1.Y() * vec2.Y() + vec1.Z() * vec2.Z();
         }
 
         T dotProduct(const Vec3_ &vec) const
         {
-            return x * vec.x + y * vec.y + z * vec.z;
+            return x * vec.X + y * vec.Y + z * vec.Z;
         }
 
         bool isSameAs(const Vec3_& vec, const T tol = EPSILON)const
@@ -83,9 +83,9 @@ class Vec3_
         // Usage example: Vec3<double> crossVect = Vec3<double>::crossProduct(vectorA, vectorB);
         static Vec3_ crossProduct(const Vec3_ &vec1, const Vec3_ &vec2)
         {
-            return Vec3_(vec1.y * vec2.z - vec1.z * vec2.y,
-                        vec1.z * vec2.x - vec1.x * vec2.z,
-                        vec1.x * vec2.y - vec1.y * vec2.x);
+            return Vec3_(vec1.Y() * vec2.Z() - vec1.Z() * vec2.Y(),
+                        vec1.Z() * vec2.X() - vec1.X() * vec2.Z(),
+                        vec1.X() * vec2.Y() - vec1.Y() * vec2.X());
         }
 
         // Overloaded multiply operator to multiply a vector by a scalar
