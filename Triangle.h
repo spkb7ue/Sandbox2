@@ -64,7 +64,7 @@ public:
 
     typename ShapeProps::PointIntersectionResult CheckPointSegDist(const T& origin,
                                                                    const T& seg,
-                                                                   const T& P);
+                                                                   const T& P) const;
 
     VertType m_verts[ShapeProps::NUM_VERTICES];
     VecType m_edges[ShapeProps::NUM_VERTICES];
@@ -78,7 +78,7 @@ template<typename T,
 typename ShapeProps::PointIntersectionResult
 IShape<T,isDeformable,Derived,ShapeProps>::CheckPointSegDist(const T& origin,
                                                              const T& seg,
-                                                             const T& P)
+                                                             const T& P) const
 {
     const auto origin_P = P - origin;
     const T unitVecAlongSeg = seg.normalise();
@@ -86,21 +86,21 @@ IShape<T,isDeformable,Derived,ShapeProps>::CheckPointSegDist(const T& origin,
     const auto Px = origin + unitVecAlongSeg*T::dotProduct(unitVecAlongSeg,origin_P);
     const auto origin_Px = Px - origin;
     auto alongSeg = T::dotProduct(unitVecAlongSeg, origin_Px);
-    static const T EPSILON = T(1.0e-12);
+    static const double EPSILON= 1.0e-12;
     if(alongSeg >= -EPSILON && alongSeg <= seg.magnitude() + EPSILON)
     {
-        return ShapeProps::PointIntersectionResult(Px, (P-Px).magnitude());
+        return typename ShapeProps::PointIntersectionResult(Px, (P-Px).magnitude());
     }
     else
     {
         if(alongSeg < 0.0)
         {
-            return ShapeProps::PointIntersectionResult(origin,origin_P.magnitude());
+            return typename ShapeProps::PointIntersectionResult(origin,origin_P.magnitude());
         }
         else
         {
             auto otherEnd = origin + seg;
-            return ShapeProps::PointIntersectionResult(otherEnd, (otherEnd - P).magnitude());
+            return typename ShapeProps::PointIntersectionResult(otherEnd, (otherEnd - P).magnitude());
         }
     }
 }
@@ -165,7 +165,7 @@ TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestD
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.Dist;
-    const Point& projectedPoint = projectedPointData.P;
+    const Vec3& projectedPoint = projectedPointData.P;
     if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
     {
         // If the point was within the extruded triangle, there is nothing else
@@ -178,10 +178,10 @@ TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestD
         const auto P0_P1_Data = this->CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
         const auto d0 = P0_P1_Data.Dist;
 
-        const auto P0_P2_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
+        const auto P0_P2_Data = this->CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
         const auto d1 = P0_P2_Data.Dist;
 
-        const auto P1_P2_Data = CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
+        const auto P1_P2_Data = this->CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
         const auto d2 = P1_P2_Data.Dist;
         if(d0 < d1)
         {

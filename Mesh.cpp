@@ -20,6 +20,7 @@ Mesh::Mesh(std::string fileName)
           )
     {
         m_triangles.emplace_back(Triangle(P0, P1, P2));
+        m_tr.emplace_back(RigidTriangle(P0,P1,P2));
     }
     infile.close();
 }

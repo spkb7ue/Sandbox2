@@ -12,7 +12,7 @@ namespace rabbit
     public:
         explicit Mesh(std::string fileName);
         std::vector<Triangle>& GetTriangles();
-    private:
         std::vector<Triangle> m_triangles;
+        std::vector<RigidTriangle> m_tr;
     };
 }
