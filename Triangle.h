@@ -54,6 +54,8 @@ public:
         return static_cast<Derived*>(this)->IsPointWithinShapeExtrudedAlongNormal(point);
     }
 
+    //std::pair<Point,double> Triangle::ProjectPointOntoTrianglePlane(const Point& p) const;
+
     VertType m_verts[Indices::NUM_VERTICES];
     VecType m_edges[Indices::NUM_VERTICES];
     VecType m_normal;
@@ -80,6 +82,13 @@ struct TriangleProps3D
         BarycentricCoords(double a, double b):u(a),v(b){}
         double u;
         double v;
+    };
+
+    struct PointIntersectionResult
+    {
+        PointIntersectionResult(const Point& p, double d):P(p),Dist(d){}
+        Point P; ///< Point of intersection or the closest point
+        double Dist; ///< The distance to point P
     };
 
     static const unsigned NUM_VERTICES = 3;
