@@ -84,6 +84,9 @@ public:
                         TriangleProps3D>({Vec3(), Vec3(), Vec3()}){}
 };
 
+typedef TriangleV1<false> RigidTriangle;
+typedef TriangleV1<true> FlexibleTriangle;
+
 template<typename T, bool isTriangleDeformable = false>
 class Tri
 {
@@ -131,7 +134,7 @@ int main()
 {
     Point p;
     Point q; q.Y() = 10.0f;
-    TriangleV1<false> t;
+    RigidTriangle t;
     t.Vert(TriangleProps3D::VertIndices::eP0);
 
 }
