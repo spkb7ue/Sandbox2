@@ -51,13 +51,20 @@ protected:
     VertType m_verts[Indices::NUM_VERTICES];
 };
 
-struct TriangleIndices
+struct TriangleProps3D
 {
     enum VertIndices : unsigned
     {
         eP0 = 0,    ///< Refers to Vertex P0
         eP1 = 1,    ///< Refers to Vertex P1
         eP2 = 2     ///< Refers to Vertex P2
+    };
+
+    enum EdgeIndices : unsigned
+    {
+        eP0P1 = 0,    ///< Refers to Edge P0 to P1
+        eP0P2 = 1,    ///< Refers to Edge P0 to P2
+        eP1P2 = 2     ///< Refers to Edge P1 to P2
     };
 
     static const unsigned NUM_VERTICES = 3;
@@ -68,13 +75,13 @@ class TriangleV1:
     public IShape<  Vec3,
                     isDeformable,
                     TriangleV1<isDeformable>,
-                    TriangleIndices>
+                    TriangleProps3D>
 {
 public:
     TriangleV1():IShape<Vec3,
                         isDeformable,
                         TriangleV1<isDeformable>,
-                        TriangleIndices>({Vec3(), Vec3(), Vec3()}){}
+                        TriangleProps3D>({Vec3(), Vec3(), Vec3()}){}
 };
 
 template<typename T, bool isTriangleDeformable = false>
@@ -125,6 +132,6 @@ int main()
     Point p;
     Point q; q.Y() = 10.0f;
     TriangleV1<false> t;
-    t.Vert(TriangleIndices::VertIndices::eP0);
+    t.Vert(TriangleProps3D::VertIndices::eP0);
 
 }
