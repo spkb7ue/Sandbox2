@@ -97,26 +97,26 @@ class Vec3_
         // Overloaded multiply and assign operator to multiply a vector by a scalar
         void operator*=(const T &value)
         {
-            x *= value;
-            y *= value;
-            z *= value;
+            X() *= value;
+            Y() *= value;
+            Z() *= value;
         }
 
         Vec3_<T> operator-(const Vec3_<T>& vec)const
         {
-            return Vec3_<T>(x - vec.X(), y - vec.Y(), z - vec.Z());
+            return Vec3_<T>(X() - vec.X(), Y() - vec.Y(), Z() - vec.Z());
         }
 
         Vec3_<T> operator+(const Vec3_<T>& vec)const
         {
-            return Vec3_<T>(x + vec.X(), y + vec.Y(), z + vec.Z());
+            return Vec3_<T>(X() + vec.X(), Y() + vec.Y(), Z() + vec.Z());
         }
 
         Vec3_<T>& operator=(const Vec3_<T>& vec)
         {
-            x = vec.X();
-            y = vec.Y();
-            z = vec.Z();
+            X() = vec.X();
+            Y() = vec.Y();
+            Z() = vec.Z();
             return *this;
         }
 
