@@ -11,15 +11,15 @@ namespace
 {
     const std::string fileName = "rabbit.triangles";
     static mt19937::result_type seed = time(0);
-    static auto real_rand = std::bind(std::uniform_real_distribution<float>(0,1), mt19937(seed));
+    static auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
 
     Point GenerateTriangleInternalPoint(const Triangle& t)
     {
         // Point (p) internal to triangle can be represented as r0*P0 + r1*P1 + r2*P3
         // where r0 + r1 + r2 = 1;
-        float r0 = real_rand();
-        float r1 = real_rand();
-        float r2 = real_rand();
+        double r0 = real_rand();
+        double r1 = real_rand();
+        double r2 = real_rand();
         auto mag = r0 + r1 + r2;
         r0 /= mag;
         r1 /= mag;
@@ -28,11 +28,11 @@ namespace
     }
 
     // Generate random point within a triangle extruded along its normal
-    std::tuple<Point, Point,float> GenerateExtrudedPointData(const Triangle& t)
+    std::tuple<Point, Point,double> GenerateExtrudedPointData(const Triangle& t)
     {
-        const float DIST_SCALE = 10.0f;
-        float sign = real_rand() > 0.5f ? 1.0f : -1.0f;
-        float distance = DIST_SCALE * real_rand() * sign;
+        const double DIST_SCALE = 10.0f;
+        double sign = real_rand() > 0.5f ? 1.0f : -1.0f;
+        double distance = DIST_SCALE * real_rand() * sign;
         auto PointWithinTriangle = GenerateTriangleInternalPoint(t);
         auto ExtrudedPoint = PointWithinTriangle + t.Normal*distance;
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
@@ -46,7 +46,7 @@ int main()
     const auto& triangles = mesh.GetTriangles();
     for(const Triangle& t: triangles)
     {
-        float u,v;
+        double u,v;
         for(unsigned i = 0; i<100; ++i)
         {
             const auto testPointData = GenerateExtrudedPointData(t);

@@ -19,15 +19,15 @@ namespace
     }
 
     static mt19937::result_type seed = time(0);
-    static auto real_rand = std::bind(std::uniform_real_distribution<float>(0,1), mt19937(seed));
+    static auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
 
     Point GenerateTriangleInternalPoint(const Triangle& t)
     {
         // Point (p) internal to triangle can be represented as r0*P0 + r1*P1 + r2*P3
         // where r0 + r1 + r2 = 1;
-        float r0 = real_rand();
-        float r1 = real_rand();
-        float r2 = real_rand();
+        double r0 = real_rand();
+        double r1 = real_rand();
+        double r2 = real_rand();
         auto mag = r0 + r1 + r2;
         r0 /= mag;
         r1 /= mag;
@@ -36,11 +36,11 @@ namespace
     }
 
     // Generate random point within a triangle extruded along its normal
-    std::tuple<Point, Point,float> GenerateExtrudedPointData(const Triangle& t)
+    std::tuple<Point, Point,double> GenerateExtrudedPointData(const Triangle& t)
     {
-        const float DIST_SCALE = 10.0f;
-        float sign = real_rand() > 0.5f ? 1.0f : -1.0f;
-        float distance = DIST_SCALE * real_rand() * sign;
+        const double DIST_SCALE = 10.0f;
+        double sign = real_rand() > 0.5f ? 1.0f : -1.0f;
+        double distance = DIST_SCALE * real_rand() * sign;
         auto PointWithinTriangle = GenerateTriangleInternalPoint(t);
         auto ExtrudedPoint = PointWithinTriangle + t.Normal*distance;
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
@@ -49,7 +49,7 @@ namespace
     Point GeneratePointOutsideExtrudedTriangle(const Triangle& t)
     {
         Point withinTriangle = std::get<1>(GenerateExtrudedPointData(t));
-        return withinTriangle + t.P0_P1*(1.0f + std::max(real_rand(),0.01f));
+        return withinTriangle + t.P0_P1*(1.0f + std::max(real_rand(),0.01));
     }
 }
 
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
     rabbit::Mesh mesh(FILE_NAME);
     const auto& triangles = mesh.GetTriangles();
 
-    float u,v;
+    double u,v;
     for(const Triangle& t : triangles)
     {
         {   // Test vertex P0
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
             BOOST_ASSERT(std::abs(v-1.0f)<Vec3::EPSILON);
         }
 
-        const float TOLERANCE = 0.005f;
+        const double TOLERANCE = 0.005f;
 
         for(unsigned i = 0; i < 100; ++i)
         {
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 
             const Point& expectedProjectedPoint = std::get<0>(testPointData);
             const Point& expectedExtrudedPoint = std::get<1>(testPointData);
-            const float& expectedExtrudeDist = std::get<2>(testPointData);
+            const double& expectedExtrudeDist = std::get<2>(testPointData);
 
             {   // Calculate using ProjectPointOntoTrianglePlane
                 const auto calculatedData = t.ProjectPointOntoTrianglePlane(expectedExtrudedPoint);

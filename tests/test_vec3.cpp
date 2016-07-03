@@ -8,56 +8,132 @@ using namespace rabbit;
 
 namespace
 {
-    const Vec3 v1(1.0f, 2.0f, 3.3f);
-    const Vec3 v2(2.0f, 3.0f, 1.0f);
+    mt19937::result_type seed = time(0);
+    auto real_rand = std::bind(std::uniform_real_distribution<double>(0.0,1), mt19937(seed));
 }
 
 BOOST_AUTO_TEST_CASE(TestVec3_DotProduct)
 {
+    for(unsigned i=0;i<1000;++i)
     {
-        auto dotProd = Vec3::dotProduct(v1, v2);
-        BOOST_ASSERT(dotProd == 11.3f);
+        const double a = real_rand();
+        const double b = real_rand();
+        const double c = real_rand();
+        const double d = real_rand();
+        const double e = real_rand();
+        const double f = real_rand();
+
+        const Vec3 v1(a, b, c);
+        const Vec3 v2(d, e, f);
+        const auto expected = a*d + b*e + c*f;
+
+        {
+            auto dotProd = Vec3::dotProduct(v1, v2);
+            BOOST_ASSERT(dotProd == expected);
+        }
+
+        {
+            auto dotProd = v1.dotProduct(v2);
+            BOOST_ASSERT(dotProd == expected);
+        }
     }
 
-    {
-        auto dotProd = v1.dotProduct(v2);
-        BOOST_ASSERT(dotProd == 11.3f);
-    }
 }
+
 
 BOOST_AUTO_TEST_CASE(TestVec3_Normalize)
 {
-    BOOST_ASSERT(std::abs((v1.normalise()).magnitude()-1.0f) < Vec3::EPSILON);
-    BOOST_ASSERT(std::abs((v2.normalise()).magnitude()-1.0f) < Vec3::EPSILON);
+    for(unsigned i=0;i<1000000;++i)
+    {
+        const double a = real_rand();
+        const double b = real_rand();
+        const double c = real_rand();
+        const double d = real_rand();
+        const double e = real_rand();
+        const double f = real_rand();
+
+        const Vec3 v1(a, b, c);
+        const Vec3 v2(d, e, f);
+        BOOST_ASSERT(std::abs((v1.normalise()).magnitude()-1.0) < Vec3::EPSILON);
+        BOOST_ASSERT(std::abs((v2.normalise()).magnitude()-1.0) < Vec3::EPSILON);
+    }
 }
+
 
 BOOST_AUTO_TEST_CASE(TestVec3_CrossProduct)
 {
-    auto v1CrossV2 = Vec3::crossProduct(v1,v2);
-    BOOST_ASSERT(Vec3::dotProduct(v1CrossV2, v1) < Vec3::EPSILON);
-    BOOST_ASSERT(Vec3::dotProduct(v1CrossV2, v2) < Vec3::EPSILON);
+    for(unsigned i=0;i<100000;++i)
+    {
+        const double a = real_rand();
+        const double b = real_rand();
+        const double c = real_rand();
+        const double d = real_rand();
+        const double e = real_rand();
+        const double f = real_rand();
+
+        const Vec3 v1(a, b, c);
+        const Vec3 v2(d, e, f);
+        auto v1CrossV2 = Vec3::crossProduct(v1,v2);
+        BOOST_ASSERT(std::abs(Vec3::dotProduct(v1CrossV2, v1)) < 1.0e-14);
+        BOOST_ASSERT(std::abs(Vec3::dotProduct(v1CrossV2, v2)) < 1.0e-14);
+    }
 }
+
 
 BOOST_AUTO_TEST_CASE(TestVec3_Addition)
 {
-    auto v3 = v1 + v2;
-    BOOST_ASSERT(v3.X() == 3.0f);
-    BOOST_ASSERT(v3.Y() == 5.0f);
-    BOOST_ASSERT(v3.Z() == 4.3f);
+    for(unsigned i=0;i<10000;++i)
+    {
+        const double a = real_rand();
+        const double b = real_rand();
+        const double c = real_rand();
+        const double d = real_rand();
+        const double e = real_rand();
+        const double f = real_rand();
+
+        const Vec3 v1(a, b, c);
+        const Vec3 v2(d, e, f);
+        auto v3 = v1 + v2;
+        BOOST_ASSERT(v3.X() == a+d);
+        BOOST_ASSERT(v3.Y() == b+e);
+        BOOST_ASSERT(v3.Z() == c+f);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(TestVec3_ScalarMultiplication)
 {
-    auto v3 = v1*2.0f;
-    BOOST_ASSERT(v3.X() == 2.0f);
-    BOOST_ASSERT(v3.Y() == 4.0f);
-    BOOST_ASSERT(v3.Z() == 6.6f);
+    for(unsigned i=0;i<100000;++i)
+    {
+        const double a = real_rand();
+        const double b = real_rand();
+        const double c = real_rand();
+
+        const Vec3 v1(a, b, c);
+        const auto scalar = real_rand();
+        auto v3 = v1*scalar;
+        BOOST_ASSERT(v3.X() == a*scalar);
+        BOOST_ASSERT(v3.Y() == b*scalar);
+        BOOST_ASSERT(v3.Z() == c*scalar);
+    }
 }
+
 
 BOOST_AUTO_TEST_CASE(TestVec3_IsSame)
 {
-    Vec3 v3 = v1*2.0f;
-    Vec3 v4 = v1;
-    BOOST_ASSERT(!v3.isSameAs(v1));
-    BOOST_ASSERT(v4.isSameAs(v1));
+    for(unsigned i=0;i<100000;++i)
+    {
+        const double a = real_rand();
+        const double b = real_rand();
+        const double c = real_rand();
+        const double d = real_rand();
+        const double e = real_rand();
+        const double f = real_rand();
+
+        const Vec3 v1(a, b, c);
+        const Vec3 v2(d, e, f);
+        Vec3 v3 = v1*real_rand();
+        Vec3 v4 = v1;
+        BOOST_ASSERT(!v3.isSameAs(v1));
+        BOOST_ASSERT(v4.isSameAs(v1));
+    }
 }

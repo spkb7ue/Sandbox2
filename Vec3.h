@@ -12,7 +12,7 @@ template <class T> class Vec3_
         T x, y, z;
     public:
 
-        static constexpr T EPSILON = T(1.0E-6);
+        static constexpr T EPSILON = T(1.0E-12);
 
         // Default constructor
         Vec3_():x(T(0)),y(T(0)),z(T(0)){}
@@ -149,7 +149,7 @@ std::ostream& operator << (std::ostream& os, const Vec3_<T>& v)
     return os;
 }
 
-typedef Vec3_<float> Point;
-typedef Vec3_<float> Vec3;
+typedef Vec3_<double> Point;
+typedef Vec3_<double> Vec3;
 
 }
