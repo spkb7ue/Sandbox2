@@ -1,39 +1,64 @@
 #pragma once
 
 #include "Vec3.h"
-#include <boost/optional.hpp>
 
 namespace rabbit
 {
-    struct Triangle
-    {
-        Point P0;
-        Point P1;
-        Point P2;
-        Vec3 P0_P1; ///< P0 to P1 Vector
-        Vec3 P0_P2; ///< P0 to P2 Vector;
-        Vec3 P1_P2; ///< P1 to P2 Vector
-        Vec3 Normal; ///< Normal to the Triangle's plane
-        Vec3 Centroid;
-        double Area;
 
-        bool IsPointWithinExtrudedTriangle(const Point& p)const;
+template<typename T>
+class Tri
+{
+public:
+    Tri(const T& v0, const T& v1, const T& v2):
+        m_verts({v0, v1, v2}){}
 
-        std::pair<Point,double> ProjectPointOntoTrianglePlane(const Point& p) const;
+    T& Vert(unsigned index){return m_verts[index];}
+    const T& Vert(unsigned index)const {return m_verts[index];}
 
-        std::pair<double,double> CalcBarycentricCoords(const Point& p)const;
+    static const short NUM_VERTS = 3;
+    T m_verts[NUM_VERTS];
+};
 
-        std::pair<Point, double> CalcInPlaneDistanceToTriangle(const Point& p)const;
+typedef Tri<Vec3> Triangle3D;
 
-        std::pair<Point, double> CalcShortestDistanceFrom(const Point&)const;
+template<typename T>
+class TriangleProps{};
 
-        Point CalcPointFromBarycentricCoords(const double u, const double v) const;
-        Point CalcPointFromBarycentricCoords(std::pair<double,double> coords)const;
+template<>
+class TriangleProps<Triangle3D>
+{
+public:
+    TriangleProps():m_data(Vec3(), Vec3(),Vec3()){}
+    Triangle3D m_data;
+};
 
-        std::tuple<Point, double, bool> CheckPointSegDist(const Vec3& origin,
-                                                          const Vec3& seg,
-                                                          const Vec3& P)const;
+struct Triangle
+{
+    Point P0;
+    Point P1;
+    Point P2;
+    Vec3 P0_P1; ///< P0 to P1 Vector
+    Vec3 P0_P2; ///< P0 to P2 Vector;
+    Vec3 P1_P2; ///< P1 to P2 Vector
+    Vec3 Normal; ///< Normal to the Triangle's plane
 
-        Triangle(const Point& p0, const Point& p1, const Point& p2);
-    };
+    bool IsPointWithinExtrudedTriangle(const Point& p)const;
+
+    std::pair<Point,double> ProjectPointOntoTrianglePlane(const Point& p) const;
+
+    std::pair<double,double> CalcBarycentricCoords(const Point& p)const;
+
+    std::pair<Point, double> CalcInPlaneDistanceToTriangle(const Point& p)const;
+
+    std::pair<Point, double> CalcShortestDistanceFrom(const Point&)const;
+
+    Point CalcPointFromBarycentricCoords(const double u, const double v) const;
+    Point CalcPointFromBarycentricCoords(std::pair<double,double> coords)const;
+
+    std::tuple<Point, double, bool> CheckPointSegDist(const Vec3& origin,
+                                                      const Vec3& seg,
+                                                      const Vec3& P)const;
+
+    Triangle(const Point& p0, const Point& p1, const Point& p2);
+};
 }

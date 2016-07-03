@@ -188,7 +188,6 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
                     cout<<t.CalcPointFromBarycentricCoords(bc)<<endl;
                     cout<<t.ProjectPointOntoTrianglePlane(extrudedPoint).first<<endl;
                     cout<<t.ProjectPointOntoTrianglePlane(extrudedPoint).second<<endl;
-                    cout<<t.Area<<endl;
                     cout<<t.P0<<endl;
                     cout<<t.P1<<endl;
                     cout<<t.P2<<endl;
