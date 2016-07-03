@@ -41,25 +41,15 @@ namespace
 
 int main()
 {
+    Point p0(-0.369095000000000,  -0.541160010000000,   0.131570000000000);
+    Point p1(-0.388785020000000,  -0.531530000000000 ,  0.125940000000000);
+    Point p2(-0.4127550100000000 , -0.5245500200000000 ,  0.0715800000000000);
+    Point p(-0.4127550100000000,  -0.5245500200000000  , 0.0715800000000000);
+    Triangle t(p0, p1, p2);
     cout<<"Hello World\n"<<endl;
-    rabbit::Mesh mesh(fileName);
-    const auto& triangles = mesh.GetTriangles();
-    for(const Triangle& t: triangles)
-    {
-        double u,v;
-        for(unsigned i = 0; i<100; ++i)
-        {
-            const auto testPointData = GenerateExtrudedPointData(t);
-            const Point& expectedProjectedPoint = std::get<0>(testPointData);
-            const Point& expectedExtrudedPoint = std::get<1>(testPointData);
+    cout<<boolalpha;
+    auto pt = t.CheckPointSegDist(p0, p1-p0, p);
+    bool pass = pt.is_initialized();
+    cout<<pass<<endl;
 
-            std::tie(u,v) = t.CalcBarycentricCoords(expectedExtrudedPoint);
-            Point calculatedProjectedPoint = t.P0 + t.P0_P1*u + t.P0_P2*(v*3.0);
-            cout<<calculatedProjectedPoint<<endl;
-            cout<<expectedProjectedPoint<<endl;
-            cout<<std::boolalpha<<calculatedProjectedPoint.isSameAs(expectedProjectedPoint)<<endl;
-            cout<<"---------------\n";
-            cin.get();
-        }
-    }
 }

@@ -15,8 +15,7 @@ Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
  P1_P2(p2-p1),
  Normal((Vec3::crossProduct(P0_P1,P0_P2)).normalise()),
  Centroid((P0+P1+P2)*1.0f/3.0f),
- Area((Vec3::crossProduct(P0_P1,P0_P2)).magnitude()*0.5f),
-IsDegenerate(Area < 1.0E-4f)
+ Area((Vec3::crossProduct(P0_P1,P0_P2)).magnitude()*0.5f)
 {
 
 }
@@ -89,12 +88,11 @@ boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
                                                    const Vec3& seg,
                                                    const Vec3& P)const
 {
-    const Vec3 normalSeg = (Vec3::crossProduct(Normal,seg)).normalise();
-    const Vec3 P_origin = origin - P;
-    auto distToSeg = Vec3::dotProduct(normalSeg, P_origin);
-    const Vec3 Px = P + normalSeg*distToSeg;
-    const Vec3 origin_Px = Px - origin;
+    const Vec3 origin_P = P - origin;
     const Vec3 unitVecAlongSeg = seg.normalise();
+
+    const Vec3 Px = origin + unitVecAlongSeg*Vec3::dotProduct(unitVecAlongSeg,origin_P);
+    const Vec3 origin_Px = Px - origin;
     auto alongSeg = Vec3::dotProduct(unitVecAlongSeg, origin_Px);
     if(alongSeg >= -0.01 && alongSeg <= seg.magnitude() + 0.01)
     {
@@ -102,11 +100,6 @@ boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
     }
     else
     {
-        cout<<boolalpha<<endl;
-        cout<<P0<<endl;
-        cout<<P1<<endl<<P2<<endl<<P<<endl<<Px;
-        cout<<IsPointWithinExtrudedTriangle(P)<<endl;
-        cin.get();
         return boost::none;
     }
 }

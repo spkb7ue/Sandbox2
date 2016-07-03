@@ -16,7 +16,6 @@ namespace rabbit
         Vec3 Normal; ///< Normal to the Triangle's plane
         Vec3 Centroid;
         double Area;
-        bool IsDegenerate;
 
         bool IsPointWithinExtrudedTriangle(const Point& p)const;
 

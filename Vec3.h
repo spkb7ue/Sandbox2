@@ -53,7 +53,8 @@ template <class T> class Vec3_
 
             if (magnitude > EPSILON)
             {
-                return Vec3_<T>(x/magnitude, y/magnitude, z/magnitude);
+                T oneOverMag = 1.0/magnitude;
+                return Vec3_<T>(x*oneOverMag, y*oneOverMag, z*oneOverMag);
             }
             else
             {
