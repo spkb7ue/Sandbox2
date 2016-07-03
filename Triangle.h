@@ -112,7 +112,17 @@ public:
     bool IsPointWithinShapeExtrudedAlongNormal(const Point& point)const;
 
     TriangleProps3D::BarycentricCoords CalcBarycentricCoords(const Point& P)const;
+
+    TriangleProps3D::PointIntersectionResult ProjectPointOntoShapePlane(const Point& p)const;
 };
+
+template<bool isDeformable>
+TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::ProjectPointOntoShapePlane(const Point& p)const
+{
+    const auto p_P0 = this->m_verts[0] - p;
+    auto signedDist = Vec3::dotProduct(p_P0, this->m_normal);
+    return TriangleProps3D::PointIntersectionResult(Point(p + this->m_normal*signedDist), -signedDist);
+}
 
 template<bool isDeformable>
 TriangleProps3D::BarycentricCoords TriangleV1<isDeformable>::CalcBarycentricCoords(const Point& P)const
