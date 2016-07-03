@@ -216,24 +216,44 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
     }
 }
 
-
 BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist)
 {
     // Create test triangles
     rabbit::Mesh mesh(FILE_NAME);
     const auto& triangles = mesh.GetTriangles();
 
-    int i = 0;
     for(const Triangle& t : triangles)
     {
-        cout<<i++<<endl;
-        Point p = GenerateTriangleInternalPoint(t);
-        boost::optional<Vec3> px = t.CheckPointSegDist(t.P0, t.P0_P1, p);
-        bool pass = px.is_initialized();
-        if(!pass)
+        for(unsigned i=0;i<1000;++i)
         {
+            Point p = GenerateTriangleInternalPoint(t);
+            int numSegs = 0;
 
+            {   // Check internal P0_P1
+                boost::optional<Vec3> px = t.CheckPointSegDist(t.P0, t.P0_P1, p);
+                if(px.is_initialized())
+                {
+                    ++numSegs;
+                }
+            }
+
+            {   // Check internal P0_P2
+                boost::optional<Vec3> px = t.CheckPointSegDist(t.P0, t.P0_P2, p);
+                if(px.is_initialized())
+                {
+                    ++numSegs;
+                }
+            }
+
+            {   // Check internal P0_P2
+                boost::optional<Vec3> px = t.CheckPointSegDist(t.P1, t.P1_P2, p);
+                if(px.is_initialized())
+                {
+                    ++numSegs;
+                }
+            }
+
+            BOOST_ASSERT(numSegs >= 2);
         }
-        BOOST_ASSERT(px.is_initialized());
     }
 }

@@ -94,7 +94,7 @@ boost::optional<Point> Triangle::CheckPointSegDist(const Vec3& origin,
     const Vec3 Px = origin + unitVecAlongSeg*Vec3::dotProduct(unitVecAlongSeg,origin_P);
     const Vec3 origin_Px = Px - origin;
     auto alongSeg = Vec3::dotProduct(unitVecAlongSeg, origin_Px);
-    if(alongSeg >= -0.01 && alongSeg <= seg.magnitude() + 0.01)
+    if(alongSeg >= -Vec3::EPSILON && alongSeg <= seg.magnitude() + Vec3::EPSILON)
     {
         return Px;
     }
