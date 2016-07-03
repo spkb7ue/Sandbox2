@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.6)
 project(Rabbit C CXX)
 set(CMAKE_CXX_STANDARD 11)
 
-file(GLOB Rabbit_Src "*.h" "*.cpp")
+file(GLOB Rabbit_Src "*.cpp")
 file(GLOB Rabbit_Inc "*.h")
 
 set(CMAKE_BUILD_TYPE debug)
