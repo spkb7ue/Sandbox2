@@ -17,6 +17,6 @@ int main()
 {
     Point p;
     Point q; q.Y() = 10.0f;
-    TriangleProps<Tri<Vec3>> t;
-    cout<<t.m_data.Vert(2);
+    TriangleProps<Tri<Vec3>> t(p,q,p);
+    cout<<t.m_data.Vert(1);
 }

@@ -5,10 +5,13 @@
 namespace rabbit
 {
 
-template<typename T>
+template<typename T, bool Deformable = false>
 class Tri
 {
 public:
+
+    typedef T VertType;
+
     Tri(const T& v0, const T& v1, const T& v2):
         m_verts({v0, v1, v2}){}
 
@@ -16,7 +19,7 @@ public:
     const T& Vert(unsigned index)const {return m_verts[index];}
 
     static const short NUM_VERTS = 3;
-    T m_verts[NUM_VERTS];
+    VertType m_verts[NUM_VERTS];
 };
 
 typedef Tri<Vec3> Triangle3D;
@@ -28,7 +31,7 @@ template<>
 class TriangleProps<Triangle3D>
 {
 public:
-    TriangleProps():m_data(Vec3(), Vec3(),Vec3()){}
+    TriangleProps(const Vec3& v0, const Vec3& v1, const Vec3& v2):m_data(v0, v1,v2){}
     Triangle3D m_data;
 };
 
