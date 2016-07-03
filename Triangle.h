@@ -121,7 +121,7 @@ TriangleProps3D::BarycentricCoords TriangleV1<isDeformable>::CalcBarycentricCoor
     const auto c = Vec3::dotProduct(this->m_edges[1],this->m_edges[0]);
     const auto d = Vec3::dotProduct(this->m_edges[1],this->m_edges[1]);
 
-    const auto inverseDet = 1.0f/(a*d - c*b);
+    const auto inverseDet = 1.0/(a*d - c*b);
     const auto u = inverseDet * (d*x - b*y);
     const auto v = inverseDet * (-c*x + a*y);
     return TriangleProps3D::BarycentricCoords(u,v);
