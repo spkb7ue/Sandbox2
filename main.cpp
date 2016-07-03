@@ -40,6 +40,14 @@ public:
 
     IShape(std::initializer_list<T> verts){
         std::copy(verts.begin(), verts.end(), const_cast<T*>(m_verts));
+        T* edges = const_cast<T*>(m_edges);
+        edges[Indices::EdgeIndices::eP0P1] = m_verts[Indices::VertIndices::eP1] - m_verts[Indices::VertIndices::eP0];
+        edges[Indices::EdgeIndices::eP0P2] = m_verts[Indices::VertIndices::eP2] - m_verts[Indices::VertIndices::eP0];
+        edges[Indices::EdgeIndices::eP1P2] = m_verts[Indices::VertIndices::eP2] - m_verts[Indices::VertIndices::eP1];
+
+        T* normal = const_cast<T*>(&m_normal);
+        *normal =(T::crossProduct(m_edges[Indices::EdgeIndices::eP0P1],
+                         m_edges[Indices::EdgeIndices::eP0P2])).normalise();
     }
 
 
@@ -49,6 +57,8 @@ public:
 
 protected:
     VertType m_verts[Indices::NUM_VERTICES];
+    VecType m_edges[Indices::NUM_VERTICES];
+    VecType m_normal;
 };
 
 struct TriangleProps3D
