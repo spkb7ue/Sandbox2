@@ -29,13 +29,6 @@ template <class T> class Vec3_
         x(vec.X()),y(vec.Y()),z(vec.Z())
         {}
 
-        void set(const T &xValue, const T &yValue, const T &zValue)
-        {
-            x = xValue;
-            y = yValue;
-            z = zValue;
-        }
-
         T& X() { return x; }
         const T& X() const {return x;}
 
@@ -91,16 +84,6 @@ template <class T> class Vec3_
             return Vec3_(vec1.y * vec2.z - vec1.z * vec2.y,
                         vec1.z * vec2.x - vec1.x * vec2.z,
                         vec1.x * vec2.y - vec1.y * vec2.x);
-        }
-
-        // Method to return the distance between two vectors in 3D space
-        static T getDistance(const Vec3_ &v1, const Vec3_ &v2)
-        {
-            T dx = v2.x - v1.x;
-            T dy = v2.y - v1.y;
-            T dz = v2.z - v1.z;
-
-            return sqrt(dx * dx + dy * dy + dz * dz);
         }
 
         // Overloaded multiply operator to multiply a vector by a scalar

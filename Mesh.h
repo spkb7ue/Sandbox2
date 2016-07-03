@@ -7,13 +7,11 @@
 
 namespace rabbit
 {
-    class Mesh 
+    class Mesh
     {
     public:
 
         explicit Mesh(std::string fileName);
-
-
         std::vector<Triangle>& GetTriangles();
     private:
         std::vector<Triangle> m_triangles;
