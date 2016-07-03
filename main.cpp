@@ -37,6 +37,7 @@ public:
     typedef typename IsPropertyModifiable<T,isDeformable>::type VertType;
     typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
     typedef typename Indices::VertIndices VertIndices;
+    typedef typename Indices::EdgeIndices EdgeIndices;
 
     IShape(const T& v0, const T& v1, const T& v2):
         m_verts({v0, v1, v2}),
@@ -45,7 +46,15 @@ public:
     }
 
     VertType& Vert(VertIndices index){
-        return m_verts[index];
+        return m_verts[static_cast<short>(index)];
+    }
+
+    VecType& Edge(EdgeIndices index){
+        return m_edges[static_cast<short>(index)];
+    }
+
+    VecType& Normal(){
+        return m_normal;
     }
 
 protected:
