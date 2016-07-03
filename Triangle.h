@@ -5,18 +5,32 @@
 namespace rabbit
 {
 
-template<typename T, bool Deformable = false>
+template<typename T, bool deformable>
+struct IsPropertyModifiable{};
+
+template<typename T>
+struct IsPropertyModifiable<T,true>
+{
+    typedef T type;
+};
+
+template<typename T>
+struct IsPropertyModifiable<T,false>
+{
+    typedef const T type;
+};
+
+template<typename T, bool isTriangleDeformable = false>
 class Tri
 {
 public:
 
-    typedef T VertType;
+    typedef typename IsPropertyModifiable<T,isTriangleDeformable>::type VertType;
 
     Tri(const T& v0, const T& v1, const T& v2):
         m_verts({v0, v1, v2}){}
 
-    T& Vert(unsigned index){return m_verts[index];}
-    const T& Vert(unsigned index)const {return m_verts[index];}
+    VertType& Vert(unsigned index){return m_verts[index];}
 
     static const short NUM_VERTS = 3;
     VertType m_verts[NUM_VERTS];
