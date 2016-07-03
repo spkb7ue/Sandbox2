@@ -163,8 +163,7 @@ public:
 template<bool isDeformable>
 TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestDistanceFrom(const Point& p) const
 {
-    /*
-    auto projectedPointData = ProjectPointOntoShapePlane(p);
+    const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.Dist;
     const Point& projectedPoint = projectedPointData.P;
     if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
@@ -176,25 +175,25 @@ TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestD
     else
     {
         // Lets check intersection with the other edges now.
-        auto P0_P1_Data = CheckPointSegDist(m_verts[0],m_edges[0],projectedPoint);
-        auto d0 = std::get<1>(P0_P1_Data);
+        const auto P0_P1_Data = this->CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
+        const auto d0 = P0_P1_Data.Dist;
 
-        auto P0_P2_Data = CheckPointSegDist(P0,P0_P2,projectedPoint);
-        auto d1 = std::get<1>(P0_P2_Data);
+        const auto P0_P2_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
+        const auto d1 = P0_P2_Data.Dist;
 
-        auto P1_P2_Data = CheckPointSegDist(P1,P1_P2,projectedPoint);
-        auto d2 = std::get<1>(P1_P2_Data);
+        const auto P1_P2_Data = CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
+        const auto d2 = P1_P2_Data.Dist;
         if(d0 < d1)
         {
             if(d0 < d2)
             {
                 auto dist = sqrt(d0*d0 + pDist*pDist);
-                return std::make_pair(std::get<0>(P0_P1_Data), dist);
+                return TriangleProps3D::PointIntersectionResult(P0_P1_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return std::make_pair(std::get<0>(P1_P2_Data), dist);
+                return TriangleProps3D::PointIntersectionResult(P1_P2_Data.P, dist);
             }
         }
         else
@@ -202,16 +201,15 @@ TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestD
             if(d1 < d2)
             {
                 auto dist = sqrt(d1*d1 + pDist*pDist);
-                return std::make_pair(std::get<0>(P0_P2_Data), dist);
+                return TriangleProps3D::PointIntersectionResult(P0_P2_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return std::make_pair(std::get<0>(P1_P2_Data), dist);
+                return TriangleProps3D::PointIntersectionResult(P1_P2_Data.P, dist);
             }
         }
     }
-    */
 }
 
 template<bool isDeformable>
