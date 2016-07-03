@@ -24,29 +24,35 @@ template<typename T, bool isTriangleDeformable = false>
 class Tri
 {
 public:
-
     typedef typename IsPropertyModifiable<T,isTriangleDeformable>::type VertType;
+    typedef typename IsPropertyModifiable<T,isTriangleDeformable>::type EdgeType;
+
+    enum Edge
+    {
+        eP0P1 = 0,  ///< Vector from P0 to P1
+        eP0P2 = 1,  ///< Vector from P0 to P2
+        eP1P2 = 2   ///< Vector from P1 to P2
+    };
 
     Tri(const T& v0, const T& v1, const T& v2):
-        m_verts({v0, v1, v2}){}
+        m_verts({v0, v1, v2}),
+        m_edges({m_verts[1]-m_verts[0],
+                 m_verts[2]-m_verts[0],
+                 m_verts[2]-m_verts[1]})
+                 {}
 
-    VertType& Vert(unsigned index){return m_verts[index];}
+    VertType& Vert(unsigned index){
+        return m_verts[index];
+    }
+
+    EdgeType& Edge(Edge edgeID){
+        return m_edges[static_cast<unsigned>(edgeID)];
+    }
 
     static const short NUM_VERTS = 3;
     VertType m_verts[NUM_VERTS];
-};
+    EdgeType m_edges[NUM_VERTS];
 
-typedef Tri<Vec3> Triangle3D;
-
-template<typename T>
-class TriangleProps{};
-
-template<>
-class TriangleProps<Triangle3D>
-{
-public:
-    TriangleProps(const Vec3& v0, const Vec3& v1, const Vec3& v2):m_data(v0, v1,v2){}
-    Triangle3D m_data;
 };
 
 struct Triangle
