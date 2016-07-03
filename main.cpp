@@ -59,8 +59,8 @@ int main()
 {
     Point p;
     Point q; q.Y() = 10.0f;
-    RigidTriangle t;
-    t.Vert(TriangleProps3D::VertIndices::eP0);
-    t.CalcBarycentricCoords(Point());
+    t(p,q,p);
+    p = q*4.0;
+    t.Vert(TriangleProps3D::VertIndices::eP0) = q*4.0;
 
 }

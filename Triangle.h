@@ -93,10 +93,11 @@ class TriangleV1:
                     TriangleProps3D>
 {
 public:
-    TriangleV1():IShape<Vec3,
-                        isDeformable,
-                        TriangleV1<isDeformable>,
-                        TriangleProps3D>(Vec3(), Vec3(), Vec3()){}
+    TriangleV1(const Vec3& p0, const Vec3& p1, const Vec3& p2):
+         IShape<Vec3,
+                isDeformable,
+                TriangleV1<isDeformable>,
+                TriangleProps3D>(p0, p1, p2){}
     bool IsPointWithinShapeExtrudedAlongNormal(const Point& point)const;
 
     TriangleProps3D::BarycentricCoords CalcBarycentricCoords(const Point& P)const;
