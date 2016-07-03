@@ -23,14 +23,14 @@ struct IsPropertyModifiable<T,false>
 template<typename T,
          bool isDeformable,
          typename Derived,
-         typename Indices>
+         typename ShapeProps>
 class IShape
 {
 public:
     typedef typename IsPropertyModifiable<T,isDeformable>::type VertType;
     typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
-    typedef typename Indices::VertIndices VertIndices;
-    typedef typename Indices::EdgeIndices EdgeIndices;
+    typedef typename ShapeProps::VertIndices VertIndices;
+    typedef typename ShapeProps::EdgeIndices EdgeIndices;
 
     IShape(const T& v0, const T& v1, const T& v2):
         m_verts({v0, v1, v2}),
@@ -54,10 +54,12 @@ public:
         return static_cast<Derived*>(this)->IsPointWithinShapeExtrudedAlongNormal(point);
     }
 
-    //std::pair<Point,double> Triangle::ProjectPointOntoTrianglePlane(const Point& p) const;
+    typename ShapeProps::PointIntersectionResult ProjectPointOntoShapePlane(const T& point) const{
+        return static_cast<Derived*>(this)->IsPointWithinShapeExtrudedAlongNormal(point);
+    }
 
-    VertType m_verts[Indices::NUM_VERTICES];
-    VecType m_edges[Indices::NUM_VERTICES];
+    VertType m_verts[ShapeProps::NUM_VERTICES];
+    VecType m_edges[ShapeProps::NUM_VERTICES];
     VecType m_normal;
 };
 
