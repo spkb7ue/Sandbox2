@@ -38,7 +38,9 @@ public:
     typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
     typedef typename Indices::VertIndices VertIndices;
 
-    IShape(std::initializer_list<T> verts){ }
+    IShape(std::initializer_list<T> verts){
+        std::copy(verts.begin(), verts.end(), const_cast<T*>(m_verts));
+    }
 
 
     VertType& Vert(VertIndices index){
