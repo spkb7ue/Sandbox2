@@ -10,7 +10,7 @@ using namespace std;
 using namespace rabbit;
 namespace
 {
-    const std::string fileName = "rabbit.triangles";
+const std::string fileName = "rabbit.triangles";
 
 template<typename T, bool deformable>
 struct IsPropertyModifiable{};
@@ -39,6 +39,8 @@ public:
     typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
     typedef typename Indices::VertIndices VertIndices;
 
+    IShape(){}
+
     VertType& Vert(VertIndices index){
         return m_verts[index];
     }
@@ -59,15 +61,17 @@ struct TriangleIndices
 
 template<bool isDeformable = false>
 class TriangleV1:
-    public IShape<Vec3, isDeformable, TriangleV1<isDeformable>, TriangleIndices, 3>
+    public IShape<  Vec3,
+                    isDeformable,
+                    TriangleV1<isDeformable>,
+                    TriangleIndices,
+                    3>
 {
 public:
-    enum VertIndices : unsigned
-    {
-        eP0 = 0,    ///< Refers to Vertex P0
-        eP1 = 1,    ///< Refers to Vertex P1
-        eP2 = 2     ///< Refers to Vertex P2
-    };
+    TriangleV1():IShape<Vec3,
+                        isDeformable,
+                        TriangleV1<isDeformable>,
+                        TriangleIndices, 3>(){}
 };
 
 
