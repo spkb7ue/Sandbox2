@@ -68,6 +68,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
     }
 }
 
+/*
 BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist)
 {
     // Create test triangles
@@ -86,7 +87,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist)
         BOOST_ASSERT(px.is_initialized());
     }
 }
-
+*/
 BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 {
     // Create test triangles
@@ -191,15 +192,11 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
     rabbit::Mesh mesh(FILE_NAME);
     const auto& triangles = mesh.GetTriangles();
 
-    for(unsigned i = 0; i < 1000; ++i)
+
+    for(const Triangle& t : triangles)
     {
-        for(const Triangle& t : triangles)
+        for(unsigned i = 0; i < 1000; ++i)
         {
-            if(t.IsDegenerate)
-            {
-                // Treat the triangle like a point
-                continue;
-            }
             const auto testPointData = GenerateExtrudedPointData(t);
             const Point& extrudedPoint = std::get<1>(testPointData);
             {
