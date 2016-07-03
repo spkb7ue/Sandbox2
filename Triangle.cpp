@@ -111,3 +111,52 @@ std::tuple<Point, double, bool> Triangle::CheckPointSegDist(const Vec3& origin,
         }
     }
 }
+
+std::pair<Point, double> Triangle::CalcShortestDistanceFrom(const Point& p)const
+{
+    auto projectedPointData = ProjectPointOntoTrianglePlane(p);
+    const auto pDist = projectedPointData.second;
+    const Point projectedPoint = std::get<0>(projectedPointData);
+    if(IsPointWithinExtrudedTriangle(projectedPoint))
+    {
+        return projectedPointData;
+    }
+    else
+    {
+        // go ahead and check with the other edges now.
+        auto P0_P1_Data = CheckPointSegDist(P0,P0_P1,projectedPoint);
+        auto d0 = std::get<1>(P0_P1_Data);
+
+        auto P0_P2_Data = CheckPointSegDist(P0,P0_P2,projectedPoint);
+        auto d1 = std::get<1>(P0_P2_Data);
+
+        auto P1_P2_Data = CheckPointSegDist(P1,P1_P2,projectedPoint);
+        auto d2 = std::get<1>(P1_P2_Data);
+        if(d0 < d1)
+        {
+            if(d0 < d2)
+            {
+                auto dist = sqrt(d0*d0 + pDist*pDist);
+                return std::make_pair(std::get<0>(P0_P1_Data), dist);
+            }
+            else
+            {
+                auto dist = sqrt(d2*d2 + pDist*pDist);
+                return std::make_pair(std::get<0>(P1_P2_Data), dist);
+            }
+        }
+        else
+        {
+            if(d1 < d2)
+            {
+                auto dist = sqrt(d1*d1 + pDist*pDist);
+                return std::make_pair(std::get<0>(P0_P2_Data), dist);
+            }
+            else
+            {
+                auto dist = sqrt(d2*d2 + pDist*pDist);
+                return std::make_pair(std::get<0>(P1_P2_Data), dist);
+            }
+        }
+    }
+}

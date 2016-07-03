@@ -25,6 +25,8 @@ namespace rabbit
 
         std::pair<Point, double> CalcInPlaneDistanceToTriangle(const Point& p)const;
 
+        std::pair<Point, double> CalcShortestDistanceFrom(const Point&)const;
+
         Point CalcPointFromBarycentricCoords(const double u, const double v) const;
         Point CalcPointFromBarycentricCoords(std::pair<double,double> coords)const;
 
