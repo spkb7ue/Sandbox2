@@ -10,26 +10,23 @@ template <class T>
 class Vec3_
 {
     private:
-        T x, y, z;
         std::array<T, 3> m_coords;
     public:
 
         static constexpr T EPSILON = T(1.0E-12);
 
         // Default constructor
-        Vec3_():x(T(0)),y(T(0)),z(T(0)),m_coords({0, 0, 0}){}
+        Vec3_():m_coords({0, 0, 0}){}
 
         // Three parameter constructor
         Vec3_(const T& xValue, const T& yValue, const T& zValue)
         :m_coords({xValue, yValue, zValue})
         {
-            x = xValue;
-            y = yValue;
-            z = zValue;
+
         }
 
         Vec3_(const Vec3_<T>& vec):
-        x(vec.X()),y(vec.Y()),z(vec.Z()),m_coords({vec.X(), vec.Y(), vec.Z()})
+        m_coords({vec.X(), vec.Y(), vec.Z()})
         {}
 
         T& X() { return m_coords[0]; }
@@ -49,7 +46,7 @@ class Vec3_
             if (mag > EPSILON)
             {
                 T oneOverMag = 1.0/mag;
-                return Vec3_<T>(x*oneOverMag, y*oneOverMag, z*oneOverMag);
+                return Vec3_<T>(X()*oneOverMag, Y()*oneOverMag, Z()*oneOverMag);
             }
             else
             {
@@ -74,9 +71,9 @@ class Vec3_
 
         bool isSameAs(const Vec3_& vec, const T tol = EPSILON)const
         {
-            return  fabs(x-vec.X()) < tol &&
-                    fabs(y-vec.Y()) < tol &&
-                    fabs(z-vec.Z()) < tol;
+            return  fabs(X()-vec.X()) < tol &&
+                    fabs(Y()-vec.Y()) < tol &&
+                    fabs(Z()-vec.Z()) < tol;
         }
 
 
@@ -91,7 +88,7 @@ class Vec3_
         // Overloaded multiply operator to multiply a vector by a scalar
         Vec3_ operator*(const T &value) const
         {
-            return Vec3_<T>(x * value, y * value, z * value);
+            return Vec3_<T>(X() * value, Y() * value, Z() * value);
         }
 
         // Overloaded multiply and assign operator to multiply a vector by a scalar
@@ -123,7 +120,7 @@ class Vec3_
         // Overloaded multiply operator to multiply a vector by a scalar
         Vec3_ operator/(const T &value) const
         {
-            return Vec3_<T>(x / value, y / value, z / value);
+            return Vec3_<T>(X() / value, Y() / value, Z() / value);
         }
 };
 
