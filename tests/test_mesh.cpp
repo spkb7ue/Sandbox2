@@ -20,7 +20,6 @@ BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV1)
 
         // Make sure we have loaded the right number of triangles
         std::vector<Triangle>& triangles = mesh.GetTriangles();
-        cout<<triangles.size()<<endl;
         BOOST_ASSERT(triangles.size() == NUM_TRIANGLES);
     }
     catch(...)
