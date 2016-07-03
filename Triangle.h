@@ -129,7 +129,9 @@ TriangleProps3D::BarycentricCoords TriangleV1<isDeformable>::CalcBarycentricCoor
 template<bool isDeformable>
 bool TriangleV1<isDeformable>::IsPointWithinShapeExtrudedAlongNormal(const Vec3& point)const
 {
-
+    TriangleProps3D::BarycentricCoords coords = CalcBarycentricCoords(point);
+    const double tol = 0.000001;
+    return ( coords.u >= -tol && coords.v >= -tol && coords.u+coords.v <= 1.0f + tol);
 }
 
 typedef TriangleV1<false> RigidTriangle;
