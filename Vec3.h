@@ -117,7 +117,6 @@ class Vec3_
             return *this;
         }
 
-        // Overloaded multiply operator to multiply a vector by a scalar
         Vec3_ operator/(const T &value) const
         {
             return Vec3_<T>(X() / value, Y() / value, Z() / value);
