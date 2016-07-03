@@ -38,7 +38,8 @@ public:
     typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
     typedef typename Indices::VertIndices VertIndices;
 
-    IShape(){}
+    IShape(std::initializer_list<T> verts){ }
+
 
     VertType& Vert(VertIndices index){
         return m_verts[index];
@@ -71,9 +72,8 @@ public:
     TriangleV1():IShape<Vec3,
                         isDeformable,
                         TriangleV1<isDeformable>,
-                        TriangleIndices>(){}
+                        TriangleIndices>({Vec3(), Vec3(), Vec3()}){}
 };
-
 
 template<typename T, bool isTriangleDeformable = false>
 class Tri
