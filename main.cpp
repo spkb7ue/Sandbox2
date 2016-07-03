@@ -12,93 +12,6 @@ namespace
 {
 const std::string fileName = "rabbit.triangles";
 
-template<typename T, bool deformable>
-struct IsPropertyModifiable{};
-
-template<typename T>
-struct IsPropertyModifiable<T,true>
-{
-    typedef T type;
-};
-
-template<typename T>
-struct IsPropertyModifiable<T,false>
-{
-    typedef const T type;
-};
-
-template<typename T,
-         bool isDeformable,
-         typename Derived,
-         typename Indices>
-class IShape
-{
-public:
-    typedef typename IsPropertyModifiable<T,isDeformable>::type VertType;
-    typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
-    typedef typename Indices::VertIndices VertIndices;
-    typedef typename Indices::EdgeIndices EdgeIndices;
-
-    IShape(const T& v0, const T& v1, const T& v2):
-        m_verts({v0, v1, v2}),
-        m_edges({v1-v0, v2-v0, v2-v1}),
-        m_normal((T::crossProduct(m_edges[0],m_edges[1])).normalise()){
-    }
-
-    VertType& Vert(VertIndices index){
-        return m_verts[static_cast<short>(index)];
-    }
-
-    VecType& Edge(EdgeIndices index){
-        return m_edges[static_cast<short>(index)];
-    }
-
-    VecType& Normal(){
-        return m_normal;
-    }
-
-protected:
-    VertType m_verts[Indices::NUM_VERTICES];
-    VecType m_edges[Indices::NUM_VERTICES];
-    VecType m_normal;
-};
-
-struct TriangleProps3D
-{
-    enum VertIndices : unsigned
-    {
-        eP0 = 0,    ///< Refers to Vertex P0
-        eP1 = 1,    ///< Refers to Vertex P1
-        eP2 = 2     ///< Refers to Vertex P2
-    };
-
-    enum EdgeIndices : unsigned
-    {
-        eP0P1 = 0,    ///< Refers to Edge P0 to P1
-        eP0P2 = 1,    ///< Refers to Edge P0 to P2
-        eP1P2 = 2     ///< Refers to Edge P1 to P2
-    };
-
-    static const unsigned NUM_VERTICES = 3;
-};
-
-template<bool isDeformable = false>
-class TriangleV1:
-    public IShape<  Vec3,
-                    isDeformable,
-                    TriangleV1<isDeformable>,
-                    TriangleProps3D>
-{
-public:
-    TriangleV1():IShape<Vec3,
-                        isDeformable,
-                        TriangleV1<isDeformable>,
-                        TriangleProps3D>(Vec3(), Vec3(), Vec3()){}
-};
-
-typedef TriangleV1<false> RigidTriangle;
-typedef TriangleV1<true> FlexibleTriangle;
-
 template<typename T, bool isTriangleDeformable = false>
 class Tri
 {
@@ -148,5 +61,6 @@ int main()
     Point q; q.Y() = 10.0f;
     RigidTriangle t;
     t.Vert(TriangleProps3D::VertIndices::eP0);
+    t.CalcBarycentricCoords(Point());
 
 }
