@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
     }
 }
 
-BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist)
+BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
 {
     // Create test triangles
     rabbit::Mesh mesh(FILE_NAME);
