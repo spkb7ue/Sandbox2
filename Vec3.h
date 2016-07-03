@@ -17,11 +17,11 @@ class Vec3_
         static constexpr T EPSILON = T(1.0E-12);
 
         // Default constructor
-        Vec3_():x(T(0)),y(T(0)),z(T(0)){}
+        Vec3_():x(T(0)),y(T(0)),z(T(0)),m_coords({0, 0, 0}){}
 
         // Three parameter constructor
         Vec3_(const T& xValue, const T& yValue, const T& zValue)
-        :m_coords{xValue, yValue, zValue}
+        :m_coords({xValue, yValue, zValue})
         {
             x = xValue;
             y = yValue;
@@ -29,7 +29,7 @@ class Vec3_
         }
 
         Vec3_(const Vec3_<T>& vec):
-        x(vec.X()),y(vec.Y()),z(vec.Z())
+        x(vec.X()),y(vec.Y()),z(vec.Z()),m_coords({vec.X(), vec.Y(), vec.Z()})
         {}
 
         T& X() { return x; }
