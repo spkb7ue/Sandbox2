@@ -144,60 +144,60 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
     }
 }
 
-//BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
-//{
-//    // Load test triangles from file
-//    rabbit::Mesh mesh(FILE_NAME);
-//    const auto& triangles = mesh.GetTriangles();
-//
-//    for(unsigned i=0;i<100;++i)
-//    {
-//        // We repeat the test 100 times just to get sufficient coverage of tested points
-//        for(const auto& t : triangles)
-//        {
-//            const auto testPointData = GenerateExtrudedPointData(t);
-//
-//            const Point& expectedProjectedPoint = std::get<0>(testPointData);
-//            const Point& expectedExtrudedPoint = std::get<1>(testPointData);
-//            const double& expectedExtrudeDist = std::get<2>(testPointData);
-//
-//            {   // Calculate using ProjectPointOntoShapePlane
-//                const auto calculatedData = t.ProjectPointOntoShapePlane(expectedExtrudedPoint);
-//                const auto calculatedProjectedPoint = calculatedData.P;
-//                const auto calculatedDist = calculatedData.Dist;
-//
-//                BOOST_ASSERT_MSG(Sign(expectedExtrudeDist) == Sign(calculatedDist),
-//                                 "Signs of the computed distance don't match expected value");
-//
-//                bool isCalculatedDistanceWithinTolerance = std::abs(expectedExtrudeDist - calculatedDist) < 1.e-5;
-//                BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
-//                                "The distance from point to triangle does not match expected data");
-//
-//                bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(expectedProjectedPoint, 1.e-5);
-//                BOOST_ASSERT_MSG(areProjectedPointsIdentical,"Projected point onto the triangle plane is incorrect");
-//            }
-//        }
-//    }
-//}
-//
-//BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
-//{
-//    // Load test triangles from file
-//    rabbit::Mesh mesh(FILE_NAME);
-//    const auto& triangles = mesh.GetTriangles();
-//
-//    for(const auto& t : triangles)
-//    {
-//        for(unsigned i = 0; i < 100; ++i)
-//        {
-//            const auto testPointData = GenerateExtrudedPointData(t);
-//            const Point& extrudedPoint = std::get<1>(testPointData);
-//            BOOST_ASSERT(t.IsPointWithinShapeExtrudedAlongNormal(extrudedPoint));
-//            BOOST_ASSERT(!t.IsPointWithinShapeExtrudedAlongNormal(GeneratePointOutsideExtrudedTriangle(t)));
-//
-//        }
-//    }
-//}
+BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
+{
+    // Load test triangles from file
+    rabbit::Mesh mesh(FILE_NAME);
+    const auto& triangles = mesh.GetTriangles();
+
+    for(unsigned i=0;i<100;++i)
+    {
+        // We repeat the test 100 times just to get sufficient coverage of tested points
+        for(const auto& t : triangles)
+        {
+            const auto testPointData = GenerateExtrudedPointData(t);
+
+            const Point& expectedProjectedPoint = std::get<0>(testPointData);
+            const Point& expectedExtrudedPoint = std::get<1>(testPointData);
+            const double& expectedExtrudeDist = std::get<2>(testPointData);
+
+            {   // Calculate using ProjectPointOntoShapePlane
+                const auto calculatedData = t.ProjectPointOntoShapePlane(expectedExtrudedPoint);
+                const auto calculatedProjectedPoint = calculatedData.P;
+                const auto calculatedDist = calculatedData.Dist;
+
+                BOOST_ASSERT_MSG(Sign(expectedExtrudeDist) == Sign(calculatedDist),
+                                 "Signs of the computed distance don't match expected value");
+
+                bool isCalculatedDistanceWithinTolerance = std::abs(expectedExtrudeDist - calculatedDist) < 1.e-5;
+                BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
+                                "The distance from point to triangle does not match expected data");
+
+                bool areProjectedPointsIdentical = calculatedProjectedPoint.isSameAs(expectedProjectedPoint, 1.e-5);
+                BOOST_ASSERT_MSG(areProjectedPointsIdentical,"Projected point onto the triangle plane is incorrect");
+            }
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
+{
+    // Load test triangles from file
+    rabbit::Mesh mesh(FILE_NAME);
+    const auto& triangles = mesh.GetTriangles();
+
+    for(const auto& t : triangles)
+    {
+        for(unsigned i = 0; i < 100; ++i)
+        {
+            const auto testPointData = GenerateExtrudedPointData(t);
+            const Point& extrudedPoint = std::get<1>(testPointData);
+            BOOST_ASSERT(t.IsPointWithinShapeExtrudedAlongNormal(extrudedPoint));
+            BOOST_ASSERT(!t.IsPointWithinShapeExtrudedAlongNormal(GeneratePointOutsideExtrudedTriangle(t)));
+
+        }
+    }
+}
 //
 //BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
 //{
