@@ -56,6 +56,13 @@ public:
     TriangleProps3D::PointIntersectionResult ProjectPointOntoShapePlane(const Point& p)const;
 
     TriangleProps3D::PointIntersectionResult CalcShortestDistanceFrom(const Point& point) const;
+
+    const Point& P0;
+    const Point& P1;
+    const Point& P2;
+    const Vec3& P0P1;
+    const Vec3& P0P2;
+    const Vec3& P1P2;
 };
 
 template<bool isDeformable>
@@ -63,7 +70,13 @@ Triangle<isDeformable>::Triangle(const Vec3& p0, const Vec3& p1, const Vec3& p2)
          IShape<Vec3,
                 isDeformable,
                 Triangle<isDeformable>,
-                TriangleProps3D>(p0, p1, p2){}
+                TriangleProps3D>(p0, p1, p2),
+                P0(this->m_verts[0]),
+                P1(this->m_verts[1]),
+                P2(this->m_verts[2]),
+                P0P1(this->m_edges[0]),
+                P0P2(this->m_edges[1]),
+                P1P2(this->m_edges[2]){}
 
 template<bool isDeformable>
 TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::CalcShortestDistanceFrom(const Point& p) const

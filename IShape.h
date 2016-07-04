@@ -40,7 +40,11 @@ public:
         return m_verts[static_cast<short>(index)];
     }
 
-    VertType* VertPtr(){
+    VertType& Vert(VertIndices index)const{
+        return m_verts[static_cast<short>(index)];
+    }
+
+    VertType* VertPtr()const{
         return m_verts;
     }
 
@@ -48,11 +52,15 @@ public:
         return m_edges[static_cast<short>(index)];
     }
 
-    VecType* EdgePtr(){
-        return m_edges;
+    VecType& Edge(EdgeIndices index)const{
+        return m_edges[static_cast<short>(index)];
     }
 
     VecType& Normal(){
+        return m_normal;
+    }
+
+    VecType& Normal()const{
         return m_normal;
     }
 
