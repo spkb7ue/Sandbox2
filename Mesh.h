@@ -14,4 +14,6 @@ namespace rabbit
         std::vector<RigidTriangle> m_triangles;
         std::vector<RigidTriangle>& GetTriangles();
     };
+
+
 }

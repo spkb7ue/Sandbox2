@@ -1,29 +1,35 @@
+
+#include <memory>
+#include <iterator>
 #include <iostream>
-#include <fstream>
-#include <vector>
+#include <ostream>
 #include <algorithm>
-#include <random>
-#include "Mesh.h"
+#include <vector>
+#include "IShape.h"
+#include "IMesh.h"
+#include "IMeshBuilder.h"
 #include "Triangle.h"
-#include <type_traits>
+#include <string>
+
 using namespace std;
 using namespace rabbit;
 namespace
 {
 const std::string fileName = "rabbit.triangles";
 
+struct TriangleMeshBuilder : public IMeshBuilder<RigidTriangle, TriangleMeshBuilder>
+{
+    void GeneratePolygons(std::vector<RigidTriangle>& polygons){
+        RigidTriangle::VertType point(1.3f, 0.0f, 2.0f);
+        polygons.emplace_back(RigidTriangle(point, point*3.0, point*2.0));
+    }
+};
+
 }
 
 int main()
 {
-    Mesh mesh(fileName);
-    Point p(0.0, 50.0, 2.0);
-    fstream file;
-    file.open("p.txt", ios::app | ios::out);
-    for(const RigidTriangle& t : mesh.m_triangles)
-    {
-        auto op = t.CalcShortestDistanceFrom(p);
-        file<<op.Dist<<"\t"<<op.P.X()<<"\t"<<op.P.Y()<<"\t"<<op.P.Z()<<endl;
-    }
-    file.close();
+    RigidTriangle::VertType point(1.3f, 0.0f, 2.0f);
+    TriangleMeshBuilder b;
+    Mesh2<RigidTriangle, TriangleMeshBuilder> mesh(b);
 }
