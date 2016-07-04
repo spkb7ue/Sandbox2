@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#include "TriangleV2.h"
 #include "Triangle.h"
 
 namespace rabbit
