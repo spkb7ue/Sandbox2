@@ -20,7 +20,7 @@ int main()
     Point p(0.0, 50.0, 2.0);
     std::fstream file;
     file.open("o.txt", ios::app | ios::out);
-    for(const Triangle& t: mesh.m_triangles)
+    for(const TriangleV2& t: mesh.m_triangles)
     {
         auto op = t.CalcShortestDistanceFrom(p);
         file<<op.second<<"\t"<<op.first.X()<<"\t"<<op.first.Y()<<"\t"<<op.first.Z()<<endl;

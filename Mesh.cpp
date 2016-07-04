@@ -19,13 +19,13 @@ Mesh::Mesh(std::string fileName)
                  >> P2.X() >> P2.Y() >> P2.Z()
           )
     {
-        m_triangles.emplace_back(Triangle(P0, P1, P2));
+        m_triangles.emplace_back(TriangleV2(P0, P1, P2));
         m_tr.emplace_back(RigidTriangle(P0,P1,P2));
     }
     infile.close();
 }
 
-std::vector<Triangle>& Mesh::GetTriangles()
+std::vector<TriangleV2>& Mesh::GetTriangles()
 {
     return m_triangles;
 }

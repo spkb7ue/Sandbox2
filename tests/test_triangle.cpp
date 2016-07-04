@@ -21,7 +21,7 @@ namespace
     static mt19937::result_type seed = time(0);
     static auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
 
-    Point GenerateTriangleInternalPoint(const Triangle& t)
+    Point GenerateTriangleInternalPoint(const TriangleV2& t)
     {
         // Point (p) internal to triangle can be represented as r0*P0 + r1*P1 + r2*P3
         // where r0 + r1 + r2 = 1;
@@ -36,7 +36,7 @@ namespace
     }
 
     // Generate random point within a triangle extruded along its normal
-    std::tuple<Point, Point,double> GenerateExtrudedPointData(const Triangle& t)
+    std::tuple<Point, Point,double> GenerateExtrudedPointData(const TriangleV2& t)
     {
         const double DIST_SCALE = 10.0f;
         double sign = real_rand() > 0.5f ? 1.0f : -1.0f;
@@ -46,7 +46,7 @@ namespace
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
     };
 
-    Point GeneratePointOutsideExtrudedTriangle(const Triangle& t)
+    Point GeneratePointOutsideExtrudedTriangle(const TriangleV2& t)
     {
         Point withinTriangle = std::get<1>(GenerateExtrudedPointData(t));
         return withinTriangle + t.P0_P1*(1.0f + std::max(real_rand(),0.01));
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
     const auto& triangles = mesh.GetTriangles();
 
     double u,v;
-    for(const Triangle& t : triangles)
+    for(const TriangleV2& t : triangles)
     {
         {   // Test vertex P0
             std::tie(u,v) = t.CalcBarycentricCoords(t.P0);
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
     rabbit::Mesh mesh(FILE_NAME);
     const auto& triangles = mesh.GetTriangles();
 
-    for(const Triangle& t : triangles)
+    for(const TriangleV2& t : triangles)
     {
         for(unsigned i = 0; i < 100; ++i)
         {
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
     rabbit::Mesh mesh(FILE_NAME);
     const auto& triangles = mesh.GetTriangles();
 
-    for(const Triangle& t : triangles)
+    for(const TriangleV2& t : triangles)
     {
         for(unsigned i=0;i<1000;++i)
         {

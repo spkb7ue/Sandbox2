@@ -156,7 +156,7 @@ bool TriangleV1<isDeformable>::IsPointWithinShapeExtrudedAlongNormal(const Vec3&
 typedef TriangleV1<false> RigidTriangle;
 typedef TriangleV1<true> FlexibleTriangle;
 
-struct Triangle
+struct TriangleV2
 {
     Point P0;
     Point P1;
@@ -181,6 +181,6 @@ struct Triangle
                                                       const Vec3& seg,
                                                       const Vec3& P)const;
 
-    Triangle(const Point& p0, const Point& p1, const Point& p2);
+    TriangleV2(const Point& p0, const Point& p1, const Point& p2);
 };
 }

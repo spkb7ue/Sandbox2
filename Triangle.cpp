@@ -5,7 +5,7 @@
 using namespace rabbit;
 using namespace std;
 
-Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
+TriangleV2::TriangleV2(const Point& p0, const Point& p1, const Point& p2)
 :P0(p0),
  P1(p1),
  P2(p2),
@@ -17,7 +17,7 @@ Triangle::Triangle(const Point& p0, const Point& p1, const Point& p2)
 
 }
 
-bool Triangle::IsPointWithinExtrudedTriangle(const Point& p)const
+bool TriangleV2::IsPointWithinExtrudedTriangle(const Point& p)const
 {
     double u,v;
     std::tie(u,v) = CalcBarycentricCoords(p);
@@ -25,14 +25,14 @@ bool Triangle::IsPointWithinExtrudedTriangle(const Point& p)const
     return ( u >= -tol && v >= -tol && u+v <= 1.0f + tol);
 }
 
-std::pair<Point,double> Triangle::ProjectPointOntoTrianglePlane(const Point& p) const
+std::pair<Point,double> TriangleV2::ProjectPointOntoTrianglePlane(const Point& p) const
 {
     const auto p_P0 = P0-p;
     auto signedDist = Vec3::dotProduct(p_P0, Normal);
     return std::make_pair(Point(p + Normal*signedDist), -signedDist);
 }
 
-std::pair<double,double> Triangle::CalcBarycentricCoords(const Point& P)const
+std::pair<double,double> TriangleV2::CalcBarycentricCoords(const Point& P)const
 {
     // Assume P = P0 + u*P0_P1 + v*P0_P2, goal is to calculate u and v
     // Project this equation along P0_P1 and P0_P2 and we obtain a set
@@ -55,17 +55,17 @@ std::pair<double,double> Triangle::CalcBarycentricCoords(const Point& P)const
     return std::make_pair(u,v);
 }
 
-Point Triangle::CalcPointFromBarycentricCoords(const double u, const double v) const
+Point TriangleV2::CalcPointFromBarycentricCoords(const double u, const double v) const
 {
     return P0 + P0_P1*u + P0_P2*v;
 }
 
-Point Triangle::CalcPointFromBarycentricCoords(std::pair<double,double> coords)const
+Point TriangleV2::CalcPointFromBarycentricCoords(std::pair<double,double> coords)const
 {
     return P0 + P0_P1*coords.first + P0_P2*coords.second;
 }
 
-std::tuple<Point, double, bool> Triangle::CheckPointSegDist(const Vec3& origin,
+std::tuple<Point, double, bool> TriangleV2::CheckPointSegDist(const Vec3& origin,
                                                    const Vec3& seg,
                                                    const Vec3& P)const
 {
@@ -93,7 +93,7 @@ std::tuple<Point, double, bool> Triangle::CheckPointSegDist(const Vec3& origin,
     }
 }
 
-std::pair<Point, double> Triangle::CalcShortestDistanceFrom(const Point& p)const
+std::pair<Point, double> TriangleV2::CalcShortestDistanceFrom(const Point& p)const
 {
     auto projectedPointData = ProjectPointOntoTrianglePlane(p);
     const auto pDist = projectedPointData.second;
