@@ -39,19 +39,16 @@ struct TriangleProps3D
     static const unsigned NUM_VERTICES = 3;
 };
 
-template<bool isDeformable = false>
-class TriangleV1:
+template<bool isDeformable>
+class Triangle:
     public IShape<  Vec3,
                     isDeformable,
-                    TriangleV1<isDeformable>,
+                    Triangle<isDeformable>,
                     TriangleProps3D>
 {
 public:
-    TriangleV1(const Vec3& p0, const Vec3& p1, const Vec3& p2):
-         IShape<Vec3,
-                isDeformable,
-                TriangleV1<isDeformable>,
-                TriangleProps3D>(p0, p1, p2){}
+    Triangle(const Vec3& p0, const Vec3& p1, const Vec3& p2);
+
     bool IsPointWithinShapeExtrudedAlongNormal(const Point& point)const;
 
     TriangleProps3D::BarycentricCoords CalcBarycentricCoords(const Point& P)const;
@@ -62,7 +59,14 @@ public:
 };
 
 template<bool isDeformable>
-TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestDistanceFrom(const Point& p) const
+Triangle<isDeformable>::Triangle(const Vec3& p0, const Vec3& p1, const Vec3& p2):
+         IShape<Vec3,
+                isDeformable,
+                Triangle<isDeformable>,
+                TriangleProps3D>(p0, p1, p2){}
+
+template<bool isDeformable>
+TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::CalcShortestDistanceFrom(const Point& p) const
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.Dist;
@@ -114,7 +118,7 @@ TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::CalcShortestD
 }
 
 template<bool isDeformable>
-TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::ProjectPointOntoShapePlane(const Point& p)const
+TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::ProjectPointOntoShapePlane(const Point& p)const
 {
     const auto p_P0 = this->m_verts[0] - p;
     auto signedDist = Vec3::dotProduct(p_P0, this->m_normal);
@@ -122,7 +126,7 @@ TriangleProps3D::PointIntersectionResult TriangleV1<isDeformable>::ProjectPointO
 }
 
 template<bool isDeformable>
-TriangleProps3D::BarycentricCoords TriangleV1<isDeformable>::CalcBarycentricCoords(const Point& P)const
+TriangleProps3D::BarycentricCoords Triangle<isDeformable>::CalcBarycentricCoords(const Point& P)const
 {
     // Assume P = P0 + u*P0_P1 + v*P0_P2, goal is to calculate u and v
     // Project this equation along P0_P1 and P0_P2 and we obtain a set
@@ -146,13 +150,13 @@ TriangleProps3D::BarycentricCoords TriangleV1<isDeformable>::CalcBarycentricCoor
 }
 
 template<bool isDeformable>
-bool TriangleV1<isDeformable>::IsPointWithinShapeExtrudedAlongNormal(const Vec3& point)const
+bool Triangle<isDeformable>::IsPointWithinShapeExtrudedAlongNormal(const Vec3& point)const
 {
     TriangleProps3D::BarycentricCoords coords = CalcBarycentricCoords(point);
     const double tol = 0.000001;
     return ( coords.u >= -tol && coords.v >= -tol && coords.u+coords.v <= 1.0f + tol);
 }
 
-typedef TriangleV1<false> RigidTriangle;
-typedef TriangleV1<true> FlexibleTriangle;
+typedef Triangle<false> RigidTriangle;
+typedef Triangle<true> FlexibleTriangle;
 }
