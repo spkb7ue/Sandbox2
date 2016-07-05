@@ -58,14 +58,27 @@ namespace
         Point withinTriangle = std::get<1>(GenerateExtrudedPointData(t));
         return withinTriangle + t.P0P1()*(1.0f + std::max(real_rand(),0.01));
     }
+
+    class TestData
+    {
+    public:
+        TestData()
+        {
+            auto builder = GetMeshBuildingPolicy();
+            rabbit::Mesh<Triangle<Vec3>> mesh(builder);
+            m_testTriangles = mesh.GetPolygons();
+        }
+
+        const std::vector<Triangle<Vec3>>& GetTestTriangles(){return m_testTriangles;}
+    private:
+        std::vector<Triangle<Vec3>> m_testTriangles;
+    };
+    TestData testData;
 }
 
 BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 {
-    // Create test triangles
-    auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
-    const auto& triangles = mesh.GetPolygons();
+    const auto& triangles = testData.GetTestTriangles();
 
     for(const Triangle<Vec3>& t : triangles)
     {
@@ -79,10 +92,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 
 BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 {
-    // Create test triangles
-    auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
-    const auto& triangles = mesh.GetPolygons();
+    const auto& triangles = testData.GetTestTriangles();
 
     for(const auto& t : triangles)
     {
@@ -141,10 +151,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 
 BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 {
-    // Load test triangles from file
-    auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
-    const auto& triangles = mesh.GetPolygons();
+    const auto& triangles = testData.GetTestTriangles();
 
     for(unsigned i=0;i<100;++i)
     {
@@ -178,10 +185,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 
 BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
 {
-    // Load test triangles from file
-    auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
-    const auto& triangles = mesh.GetPolygons();
+    const auto& triangles = testData.GetTestTriangles();
 
     for(const auto& t : triangles)
     {
