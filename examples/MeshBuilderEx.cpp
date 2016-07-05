@@ -1,13 +1,11 @@
 #include <iostream>
 #include <IMeshBuildingPolicy.h>
-#include <Triangle.h>
 #include <Mesh.h>
 
 using namespace std;
 using namespace rabbit;
 namespace
 {
-    const std::string fileName = "rabbit.triangles";
 
     struct Point3
     {
@@ -22,17 +20,7 @@ namespace
 
 }
 
-// Dummy mesh builder.
-class DummyMeshBuildingPolicy : public IMeshBuildingPolicy<RigidTriangle>
-{
-    virtual void GeneratePolygons(std::vector<RigidTriangle>& triangles) override
-    {
-
-    }
-};
-
-// We can create a Mesh with any custom polygon type
-// Here is an example
+// We can create a Mesh with any custom polygon type. Here is an example
 class CustomShapeMeshBuildingPolicy : public IMeshBuildingPolicy<Quad>
 {
     virtual void GeneratePolygons(std::vector<Quad>& triangles) override
@@ -44,14 +32,8 @@ class CustomShapeMeshBuildingPolicy : public IMeshBuildingPolicy<Quad>
 
 int main()
 {
-    {
-        // Can be used to create an empty mesh object with polygon type RigidTriangle
-        std::shared_ptr< IMeshBuildingPolicy<RigidTriangle> > dummy = std::make_shared<DummyMeshBuildingPolicy>();
-        Mesh<RigidTriangle> mesh(dummy);
-    }
+    // Here we create a mesh consisting of polygon Quad.
+    std::shared_ptr< IMeshBuildingPolicy<Quad> > quadMeshBuilder = std::make_shared<CustomShapeMeshBuildingPolicy>();
+    Mesh<Quad> mesh(quadMeshBuilder);
 
-    {
-        std::shared_ptr< IMeshBuildingPolicy<Quad> > quadMeshBuilder = std::make_shared<CustomShapeMeshBuildingPolicy>();
-        Mesh<Quad> mesh(quadMeshBuilder);
-    }
 }
