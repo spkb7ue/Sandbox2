@@ -17,6 +17,7 @@ namespace rabbit
 
         std::vector<PolygonType>& GetPolygons(){return m_polygons;}
 
+    private:
         std::vector<PolygonType> m_polygons;
     };
 
