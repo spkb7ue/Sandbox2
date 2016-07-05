@@ -96,7 +96,6 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
             BOOST_ASSERT(std::abs(px.IRes.Dist) < Vec3::EPSILON);
         }
     }
-
 }
 
 BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
