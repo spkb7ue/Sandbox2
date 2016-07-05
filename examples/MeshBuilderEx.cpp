@@ -1,4 +1,3 @@
-#include <iostream>
 #include <IMeshBuildingPolicy.h>
 #include <Mesh.h>
 
@@ -6,7 +5,6 @@ using namespace std;
 using namespace rabbit;
 namespace
 {
-
     struct Point3
     {
         float x,y,z;
@@ -28,7 +26,6 @@ class CustomShapeMeshBuildingPolicy : public IMeshBuildingPolicy<Quad>
 
     }
 };
-
 
 int main()
 {
