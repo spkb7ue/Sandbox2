@@ -1,19 +1,40 @@
 #pragma once
 
+#include <boost/noncopyable.hpp>
+#include <memory>
+
 namespace rabbit
 {
 
-template<typename PolygonType,
-         typename MeshBuilder>
-class IMeshBuilder
+template<typename PolygonType>
+class IMeshBuildingPolicy : boost::noncopyable
 {
-    void GeneratePolygons(std::vector<PolygonType>& polygons);
+public:
+
+    virtual void GeneratePolygons(std::vector<PolygonType>& polygons) = 0;
+
+    virtual ~IMeshBuildingPolicy(){}
 };
 
-template<typename PolygonType,typename MeshBuilder>
-void IMeshBuilder<PolygonType, MeshBuilder>::GeneratePolygons(std::vector<PolygonType>& polygons)
+
+template<typename PolygonType>
+class MeshBuilder : boost::noncopyable
 {
-    static_cast<MeshBuilder*>(this)->GeneratePolygons(polygons);
+public:
+
+    explicit MeshBuilder(std::shared_ptr<IMeshBuildingPolicy<PolygonType>> meshBuildingPolicy);
+
+    void GeneratePolygons(std::vector<PolygonType>& polygons);
+private:
+    std::shared_ptr<IMeshBuildingPolicy<PolygonType>> m_meshBuildingPolicy;
+};
+
+
+
+template<typename PolygonType>
+void MeshBuilder<PolygonType>::GeneratePolygons(std::vector<PolygonType>& polygons)
+{
+    m_meshBuildingPolicy->GeneratePolygons(polygons);
 }
 
 }
