@@ -1,19 +1,21 @@
 #pragma once
 
-#include <vector>
-#include <string>
-
-#include "Triangle.h"
+#include <memory>
+#include <type_traits>
 
 namespace rabbit
 {
-    class Mesh
+    template<typename Polygon, typename MeshBuilder>
+    class Mesh2
     {
     public:
-        explicit Mesh(std::string fileName);
-        std::vector<RigidTriangle> m_triangles;
-        std::vector<RigidTriangle>& GetTriangles();
+        explicit Mesh2(MeshBuilder& builder);
+        std::vector<Polygon> m_polygons;
     };
 
-
+    template<typename Polygon, typename MeshBuilder>
+    Mesh2<Polygon, MeshBuilder>::Mesh2(MeshBuilder& builder)
+    {
+        builder.GeneratePolygons(m_polygons);
+    }
 }
