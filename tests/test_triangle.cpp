@@ -69,6 +69,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 
     for(const Triangle<Vec3>& t : triangles)
     {
+        // Ensure that the the triangles on construction are set up correctly
         BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P1())) < Vec3::EPSILON);
         BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P2())) < Vec3::EPSILON);
         BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P1P2())) < Vec3::EPSILON);

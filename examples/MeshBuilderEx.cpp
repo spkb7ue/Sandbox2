@@ -18,12 +18,12 @@ namespace
 
 }
 
-// We can create a Mesh with any custom polygon type. Here is an example
+// We can create a Mesh with any custom polygon type.
 class CustomShapeMeshBuildingPolicy : public IMeshBuildingPolicy<Quad>
 {
-    virtual void GeneratePolygons(std::vector<Quad>& triangles) override
+    virtual void GeneratePolygons(std::vector<Quad>& polygons) override
     {
-
+        // The code to populate polygons goes here.
     }
 };
 
