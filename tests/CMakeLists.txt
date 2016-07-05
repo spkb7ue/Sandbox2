@@ -19,3 +19,8 @@ add_executable(TestTriangle test_triangle.cpp)
 target_link_libraries(TestTriangle
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
+
+add_executable(TestDistBruteForce test_dist_brute_force.cpp)
+target_link_libraries(TestDistBruteForce
+                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                      ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)

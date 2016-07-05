@@ -1,11 +1,10 @@
 #pragma once
 #include <memory>
+#include "Mesh.h"
+#include <boost/noncopyable.hpp>
 
 namespace rabbit
 {
-
-template<typename PolygonType>
-class Mesh;
 
 template<typename PolygonType,
          typename ProximityQueryMethod>

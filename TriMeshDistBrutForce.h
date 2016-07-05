@@ -1,6 +1,7 @@
 #pragma once
 #include "IProximityQueries.h"
 #include "Triangle.h"
+#include "Vec3.h"
 namespace rabbit
 {
 

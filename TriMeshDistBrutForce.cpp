@@ -1,5 +1,6 @@
-#include "Tri.h"
+#include "TriMeshDistBrutForce.h"
 #include "Triangle.h"
+#include "Vec3.h"
 namespace rabbit
 {
 
