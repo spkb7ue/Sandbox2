@@ -12,6 +12,5 @@ namespace rabbit
         virtual void GeneratePolygons(std::vector<RigidTriangle>& triangles);
     private:
         std::string m_fileName;
-
     };
 }

@@ -3,10 +3,12 @@
 #include <boost/noncopyable.hpp>
 #include <memory>
 #include <vector>
-#include "IMeshBuildingPolicy.h"
 
 namespace rabbit
 {
+
+template<typename Polygon>
+class IMeshBuildingPolicy;
 
 template<typename PolygonType>
 class MeshBuilder : boost::noncopyable
