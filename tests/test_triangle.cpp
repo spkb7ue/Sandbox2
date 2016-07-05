@@ -78,6 +78,18 @@ namespace
     const unsigned NUM_ITERATIONS = 100;
 }
 
+BOOST_AUTO_TEST_CASE(TestTriangle_CalcShortestDistanceFrom)
+{
+    const auto& triangles = testData.GetTestTriangles();
+
+    for(const Triangle<Vec3>& t : triangles)
+    {
+        {   // Test the verts first
+            t.CalcShortestDistanceFrom(t.P0());
+        }
+    }
+}
+
 BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 {
     const auto& triangles = testData.GetTestTriangles();

@@ -72,8 +72,8 @@ template<typename T>
 InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
-    const auto pDist = projectedPointData.Dist;
-    const T& projectedPoint = projectedPointData.P;
+    const auto pDist = projectedPointData.m_dist;
+    const T& projectedPoint = projectedPointData.m_point;
     if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
     {
         // If the point was within the extruded triangle, there is nothing else
@@ -84,13 +84,13 @@ InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
     {
         // Lets check intersection with the other edges now.
         const auto P0_P1_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
-        const auto d0 = P0_P1_Data.Dist;
+        const auto d0 = P0_P1_Data.m_dist;
 
-        const auto P0_P2_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
-        const auto d1 = P0_P2_Data.Dist;
+        const auto P0_P2_Data = CheckPointSegDist<T>(this->m_verts[0], this->m_edges[1], projectedPoint);
+        const auto d1 = P0_P2_Data.m_dist;
 
         const auto P1_P2_Data = this->CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
-        const auto d2 = P1_P2_Data.Dist;
+        const auto d2 = P1_P2_Data.m_dist;
         if(d0 < d1)
         {
             if(d0 < d2)
