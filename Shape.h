@@ -1,6 +1,4 @@
 #pragma once
-#include "IsPropertyModifiable.h"
-#include "Vec3.h"
 #include <algorithm>
 namespace rabbit
 {
@@ -9,7 +7,9 @@ template<typename T, unsigned N, typename AccessIDs>
 class Shape
 {
 public:
-    Shape(std::initializer_list<T> verts, std::initializer_list<T> edges){
+    Shape(std::initializer_list<T> verts,
+          std::initializer_list<T> edges)
+    {
         std::copy(verts.begin(), verts.end(), m_verts);
         std::copy(edges.begin(), edges.end(), m_edges);
     }

@@ -1,14 +1,14 @@
 #pragma once
 
-#include "IsPropertyModifiable.h"
 #include "Shape.h"
+#include "Vec3.h"
 namespace rabbit
 {
 
 template<typename T>
-struct PointSegInterectionResult
+struct InterectionResult
 {
-    PointSegInterectionResult(const T& intersectionPoint, double dist):
+    InterectionResult(const T& intersectionPoint, double dist):
         m_point(intersectionPoint),m_dist(dist){}
     T m_point;
     double m_dist;
@@ -58,9 +58,9 @@ public:
 
     bool IsPointWithinShapeExtrudedAlongNormal(const T& point)const;
 
-    PointSegInterectionResult<T> ProjectPointOntoShapePlane(const T& p)const;
+    InterectionResult<T> ProjectPointOntoShapePlane(const T& p)const;
 
-    PointSegInterectionResult<T> CalcShortestDistanceFrom(const T& point) const;
+    InterectionResult<T> CalcShortestDistanceFrom(const T& point) const;
 
     ~Triangle(){};
 private:
@@ -69,7 +69,7 @@ private:
 };
 
 template<typename T>
-PointSegInterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
+InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.Dist;
@@ -96,12 +96,12 @@ PointSegInterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)co
             if(d0 < d2)
             {
                 auto dist = sqrt(d0*d0 + pDist*pDist);
-                return PointSegInterectionResult<T>(P0_P1_Data.P, dist);
+                return InterectionResult<T>(P0_P1_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return PointSegInterectionResult<T>(P1_P2_Data.P, dist);
+                return InterectionResult<T>(P1_P2_Data.P, dist);
             }
         }
         else
@@ -109,23 +109,23 @@ PointSegInterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)co
             if(d1 < d2)
             {
                 auto dist = sqrt(d1*d1 + pDist*pDist);
-                return PointSegInterectionResult<T>(P0_P2_Data.P, dist);
+                return InterectionResult<T>(P0_P2_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return PointSegInterectionResult<T>(P1_P2_Data.P, dist);
+                return InterectionResult<T>(P1_P2_Data.P, dist);
             }
         }
     }
 }
 
 template<typename T>
-PointSegInterectionResult<T> Triangle<T>::ProjectPointOntoShapePlane(const T& p)const
+InterectionResult<T> Triangle<T>::ProjectPointOntoShapePlane(const T& p)const
 {
     const auto p_P0 = this->m_verts[0] - p;
     auto signedDist = T::dotProduct(p_P0, this->m_normal);
-    return PointSegInterectionResult<T>(T(p + this->m_normal*signedDist), -signedDist);
+    return InterectionResult<T>(T(p + this->m_normal*signedDist), -signedDist);
 }
 
 template<typename T>
