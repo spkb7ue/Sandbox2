@@ -197,8 +197,8 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoShapePlane)
 
             {   // Calculate using ProjectPointOntoShapePlane
                 const auto calculatedData = t.ProjectPointOntoShapePlane(expectedExtrudedPoint);
-                const auto calculatedProjectedPoint = calculatedData.m_point;
-                const auto calculatedDist = calculatedData.m_dist;
+                const auto calculatedProjectedPoint = calculatedData.Point;
+                const auto calculatedDist = calculatedData.Dist;
 
                 BOOST_ASSERT_MSG(Sign(expectedExtrudeDist) == Sign(calculatedDist),
                                  "Signs of the computed distance don't match expected value");

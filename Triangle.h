@@ -9,10 +9,10 @@ template<typename T>
 struct IntersectionResult
 {
     IntersectionResult(const T& intersectionPoint, double dist):
-        m_point(intersectionPoint),m_dist(dist){}
+        Point(intersectionPoint),Dist(dist){}
 
-    T m_point;
-    double m_dist;
+    T Point;
+    double Dist;
 };
 
 template<typename T>
