@@ -1,23 +1,16 @@
 #pragma once
-
+#include "IsPropertyModifiable.h"
 namespace rabbit
 {
 
-template<typename T, bool deformable>
-struct IsPropertyModifiable{};
-
-template<typename T>
-struct IsPropertyModifiable<T,true>
-{
-    typedef T type;
-};
-
-template<typename T>
-struct IsPropertyModifiable<T,false>
-{
-    typedef const T type;
-};
-
+/**
+* IShape is an interface for a closed planar shape with number of edges/verts and other properties decided
+* by the implementing class
+* @tparam T This is the type of vertex/edge comprising the shape
+* @tparam isDeformable Determines if T can ever be modified after construction. If true, vertex/edge type is const T
+* @tparam Derived User defined concrete Shape.
+* @tparam ShapeProps User defined ShapeProperties
+*/
 template<typename T,
          bool isDeformable,
          typename Derived,
