@@ -84,45 +84,16 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
 
     for(const Triangle<Vec3>& t : triangles)
     {
-
-        // In this loop we test if all the internal points are within atleast
-        // two of the triangles' extruded segments. This is one of the requirements
-        // for the point being internal to the triangle
-        for(unsigned i=0;i<NUM_ITERATIONS;++i)
-        {
-            Vec3 p = GenerateTriangleInternalPoint(t);
-            int numSegs = 0;
-
-            {   // Check internal P0P1
-                auto px = t.CheckPointSegDist(t.P0(), t.P0P1(), p);
-                if(px.IsWithinExtrudedNormal)
-                {
-                    ++numSegs;
-                }
-            }
-
-            {   // Check internal P0P2
-                auto px = t.CheckPointSegDist(t.P0(), t.P0P2(), p);
-                if(px.IsWithinExtrudedNormal)
-                {
-                    ++numSegs;
-                }
-            }
-
-            {   // Check internal P0P2
-                auto px = t.CheckPointSegDist(t.P1(), t.P1P2(), p);
-                if(px.IsWithinExtrudedNormal)
-                {
-                    ++numSegs;
-                }
-            }
-
-            BOOST_ASSERT(numSegs >= 2);
+        {   /// Test P0 with P0P1
+            auto px = t.CheckPointSegDist(t.P0(),t.P0P1(),t.P0());
+            BOOST_ASSERT(px.IsWithinExtrudedNormal);
+            BOOST_ASSERT(std::abs(px.IRes.Dist) < Vec3::EPSILON);
         }
 
-        for(unsigned i=0;i<NUM_ITERATIONS;++i)
-        {
-
+        {   /// Test P0 with P0P2
+            auto px = t.CheckPointSegDist(t.P0(),t.P0P2(),t.P0());
+            BOOST_ASSERT(px.IsWithinExtrudedNormal);
+            BOOST_ASSERT(std::abs(px.IRes.Dist) < Vec3::EPSILON);
         }
     }
 
