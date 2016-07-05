@@ -114,7 +114,7 @@ PointSegIntersection<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& 
             auto otherEnd = origin + seg;
             return PointSegIntersection<T>(otherEnd, (otherEnd - P).magnitude(),false);
         }
-}
+    }
 }
 
 template<typename T>
