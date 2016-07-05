@@ -10,9 +10,10 @@ namespace rabbit
 * Usage:
 * IsPropertyModifiable<T, true>::type is same as T
 * IsPropertyModifiable<T, true>::type is same as const T
-*
+* @tparam T class of interest
+* @tparam canBeModified whether T can be modified
 */
-template<typename T, bool deformable>
+template<typename T, bool canBeModified>
 struct IsPropertyModifiable{};
 
 template<typename T>
