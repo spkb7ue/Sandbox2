@@ -62,11 +62,43 @@ public:
 
     InterectionResult<T> CalcShortestDistanceFrom(const T& point) const;
 
+    InterectionResult<T> CheckPointSegDist(const T& origin,
+                                            const T& seg,
+                                            const T& point)const;
+
     ~Triangle(){};
 private:
     T m_normal;
 
 };
+
+template<typename T>
+InterectionResult<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& seg,const T& P)const
+{
+    const auto origin_P = P - origin;
+    const T unitVecAlongSeg = seg.normalise();
+
+    const auto Px = origin + unitVecAlongSeg*T::dotProduct(unitVecAlongSeg,origin_P);
+    const auto origin_Px = Px - origin;
+    auto alongSeg = T::dotProduct(unitVecAlongSeg, origin_Px);
+    static const double EPSILON= 1.0e-12;
+    if(alongSeg >= -EPSILON && alongSeg <= seg.magnitude() + EPSILON)
+    {
+        return InterectionResult<T>(Px, (P-Px).magnitude());
+    }
+    else
+    {
+        if(alongSeg < 0.0)
+        {
+            return InterectionResult<T>(origin,origin_P.magnitude());
+        }
+        else
+        {
+            auto otherEnd = origin + seg;
+            return InterectionResult<T>(otherEnd, (otherEnd - P).magnitude());
+        }
+}
+}
 
 template<typename T>
 InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
@@ -86,7 +118,7 @@ InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
         const auto P0_P1_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
         const auto d0 = P0_P1_Data.m_dist;
 
-        const auto P0_P2_Data = CheckPointSegDist<T>(this->m_verts[0], this->m_edges[1], projectedPoint);
+        const auto P0_P2_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
         const auto d1 = P0_P2_Data.m_dist;
 
         const auto P1_P2_Data = this->CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
