@@ -18,6 +18,12 @@ struct IntersectionResult
 template<typename T>
 struct PointSegIntersection
 {
+    PointSegIntersection(const T& intersectionPoint,
+                         double dist,
+                         bool isWithinExtrudedNormal):
+        IsWithinExtrudedNormal(isWithinExtrudedNormal),
+        IRes(intersectionPoint, dist){}
+
     bool IsWithinExtrudedNormal;
     IntersectionResult<T> IRes;
 };
@@ -70,7 +76,7 @@ public:
 
     IntersectionResult<T> CalcShortestDistanceFrom(const T& point) const;
 
-    IntersectionResult<T> CheckPointSegDist(const T& origin,
+    PointSegIntersection<T> CheckPointSegDist(const T& origin,
                                             const T& seg,
                                             const T& point)const;
 
@@ -81,7 +87,7 @@ private:
 };
 
 template<typename T>
-IntersectionResult<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& seg,const T& P)const
+PointSegIntersection<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& seg,const T& P)const
 {
     const auto origin_P = P - origin;
     const T unitVecAlongSeg = seg.normalise();
@@ -95,18 +101,18 @@ IntersectionResult<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& se
     static const double EPSILON= 1.0e-12;
     if(alongSeg >= -EPSILON && alongSeg <= seg.magnitude() + EPSILON)
     {
-        return IntersectionResult<T>(Px, (P-Px).magnitude());
+        return PointSegIntersection<T>(Px, (P-Px).magnitude(), true);
     }
     else
     {
         if(alongSeg < 0.0)
         {
-            return IntersectionResult<T>(origin,origin_P.magnitude());
+            return PointSegIntersection<T>(origin,origin_P.magnitude(),false);
         }
         else
         {
             auto otherEnd = origin + seg;
-            return IntersectionResult<T>(otherEnd, (otherEnd - P).magnitude());
+            return PointSegIntersection<T>(otherEnd, (otherEnd - P).magnitude(),false);
         }
 }
 }
