@@ -9,7 +9,7 @@
 #include "IMesh.h"
 #include "IMeshBuilder.h"
 #include "Triangle.h"
-#include "TriangularMeshBuilingPolicy.h"
+#include "TriangularMeshBuildingPolicy.h"
 #include <string>
 
 using namespace std;
