@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Shape.h"
-#include "Vec3.h"
 namespace rabbit
 {
 
@@ -49,7 +48,7 @@ class Triangle : public Shape<T, 3, ids>
 public:
     Triangle(const T& p0, const T& p1, const T& p2):
         Shape<T, 3, ids>({p0, p1, p2}, {p1-p0, p2-p0, p2-p1}),
-        m_normal((Vec3::crossProduct(p1-p0,p2-p0).normalise())){}
+        m_normal((T::crossProduct(p1-p0,p2-p0).normalise())){}
 
     Triangle(const T& p0, const T& p1, const T& p2,
                const T& e0, const T& e1, const T& e2,
@@ -204,13 +203,13 @@ BarycentricCoords Triangle<T>::CalcBarycentricCoords(const T& P)const
     //  |y| = |c, d||v|
 
     const auto P0_P = P - this->m_verts[0];
-    const auto x = Vec3::dotProduct(this->m_edges[0],P0_P);
-    const auto y = Vec3::dotProduct(this->m_edges[1],P0_P);
+    const auto x = T::dotProduct(this->m_edges[0],P0_P);
+    const auto y = T::dotProduct(this->m_edges[1],P0_P);
 
-    const auto a = Vec3::dotProduct(this->m_edges[0],this->m_edges[0]);
-    const auto b = Vec3::dotProduct(this->m_edges[0],this->m_edges[1]);
-    const auto c = Vec3::dotProduct(this->m_edges[1],this->m_edges[0]);
-    const auto d = Vec3::dotProduct(this->m_edges[1],this->m_edges[1]);
+    const auto a = T::dotProduct(this->m_edges[0],this->m_edges[0]);
+    const auto b = T::dotProduct(this->m_edges[0],this->m_edges[1]);
+    const auto c = T::dotProduct(this->m_edges[1],this->m_edges[0]);
+    const auto d = T::dotProduct(this->m_edges[1],this->m_edges[1]);
 
     const auto inverseDet = 1.0/(a*d - c*b);
     const auto u = inverseDet * (d*x - b*y);

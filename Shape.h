@@ -37,9 +37,6 @@ public:
 protected:
     T m_verts[N];
     T m_edges[N];
-
-    ~Shape(){}
-
 };
 
 }
