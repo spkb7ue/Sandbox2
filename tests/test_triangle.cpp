@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
     {
 
         // In this loop we test if all the internal points are within atleast
-        // two of the triangles extruded segments. This is one of the requirements
+        // two of the triangles' extruded segments. This is one of the requirements
         // for the point being internal to the triangle
         for(unsigned i=0;i<NUM_ITERATIONS;++i)
         {
@@ -118,6 +118,11 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
             }
 
             BOOST_ASSERT(numSegs >= 2);
+        }
+
+        for(unsigned i=0;i<NUM_ITERATIONS;++i)
+        {
+
         }
     }
 
