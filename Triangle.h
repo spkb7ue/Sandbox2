@@ -76,7 +76,8 @@ public:
 
     IntersectionResult<T> ProjectPointOntoShapePlane(const T& p)const;
 
-    IntersectionResult<T> CalcShortestDistanceFrom(const T& point) const;
+    IntersectionResult<T> CalcShortestDistanceFrom(const T& point,
+                                                   double maxDist = std::numeric_limits<double>::max()) const;
 
     PointSegIntersection<T> CheckPointSegDist(const T& origin,
                                               const T& seg,
@@ -120,7 +121,7 @@ PointSegIntersection<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& 
 }
 
 template<typename T>
-IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
+IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p, double maxDist)const
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.Dist;
@@ -128,7 +129,7 @@ IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
     if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
     {
         // If the point was within the extruded triangle, there is nothing else
-        // to do here and we have already found the right triangle.
+        // to do here and we have already found the closest point.
         return projectedPointData;
     }
     else
