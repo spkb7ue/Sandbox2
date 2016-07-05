@@ -6,7 +6,7 @@ using namespace std;
 
 TriangularMeshBuilingPolicy::TriangularMeshBuilingPolicy(std::string fileName):m_fileName(fileName){}
 
-void TriangularMeshBuilingPolicy::GeneratePolygons(std::vector<RigidTriangle>& triangles)
+void TriangularMeshBuilingPolicy::GeneratePolygons(std::vector<Triangle<Vec3>>& triangles)
 {
     ifstream infile;
     infile.open(m_fileName.c_str());
@@ -20,7 +20,7 @@ void TriangularMeshBuilingPolicy::GeneratePolygons(std::vector<RigidTriangle>& t
                  >> P2.X() >> P2.Y() >> P2.Z()
           )
     {
-        triangles.emplace_back(RigidTriangle(P0, P1, P2));
+        triangles.emplace_back(P0, P1, P2);
     }
     infile.close();
 }

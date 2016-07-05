@@ -1,5 +1,5 @@
 #include <Vec3.h>
-#include <Shape.h>
+#include <Triangle.h>
 using namespace std;
 using namespace rabbit;
 
@@ -16,6 +16,6 @@ struct float3
 int main()
 {
     Vec3 p,q,r(1.0f, 2.0f, 1.0f);
-    TriangleV1<Vec3>v1(p, q, r);
+    Triangle<Vec3>v1(p, q, r);
     v1.ProjectPointOntoShapePlane(q);
 }

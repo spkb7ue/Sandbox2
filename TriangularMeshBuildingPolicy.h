@@ -9,7 +9,7 @@ namespace rabbit
     * This builder can be used to extract triangle coordinates from a plain text file.
     * Look at the file rabbit.triangles for the expected format.
     */
-    class TriangularMeshBuilingPolicy : public IMeshBuildingPolicy<RigidTriangle>
+    class TriangularMeshBuilingPolicy : public IMeshBuildingPolicy<Triangle<Vec3>>
     {
     public:
 
@@ -23,7 +23,7 @@ namespace rabbit
         * Interface implementation for the base class
         * @param triangles The triangle vector which are to be populated
         */
-        virtual void GeneratePolygons(std::vector<RigidTriangle>& triangles) override;
+        virtual void GeneratePolygons(std::vector<Triangle<Vec3>>& triangles) override;
     private:
 
         std::string m_fileName; ///< Name of the file containing the triangle coordinates comprising the mesh

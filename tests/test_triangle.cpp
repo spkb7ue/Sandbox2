@@ -1,5 +1,6 @@
 #include "Triangle.h"
 #include "Mesh.h"
+#include "Vec3.h"
 #include "TriangularMeshBuildingPolicy.h"
 #include <random>
 #include <iomanip>
@@ -27,7 +28,7 @@ namespace
     static mt19937::result_type seed = time(0);
     static auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
 
-    Point GenerateTriangleInternalPoint(const RigidTriangle& t)
+    Point GenerateTriangleInternalPoint(const Triangle<Vec3>& t)
     {
         // Point (p) internal to triangle can be represented as r0*P0 + r1*P1 + r2*P3
         // where r0 + r1 + r2 = 1;
@@ -42,7 +43,7 @@ namespace
     }
 
     // Generate random point within a triangle extruded along its normal
-    std::tuple<Point, Point,double> GenerateExtrudedPointData(const RigidTriangle& t)
+    std::tuple<Point, Point,double> GenerateExtrudedPointData(const Triangle<Vec3>& t)
     {
         const double DIST_SCALE = 10.0f;
         double sign = real_rand() > 0.5f ? 1.0f : -1.0f;
@@ -52,7 +53,7 @@ namespace
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
     };
 
-    Point GeneratePointOutsideExtrudedTriangle(const RigidTriangle& t)
+    Point GeneratePointOutsideExtrudedTriangle(const Triangle<Vec3>& t)
     {
         Point withinTriangle = std::get<1>(GenerateExtrudedPointData(t));
         return withinTriangle + t.P0P1()*(1.0f + std::max(real_rand(),0.01));
@@ -63,25 +64,11 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 {
     // Create test triangles
     auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<RigidTriangle> mesh(builder);
+    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
     const auto& triangles = mesh.GetPolygons();
 
-    for(const RigidTriangle& t : triangles)
+    for(const Triangle<Vec3>& t : triangles)
     {
-
-        if(std::abs(Vec3::dotProduct(t.Normal(), t.P0P1())) < Vec3::EPSILON)
-        {
-
-        }
-        else
-        {
-            cout<<setprecision(10)<<t.Normal()<<endl<<t.P0P1()<<endl;
-            cout<<t.P0()<<endl;
-            cout<<t.P1()<<endl;
-            cout<<t.P2()<<endl;
-            cout<<t.Vert(TriangleProps3D::VertIndices::eP0)<<endl;
-            cin.get();
-        }
         BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P1())) < Vec3::EPSILON);
         BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P2())) < Vec3::EPSILON);
         BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P1P2())) < Vec3::EPSILON);
@@ -93,7 +80,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 {
     // Create test triangles
     auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<RigidTriangle> mesh(builder);
+    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
     const auto& triangles = mesh.GetPolygons();
 
     for(const auto& t : triangles)
@@ -155,7 +142,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 {
     // Load test triangles from file
     auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<RigidTriangle> mesh(builder);
+    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
     const auto& triangles = mesh.GetPolygons();
 
     for(unsigned i=0;i<100;++i)
@@ -171,8 +158,8 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 
             {   // Calculate using ProjectPointOntoShapePlane
                 const auto calculatedData = t.ProjectPointOntoShapePlane(expectedExtrudedPoint);
-                const auto calculatedProjectedPoint = calculatedData.P;
-                const auto calculatedDist = calculatedData.Dist;
+                const auto calculatedProjectedPoint = calculatedData.m_point;
+                const auto calculatedDist = calculatedData.m_dist;
 
                 BOOST_ASSERT_MSG(Sign(expectedExtrudeDist) == Sign(calculatedDist),
                                  "Signs of the computed distance don't match expected value");
@@ -192,7 +179,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
 {
     // Load test triangles from file
     auto builder = GetMeshBuildingPolicy();
-    rabbit::Mesh<RigidTriangle> mesh(builder);
+    rabbit::Mesh<Triangle<Vec3>> mesh(builder);
     const auto& triangles = mesh.GetPolygons();
 
     for(const auto& t : triangles)

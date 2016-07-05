@@ -23,10 +23,10 @@ BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV)
     try
     {
         auto buildingPolicy = GetMeshBuildingPolicy(FILE_NAME);
-        Mesh<RigidTriangle> mesh(buildingPolicy);
+        Mesh<Triangle<Vec3>> mesh(buildingPolicy);
 
         // Make sure we have loaded the right number of triangles
-        std::vector<RigidTriangle>& triangles = mesh.GetPolygons();
+        std::vector<Triangle<Vec3>>& triangles = mesh.GetPolygons();
         BOOST_ASSERT(triangles.size() == NUM_TRIANGLES);
     }
     catch(...)

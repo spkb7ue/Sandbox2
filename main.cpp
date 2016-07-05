@@ -5,9 +5,7 @@
 #include <ostream>
 #include <algorithm>
 #include <vector>
-#include "IShape.h"
 #include "Mesh.h"
-#include "Triangle.h"
 #include "TriangularMeshBuildingPolicy.h"
 #include <string>
 
@@ -22,7 +20,7 @@ const std::string fileName = "rabbit.triangles";
 int main()
 {
     std::shared_ptr<TriangularMeshBuilingPolicy> buildingPolicy = std::make_shared<TriangularMeshBuilingPolicy>(fileName);
-    Mesh<RigidTriangle> mesh{buildingPolicy};
+    Mesh<Triangle<Vec3>> mesh{buildingPolicy};
     mesh.GetPolygons();
 
    // RigidTriangle::VertType point(1.3f, 0.0f, 2.0f);

@@ -1,112 +1,79 @@
 #pragma once
 
-#include "Vec3.h"
-#include "IShape.h"
-
+#include "IsPropertyModifiable.h"
+#include "Shape.h"
 namespace rabbit
 {
 
-struct TriangleProps3D
+template<typename T>
+struct PointSegInterectionResult
 {
-    enum VertIndices : unsigned
-    {
-        eP0 = 0,    ///< Refers to Vertex P0
-        eP1 = 1,    ///< Refers to Vertex P1
-        eP2 = 2     ///< Refers to Vertex P2
-    };
-
-    enum EdgeIndices : unsigned
-    {
-        eP0P1 = 0,    ///< Refers to Edge P0 to P1
-        eP0P2 = 1,    ///< Refers to Edge P0 to P2
-        eP1P2 = 2     ///< Refers to Edge P1 to P2
-    };
-
-    struct BarycentricCoords
-    {
-        BarycentricCoords(double a, double b):u(a),v(b){}
-        double u;
-        double v;
-    };
-
-    struct PointIntersectionResult
-    {
-        PointIntersectionResult(const Point& p, double d):P(p),Dist(d){}
-        Point P; ///< Point of intersection or the closest point
-        double Dist; ///< The distance to point P
-    };
-
-    static const unsigned NUM_VERTICES = 3;
+    PointSegInterectionResult(const T& intersectionPoint, double dist):
+        m_point(intersectionPoint),m_dist(dist){}
+    T m_point;
+    double m_dist;
 };
 
-template<bool isDeformable>
-class Triangle:
-    public IShape<  Vec3,
-                    isDeformable,
-                    Triangle<isDeformable>,
-                    TriangleProps3D>
+struct BarycentricCoords
+{
+    BarycentricCoords(double a, double b):u(a),v(b){}
+    double u;
+    double v;
+};
+
+
+enum ids : unsigned
+{
+    zero = 0,
+    one = 1,
+    two = 2
+};
+
+template<typename T>
+class Triangle : public Shape<T, 3, ids>
 {
 public:
-    Triangle(const Vec3& p0, const Vec3& p1, const Vec3& p2);
+    Triangle(const T& p0, const T& p1, const T& p2):
+        Shape<T, 3, ids>({p0, p1, p2}, {p1-p0, p2-p0, p2-p1}),
+        m_normal((Vec3::crossProduct(p1-p0,p2-p0).normalise())){}
 
-    bool IsPointWithinShapeExtrudedAlongNormal(const Point& point)const;
+    Triangle(const T& p0, const T& p1, const T& p2,
+               const T& e0, const T& e1, const T& e2,
+               const T& normal):
+        Shape<T, 3, ids>({p0, p1, p2}, {e0, e1, e2}),
+        m_normal(normal){}
 
-    TriangleProps3D::BarycentricCoords CalcBarycentricCoords(const Point& P)const;
+    T& Normal(){return m_normal;}
+    const T& Normal()const{return m_normal;}
 
-    TriangleProps3D::PointIntersectionResult ProjectPointOntoShapePlane(const Point& p)const;
+    const T& P0()const{return this->m_verts[0];}
+    const T& P1()const{return this->m_verts[1];}
+    const T& P2()const{return this->m_verts[2];}
 
-    TriangleProps3D::PointIntersectionResult CalcShortestDistanceFrom(const Point& point) const;
+    const T& P0P1()const{return this->m_edges[0];}
+    const T& P0P2()const{return this->m_edges[1];}
+    const T& P1P2()const{return this->m_edges[2];}
 
-    const Point& P0()const{
-        return this->m_verts[0];
-    };
+    BarycentricCoords CalcBarycentricCoords(const T& point)const;
 
-    const Point& P1()const{
-        return this->m_verts[1];
-    };
+    bool IsPointWithinShapeExtrudedAlongNormal(const T& point)const;
 
-    const Point& P2()const{
-        return this->m_verts[2];
-    }
+    PointSegInterectionResult<T> ProjectPointOntoShapePlane(const T& p)const;
 
-    const Vec3& P0P1()const{
-        return this->m_edges[0];
-    }
+    PointSegInterectionResult<T> CalcShortestDistanceFrom(const T& point) const;
 
-    const Vec3& P0P2()const{
-        return this->m_edges[1];
-    }
-
-    const Vec3& P1P2()const{
-        return this->m_edges[2];
-    }
-
-    const Vec3& Normal()const{
-        return m_normal;
-    }
-
-    Vec3& Normal(){
-        return m_normal;
-    }
-
+    ~Triangle(){};
 private:
-    typename IsPropertyModifiable<Vec3, isDeformable>::type m_normal;
+    T m_normal;
+
 };
 
-template<bool isDeformable>
-Triangle<isDeformable>::Triangle(const Vec3& p0, const Vec3& p1, const Vec3& p2):
-         IShape<Vec3,
-                isDeformable,
-                Triangle<isDeformable>,
-                TriangleProps3D>(p0, p1, p2),
-                m_normal((Vec3::crossProduct(p1-p0,p2-p0).normalise())){}
-
-template<bool isDeformable>
-TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::CalcShortestDistanceFrom(const Point& p) const
+template<typename T>
+PointSegInterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.Dist;
-    const Vec3& projectedPoint = projectedPointData.P;
+    const T& projectedPoint = projectedPointData.P;
     if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
     {
         // If the point was within the extruded triangle, there is nothing else
@@ -116,10 +83,10 @@ TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::CalcShortestDis
     else
     {
         // Lets check intersection with the other edges now.
-        const auto P0_P1_Data = this->CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
+        const auto P0_P1_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
         const auto d0 = P0_P1_Data.Dist;
 
-        const auto P0_P2_Data = this->CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
+        const auto P0_P2_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
         const auto d1 = P0_P2_Data.Dist;
 
         const auto P1_P2_Data = this->CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
@@ -129,12 +96,12 @@ TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::CalcShortestDis
             if(d0 < d2)
             {
                 auto dist = sqrt(d0*d0 + pDist*pDist);
-                return TriangleProps3D::PointIntersectionResult(P0_P1_Data.P, dist);
+                return PointSegInterectionResult<T>(P0_P1_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return TriangleProps3D::PointIntersectionResult(P1_P2_Data.P, dist);
+                return PointSegInterectionResult<T>(P1_P2_Data.P, dist);
             }
         }
         else
@@ -142,27 +109,35 @@ TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::CalcShortestDis
             if(d1 < d2)
             {
                 auto dist = sqrt(d1*d1 + pDist*pDist);
-                return TriangleProps3D::PointIntersectionResult(P0_P2_Data.P, dist);
+                return PointSegInterectionResult<T>(P0_P2_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return TriangleProps3D::PointIntersectionResult(P1_P2_Data.P, dist);
+                return PointSegInterectionResult<T>(P1_P2_Data.P, dist);
             }
         }
     }
 }
 
-template<bool isDeformable>
-TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::ProjectPointOntoShapePlane(const Point& p)const
+template<typename T>
+PointSegInterectionResult<T> Triangle<T>::ProjectPointOntoShapePlane(const T& p)const
 {
     const auto p_P0 = this->m_verts[0] - p;
-    auto signedDist = Vec3::dotProduct(p_P0, this->m_normal);
-    return TriangleProps3D::PointIntersectionResult(Point(p + this->m_normal*signedDist), -signedDist);
+    auto signedDist = T::dotProduct(p_P0, this->m_normal);
+    return PointSegInterectionResult<T>(T(p + this->m_normal*signedDist), -signedDist);
 }
 
-template<bool isDeformable>
-TriangleProps3D::BarycentricCoords Triangle<isDeformable>::CalcBarycentricCoords(const Point& P)const
+template<typename T>
+bool Triangle<T>::IsPointWithinShapeExtrudedAlongNormal(const T& point)const
+{
+    BarycentricCoords coords = CalcBarycentricCoords(point);
+    const double tol = 0.000001;
+    return ( coords.u >= -tol && coords.v >= -tol && coords.u+coords.v <= 1.0f + tol);
+}
+
+template<typename T>
+BarycentricCoords Triangle<T>::CalcBarycentricCoords(const T& P)const
 {
     // Assume P = P0 + u*P0_P1 + v*P0_P2, goal is to calculate u and v
     // Project this equation along P0_P1 and P0_P2 and we obtain a set
@@ -182,17 +157,6 @@ TriangleProps3D::BarycentricCoords Triangle<isDeformable>::CalcBarycentricCoords
     const auto inverseDet = 1.0/(a*d - c*b);
     const auto u = inverseDet * (d*x - b*y);
     const auto v = inverseDet * (-c*x + a*y);
-    return TriangleProps3D::BarycentricCoords(u,v);
+    return BarycentricCoords(u,v);
 }
-
-template<bool isDeformable>
-bool Triangle<isDeformable>::IsPointWithinShapeExtrudedAlongNormal(const Vec3& point)const
-{
-    TriangleProps3D::BarycentricCoords coords = CalcBarycentricCoords(point);
-    const double tol = 0.000001;
-    return ( coords.u >= -tol && coords.v >= -tol && coords.u+coords.v <= 1.0f + tol);
-}
-
-typedef Triangle<false> RigidTriangle;
-typedef Triangle<true> FlexibleTriangle;
 }
