@@ -22,6 +22,9 @@ const std::string fileName = "rabbit.triangles";
 
 int main()
 {
+    std::shared_ptr<TriangularMeshBuilingPolicy> buildingPolicy = std::make_shared<TriangularMeshBuilingPolicy>(fileName);
+    MeshBuilder<RigidTriangle> builder(buildingPolicy);
+
    // RigidTriangle::VertType point(1.3f, 0.0f, 2.0f);
     //TriangleMeshBuilder b;
     ///Mesh2<RigidTriangle, TriangleMeshBuilder> mesh(b);

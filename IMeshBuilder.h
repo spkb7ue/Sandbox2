@@ -3,20 +3,10 @@
 #include <boost/noncopyable.hpp>
 #include <memory>
 #include <vector>
+#include "IMeshBuildingPolicy.h"
 
 namespace rabbit
 {
-
-template<typename PolygonType>
-class IMeshBuildingPolicy : boost::noncopyable
-{
-public:
-
-    virtual void GeneratePolygons(std::vector<PolygonType>& polygons) = 0;
-
-    virtual ~IMeshBuildingPolicy(){}
-};
-
 
 template<typename PolygonType>
 class MeshBuilder : boost::noncopyable
@@ -30,6 +20,10 @@ private:
     std::shared_ptr<IMeshBuildingPolicy<PolygonType>> m_meshBuildingPolicy;
 };
 
+
+template<typename PolygonType>
+MeshBuilder<PolygonType>::MeshBuilder(std::shared_ptr<IMeshBuildingPolicy<PolygonType>> policy):
+    m_meshBuildingPolicy(policy){}
 
 
 template<typename PolygonType>

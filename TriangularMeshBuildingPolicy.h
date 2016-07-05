@@ -1,11 +1,11 @@
 #pragma once
 
-#include "IMeshBuilder.h"
+#include "IMeshBuildingPolicy.h"
 #include "Triangle.h"
 
 namespace rabbit
 {
-    class TriangularMeshBuilingPolicy : IMeshBuildingPolicy<RigidTriangle>
+    class TriangularMeshBuilingPolicy : public IMeshBuildingPolicy<RigidTriangle>
     {
     public:
         TriangularMeshBuilingPolicy(std::string fileName);
