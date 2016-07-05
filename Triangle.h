@@ -130,8 +130,8 @@ template<typename T>
 IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
-    const auto pDist = projectedPointData.m_dist;
-    const T& projectedPoint = projectedPointData.m_point;
+    const auto pDist = projectedPointData.Dist;
+    const T& projectedPoint = projectedPointData.Point;
     if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
     {
         // If the point was within the extruded triangle, there is nothing else
@@ -142,24 +142,24 @@ IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
     {
         // Lets check intersection with the other edges now.
         const auto P0_P1_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
-        const auto d0 = P0_P1_Data.m_dist;
+        const auto d0 = P0_P1_Data.IRes.Dist;
 
         const auto P0_P2_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
-        const auto d1 = P0_P2_Data.m_dist;
+        const auto d1 = P0_P2_Data.IRes.Dist;
 
         const auto P1_P2_Data = this->CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
-        const auto d2 = P1_P2_Data.m_dist;
+        const auto d2 = P1_P2_Data.IRes.Dist;
         if(d0 < d1)
         {
             if(d0 < d2)
             {
                 auto dist = sqrt(d0*d0 + pDist*pDist);
-                return IntersectionResult<T>(P0_P1_Data.P, dist);
+                return IntersectionResult<T>(P0_P1_Data.IRes.Point, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return IntersectionResult<T>(P1_P2_Data.P, dist);
+                return IntersectionResult<T>(P1_P2_Data.IRes.Point, dist);
             }
         }
         else
@@ -167,12 +167,12 @@ IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
             if(d1 < d2)
             {
                 auto dist = sqrt(d1*d1 + pDist*pDist);
-                return IntersectionResult<T>(P0_P2_Data.P, dist);
+                return IntersectionResult<T>(P0_P2_Data.IRes.Point, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return IntersectionResult<T>(P1_P2_Data.P, dist);
+                return IntersectionResult<T>(P1_P2_Data.IRes.Point, dist);
             }
         }
     }
