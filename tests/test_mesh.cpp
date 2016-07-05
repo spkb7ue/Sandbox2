@@ -18,7 +18,7 @@ namespace
     }
 }
 
-BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV1)
+BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV)
 {
     try
     {
@@ -31,22 +31,7 @@ BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV1)
     }
     catch(...)
     {
-        std::string error = "Mesh constructor failed while loading file: " + FILE_NAME;
+        std::string error = "Unable to construct Mesh from file: " + FILE_NAME;
         BOOST_FAIL(error.c_str());
-    }
-}
-
-BOOST_AUTO_TEST_CASE(TestMesh_TestCtorV2)
-{
-    try
-    {
-        auto buildingPolicy = GetMeshBuildingPolicy("DummyFile");
-        Mesh<RigidTriangle> mesh(buildingPolicy);
-        std::string error = "rabbit::Mesh ctor should have thrown as DummyFile does not exist";
-        BOOST_FAIL(error.c_str());
-    }
-    catch(...)
-    {
-        // If the constructor throws, then the test has passed
     }
 }
