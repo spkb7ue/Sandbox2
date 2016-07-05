@@ -13,6 +13,7 @@ namespace
     // Custom Shape. A quadrilateral with 4 verts of type Point3
     struct Quad
     {
+        typedef Point3 VertType;
         Point3 m_verts[4];
     };
 
@@ -31,6 +32,5 @@ int main()
 {
     // Here we create a mesh consisting of polygon Quad.
     std::shared_ptr< IMeshBuildingPolicy<Quad> > quadMeshBuilder = std::make_shared<CustomShapeMeshBuildingPolicy>();
-    Mesh<Quad> mesh(quadMeshBuilder);
-
+    std::shared_ptr<Mesh<Quad>> mesh = std::make_shared<Mesh<Quad>>(quadMeshBuilder);
 }

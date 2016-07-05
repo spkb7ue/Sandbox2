@@ -13,6 +13,9 @@ namespace rabbit
     class Mesh
     {
     public:
+
+        typedef typename PolygonType::VertType VertType;
+
         Mesh(std::shared_ptr<IMeshBuildingPolicy<PolygonType>> buildingPolicy);
 
         std::vector<PolygonType>& GetPolygons(){return m_polygons;}

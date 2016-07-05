@@ -46,6 +46,9 @@ template<typename T>
 class Triangle : public Shape<T, 3, ids>
 {
 public:
+
+    typedef T VertType;
+
     Triangle(const T& p0, const T& p1, const T& p2):
         Shape<T, 3, ids>({p0, p1, p2}, {p1-p0, p2-p0, p2-p1}),
         m_normal((T::crossProduct(p1-p0,p2-p0).normalise())){}
