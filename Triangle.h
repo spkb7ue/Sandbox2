@@ -6,12 +6,20 @@ namespace rabbit
 {
 
 template<typename T>
-struct InterectionResult
+struct IntersectionResult
 {
-    InterectionResult(const T& intersectionPoint, double dist):
+    IntersectionResult(const T& intersectionPoint, double dist):
         m_point(intersectionPoint),m_dist(dist){}
+
     T m_point;
     double m_dist;
+};
+
+template<typename T>
+struct PointSegIntersection
+{
+    bool IsWithinExtrudedNormal;
+    IntersectionResult<T> IRes;
 };
 
 struct BarycentricCoords
@@ -58,11 +66,11 @@ public:
 
     bool IsPointWithinShapeExtrudedAlongNormal(const T& point)const;
 
-    InterectionResult<T> ProjectPointOntoShapePlane(const T& p)const;
+    IntersectionResult<T> ProjectPointOntoShapePlane(const T& p)const;
 
-    InterectionResult<T> CalcShortestDistanceFrom(const T& point) const;
+    IntersectionResult<T> CalcShortestDistanceFrom(const T& point) const;
 
-    InterectionResult<T> CheckPointSegDist(const T& origin,
+    IntersectionResult<T> CheckPointSegDist(const T& origin,
                                             const T& seg,
                                             const T& point)const;
 
@@ -73,35 +81,38 @@ private:
 };
 
 template<typename T>
-InterectionResult<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& seg,const T& P)const
+IntersectionResult<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& seg,const T& P)const
 {
     const auto origin_P = P - origin;
     const T unitVecAlongSeg = seg.normalise();
 
+    // Project point onto the seg
     const auto Px = origin + unitVecAlongSeg*T::dotProduct(unitVecAlongSeg,origin_P);
+
+    // Origin to projected point
     const auto origin_Px = Px - origin;
     auto alongSeg = T::dotProduct(unitVecAlongSeg, origin_Px);
     static const double EPSILON= 1.0e-12;
     if(alongSeg >= -EPSILON && alongSeg <= seg.magnitude() + EPSILON)
     {
-        return InterectionResult<T>(Px, (P-Px).magnitude());
+        return IntersectionResult<T>(Px, (P-Px).magnitude());
     }
     else
     {
         if(alongSeg < 0.0)
         {
-            return InterectionResult<T>(origin,origin_P.magnitude());
+            return IntersectionResult<T>(origin,origin_P.magnitude());
         }
         else
         {
             auto otherEnd = origin + seg;
-            return InterectionResult<T>(otherEnd, (otherEnd - P).magnitude());
+            return IntersectionResult<T>(otherEnd, (otherEnd - P).magnitude());
         }
 }
 }
 
 template<typename T>
-InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
+IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.m_dist;
@@ -128,12 +139,12 @@ InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
             if(d0 < d2)
             {
                 auto dist = sqrt(d0*d0 + pDist*pDist);
-                return InterectionResult<T>(P0_P1_Data.P, dist);
+                return IntersectionResult<T>(P0_P1_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return InterectionResult<T>(P1_P2_Data.P, dist);
+                return IntersectionResult<T>(P1_P2_Data.P, dist);
             }
         }
         else
@@ -141,23 +152,23 @@ InterectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p)const
             if(d1 < d2)
             {
                 auto dist = sqrt(d1*d1 + pDist*pDist);
-                return InterectionResult<T>(P0_P2_Data.P, dist);
+                return IntersectionResult<T>(P0_P2_Data.P, dist);
             }
             else
             {
                 auto dist = sqrt(d2*d2 + pDist*pDist);
-                return InterectionResult<T>(P1_P2_Data.P, dist);
+                return IntersectionResult<T>(P1_P2_Data.P, dist);
             }
         }
     }
 }
 
 template<typename T>
-InterectionResult<T> Triangle<T>::ProjectPointOntoShapePlane(const T& p)const
+IntersectionResult<T> Triangle<T>::ProjectPointOntoShapePlane(const T& p)const
 {
     const auto p_P0 = this->m_verts[0] - p;
     auto signedDist = T::dotProduct(p_P0, this->m_normal);
-    return InterectionResult<T>(T(p + this->m_normal*signedDist), -signedDist);
+    return IntersectionResult<T>(T(p + this->m_normal*signedDist), -signedDist);
 }
 
 template<typename T>
