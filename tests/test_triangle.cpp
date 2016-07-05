@@ -1,5 +1,6 @@
 #include "Triangle.h"
 #include "Mesh.h"
+#include "TriangularMeshBuildingPolicy.h"
 #include <random>
 #include <iomanip>
 #include <memory>
@@ -12,8 +13,12 @@ using namespace rabbit;
 namespace
 {
     const std::string FILE_NAME = "rabbit.triangles"; ///< File with the triangulated mesh
-    template <typename T>
+    std::shared_ptr<TriangularMeshBuilingPolicy> GetMeshBuildingPolicy()
+    {
+        return std::make_shared<TriangularMeshBuilingPolicy>(FILE_NAME);
+    }
 
+    template <typename T>
     T Sign(T value)
     {
         return value > T(0) ? T(1) : T(-1);
@@ -57,8 +62,9 @@ namespace
 BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 {
     // Create test triangles
-    rabbit::Mesh mesh(FILE_NAME);
-    const auto& triangles = mesh.GetTriangles();
+    auto builder = GetMeshBuildingPolicy();
+    rabbit::Mesh<RigidTriangle> mesh(builder);
+    const auto& triangles = mesh.GetPolygons();
 
     for(const RigidTriangle& t : triangles)
     {
@@ -86,8 +92,9 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 {
     // Create test triangles
-    rabbit::Mesh mesh(FILE_NAME);
-    const auto& triangles = mesh.GetTriangles();
+    auto builder = GetMeshBuildingPolicy();
+    rabbit::Mesh<RigidTriangle> mesh(builder);
+    const auto& triangles = mesh.GetPolygons();
 
     for(const auto& t : triangles)
     {
@@ -147,8 +154,9 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
 BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 {
     // Load test triangles from file
-    rabbit::Mesh mesh(FILE_NAME);
-    const auto& triangles = mesh.GetTriangles();
+    auto builder = GetMeshBuildingPolicy();
+    rabbit::Mesh<RigidTriangle> mesh(builder);
+    const auto& triangles = mesh.GetPolygons();
 
     for(unsigned i=0;i<100;++i)
     {
@@ -183,8 +191,9 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoTrianglePlane)
 BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
 {
     // Load test triangles from file
-    rabbit::Mesh mesh(FILE_NAME);
-    const auto& triangles = mesh.GetTriangles();
+    auto builder = GetMeshBuildingPolicy();
+    rabbit::Mesh<RigidTriangle> mesh(builder);
+    const auto& triangles = mesh.GetPolygons();
 
     for(const auto& t : triangles)
     {

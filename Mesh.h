@@ -1,21 +1,28 @@
 #pragma once
 
 #include <memory>
-#include <type_traits>
+#include <vector>
 
 namespace rabbit
 {
-    template<typename Polygon, typename MeshBuilder>
-    class Mesh2
+
+    template<typename Polygon>
+    class IMeshBuildingPolicy;
+
+    template<typename PolygonType>
+    class Mesh
     {
     public:
-        explicit Mesh2(MeshBuilder& builder);
-        std::vector<Polygon> m_polygons;
+        Mesh(std::shared_ptr<IMeshBuildingPolicy<PolygonType>> buildingPolicy);
+
+        std::vector<PolygonType>& GetPolygons(){return m_polygons;}
+
+        std::vector<PolygonType> m_polygons;
     };
 
-    template<typename Polygon, typename MeshBuilder>
-    Mesh2<Polygon, MeshBuilder>::Mesh2(MeshBuilder& builder)
+    template<typename PolygonType>
+    Mesh<PolygonType>::Mesh(std::shared_ptr<IMeshBuildingPolicy<PolygonType>> buildingPolicy)
     {
-        builder.GeneratePolygons(m_polygons);
+        buildingPolicy->GeneratePolygons(m_polygons);
     }
 }
