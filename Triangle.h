@@ -80,6 +80,17 @@ public:
     const Vec3& P1P2()const{
         return this->m_edges[2];
     }
+
+    const Vec3& Normal()const{
+        return m_normal;
+    }
+
+    Vec3& Normal(){
+        return m_normal;
+    }
+
+private:
+    typename IsPropertyModifiable<Vec3, isDeformable>::type m_normal;
 };
 
 template<bool isDeformable>
@@ -87,7 +98,8 @@ Triangle<isDeformable>::Triangle(const Vec3& p0, const Vec3& p1, const Vec3& p2)
          IShape<Vec3,
                 isDeformable,
                 Triangle<isDeformable>,
-                TriangleProps3D>(p0, p1, p2){}
+                TriangleProps3D>(p0, p1, p2),
+                m_normal((Vec3::crossProduct(p1-p0,p2-p0).normalise())){}
 
 template<bool isDeformable>
 TriangleProps3D::PointIntersectionResult Triangle<isDeformable>::CalcShortestDistanceFrom(const Point& p) const

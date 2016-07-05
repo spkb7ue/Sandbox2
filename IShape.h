@@ -18,16 +18,22 @@ template<typename T,
 class IShape
 {
 public:
-    typedef typename IsPropertyModifiable<T,isDeformable>::type VertType;
-    typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;
+    typedef typename IsPropertyModifiable<T,isDeformable>::type VertType; ///< Vertex type
+    typedef typename IsPropertyModifiable<T,isDeformable>::type VecType;  ///< EdgeType type
     typedef typename ShapeProps::VertIndices VertIndices;
     typedef typename ShapeProps::EdgeIndices EdgeIndices;
 
-    IShape(const T& v0, const T& v1, const T& v2):
-        m_verts({v0, v1, v2}),
-        m_edges({v1-v0, v2-v0, v2-v1}),
-        m_normal((T::crossProduct(m_edges[0],m_edges[1])).normalise()){
-    }
+    /**
+    * Create a shape with 3 verts of type T. If a shape has a different
+    * number of vertices, a new constructor will have to be added.
+    * Note: Ideally, we should use variadic templates here. Also not supported
+    * by all the compilers yet (Visual Studio certainly does not support it yet)
+    * Vertices are numbered from 0.
+    * @param v0 Vertex 0
+    * @param v1 Vertex 1
+    * @param v2 Vertex 2
+    */
+    IShape(const T& v0, const T& v1, const T& v2);
 
     VertType& Vert(VertIndices index){
         return m_verts[static_cast<short>(index)];
@@ -49,14 +55,6 @@ public:
         return m_edges[static_cast<short>(index)];
     }
 
-    VecType& Normal(){
-        return m_normal;
-    }
-
-    VecType& Normal()const{
-        return m_normal;
-    }
-
     bool IsPointWithinShapeExtrudedAlongNormal(const T& point)const{
         return static_cast<Derived*>(this)->IsPointWithinShapeExtrudedAlongNormal(point);
     }
@@ -72,11 +70,19 @@ public:
     typename ShapeProps::PointIntersectionResult CheckPointSegDist(const T& origin,
                                                                    const T& seg,
                                                                    const T& P) const;
-
+protected:
     VertType m_verts[ShapeProps::NUM_VERTICES];
     VecType m_edges[ShapeProps::NUM_VERTICES];
-    VecType m_normal;
 };
+
+template<typename T,
+         bool isDeformable,
+         typename Derived,
+         typename ShapeProps>
+IShape<T,isDeformable,Derived,ShapeProps>::IShape(const T& v0, const T& v1, const T& v2):
+        m_verts({v0, v1, v2}),
+        m_edges({v1-v0, v2-v0, v2-v1}){
+    }
 
 template<typename T,
          bool isDeformable,
