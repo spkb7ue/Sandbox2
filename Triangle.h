@@ -183,7 +183,7 @@ IntersectionResult<T> Triangle<T>::ProjectPointOntoShapePlane(const T& p)const
 {
     const auto p_P0 = this->m_verts[0] - p;
     auto signedDist = T::dotProduct(p_P0, this->m_normal);
-    return IntersectionResult<T>(T(p + this->m_normal*signedDist), -signedDist);
+    return IntersectionResult<T>(T(p + this->m_normal*signedDist), std::abs(signedDist));
 }
 
 template<typename T>

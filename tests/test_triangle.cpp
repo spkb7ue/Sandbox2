@@ -19,12 +19,6 @@ namespace
         return std::make_shared<TriangularMeshBuilingPolicy>(FILE_NAME);
     }
 
-    template <typename T>
-    T Sign(T value)
-    {
-        return value > T(0) ? T(1) : T(-1);
-    }
-
     static mt19937::result_type seed = time(0);
     static auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
 
@@ -208,10 +202,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_ProjectPointOntoShapePlane)
                 const auto calculatedProjectedPoint = calculatedData.Point;
                 const auto calculatedDist = calculatedData.Dist;
 
-                BOOST_ASSERT_MSG(Sign(expectedExtrudeDist) == Sign(calculatedDist),
-                                 "Signs of the computed distance don't match expected value");
-
-                bool isCalculatedDistanceWithinTolerance = std::abs(expectedExtrudeDist - calculatedDist) < 1.e-5;
+                bool isCalculatedDistanceWithinTolerance = std::abs( std::abs(expectedExtrudeDist) - std::abs(calculatedDist)) < 1.e-5;
                 BOOST_ASSERT_MSG(isCalculatedDistanceWithinTolerance,
                                 "The distance from point to triangle does not match expected data");
 
