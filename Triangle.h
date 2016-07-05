@@ -79,23 +79,14 @@ public:
     IntersectionResult<T> CalcShortestDistanceFrom(const T& point) const;
 
     PointSegIntersection<T> CheckPointSegDist(const T& origin,
-                                            const T& seg,
-                                            const T& point)const;
-
-
-    IntersectionResult<T> CalcShortestDistanceFromBruteForce(const T& point) const;
+                                              const T& seg,
+                                              const T& point)const;
 
     ~Triangle(){};
 private:
     T m_normal;
 
 };
-
-template<typename T>
-IntersectionResult<T> Triangle<T>::CalcShortestDistanceFromBruteForce(const T& point) const
-{
-
-}
 
 template<typename T>
 PointSegIntersection<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& seg,const T& P)const
