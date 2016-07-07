@@ -9,6 +9,30 @@ namespace
 {
     typedef Triangle<Vec3> Tri;
     typedef IntersectionResult<Vec3> IntRes;
+
+    // Debug function.
+    void printIndices(TriMeshProxQueryV3::AABBNode* node)
+    {
+        if(node == nullptr)
+        {
+            return;
+        }
+        cout<<"P:"<<node->Data().triIndices.size();
+        if(node->GetLeft()!= nullptr)
+        {
+            cout<<"\t C1:"<<node->GetLeft()->Data().triIndices.size();
+        }
+
+        if(node->GetRight()!= nullptr)
+        {
+            cout<<"\t C2:"<<node->GetRight()->Data().triIndices.size();
+        }
+        cout<<"\n------------------\n";
+
+        cin.get();
+        printIndices(node->GetLeft());
+        printIndices(node->GetRight());
+    }
 }
 
 TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
