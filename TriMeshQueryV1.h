@@ -8,9 +8,9 @@ namespace rabbit
 template<typename PolygonType> class Mesh;
 
 /**
-* This class implements the proximity query between point and a triangular mesh
+* @brief This class implements the proximity query between point and a triangular mesh
 * by calculating the distance between point and each triangle in the mesh.
-* By far the most ineffienct approach.
+* By far the most inefficient approach.
 */
 class TriMeshProxQueryV1 : public IProximityQueries<Triangle<Vec3>, TriMeshProxQueryV1>
 {
@@ -19,7 +19,7 @@ public:
 
    /**
 	*	See documentation for IProximityQueries<PolygonType, ProximityQueryMethod>::CalculateClosestPoint
-	*/ 
+	*/
     std::tuple<Vec3,double,bool> CalculateClosestPointImpl(const Vec3& point,double distThreshold);
 };
 

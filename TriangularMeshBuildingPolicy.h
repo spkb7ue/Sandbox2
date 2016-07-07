@@ -7,7 +7,7 @@
 namespace rabbit
 {
     /**
-    * This builder can be used to extract triangle coordinates from a plain text file.
+    * @brief This builder can be used to extract triangle coordinates from a plain text file.
     * Look at the file rabbit.triangles for the expected format.
     */
     class TriangularMeshBuilingPolicy : public IMeshBuildingPolicy<Triangle<Vec3>>

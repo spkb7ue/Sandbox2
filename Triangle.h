@@ -8,7 +8,7 @@ namespace rabbit
 {
 
 /**
-* struct used to represent a point inside the triangle
+* @brief struct used to represent a point inside the triangle
 * including all the three edges.
 */
 struct BarycentricCoords
@@ -31,8 +31,8 @@ enum ids : unsigned
 };
 
 /**
-* A triangle class. The following notation is used throughout the
-* triangle related code. The triangle consists of 3 vertices 
+* @brief A triangle class. The following notation is used throughout the
+* triangle related code. The triangle consists of 3 vertices
 * represented as P0, P1 and P2. The corresponding edges are
 * P0P1, P0P2, P1P2 which completes the triangle description
 */

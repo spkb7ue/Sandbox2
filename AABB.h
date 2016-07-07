@@ -7,8 +7,8 @@
 namespace rabbit
 {
 
-/*
-* Axis Alinged Bounding Box (AABB)
+/**
+* @brief Axis Alinged Bounding Box (AABB)
 */
 template<typename VertType>
 class AABB

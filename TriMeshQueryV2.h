@@ -10,7 +10,7 @@ template<typename PolygonType>
 class Mesh;
 
 /**
-* This class implements the proximity query between point and a triangular mesh
+* @brief This class implements the proximity query between point and a triangular mesh
 * by calculating by first doing a check with the axis aligned bounding box for
 * the triangle which is much cheaper than calculating the distance to the triangle.
 * Somewhat better than TriMeshProxQueryV1, but still plenty of room for improvement
