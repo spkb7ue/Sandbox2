@@ -1,6 +1,8 @@
 #pragma once
 #include "IntersectionResult.h"
 #include <limits>
+#include <vector>
+
 namespace rabbit
 {
 
@@ -31,12 +33,12 @@ struct Bounds
         zMin(center.Z() - halfExtents.Z()),
         zMax(center.Z() + halfExtents.Z()){}
 
-    const double xMin;
-    const double xMax;
-    const double yMin;
-    const double yMax;
-    const double zMin;
-    const double zMax;
+    double xMin;
+    double xMax;
+    double yMin;
+    double yMax;
+    double zMin;
+    double zMax;
 };
 
 template<typename VertType>
@@ -54,6 +56,8 @@ public:
 
     AABB(const AABB<VertType>&);
 
+    AABB(const Bounds<VertType>& bounds);
+
     /**
     * @param point Point of interest
     * @return true if the point is within the AABB.
@@ -63,6 +67,9 @@ public:
 
     IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point,
                                                           double maxDist = std::numeric_limits<double>::max()) const;
+
+    static AABB<VertType>
+    CalculateAABB(const std::vector<AABB<VertType>>& aabbList);
 
     VertType Center() const{return m_center;}
     VertType HalfExtents() const{return m_halfExtents;}
@@ -74,6 +81,49 @@ public:
     const Bounds<VertType> m_bounds;
 };
 
+template<typename VertType>
+AABB<VertType>::AABB(const Bounds<VertType>& b):
+    m_center(VertType((b.xMax + b.xMin)*0.5,
+                      (b.yMax + b.yMin)*0.5,
+                      (b.zMax + b.zMin)*0.5)),
+    m_halfExtents(VertType( (b.xMax - b.xMin)*0.5,
+                            (b.yMax - b.yMin)*0.5,
+                            (b.zMax - b.zMin)*0.5)),
+    m_bounds(b)
+{
+
+}
+
+template<typename VertType>
+AABB<VertType> AABB<VertType>::CalculateAABB(const std::vector<AABB<VertType>>& aabbList)
+{
+    Bounds<VertType> bounds;
+    bool setInitialBounds = false;
+    for(const AABB<VertType>& aabb : aabbList)
+    {
+        if(!setInitialBounds)
+        {
+            bounds = aabb.GetBounds();
+            setInitialBounds = true;
+        }
+        else
+        {
+            // Update the bounds as required.
+            const Bounds<VertType> BOUNDS = aabb.GetBounds();
+
+            bounds.xMin = std::min(bounds.xMin, BOUNDS.xMin);
+            bounds.xMax = std::max(bounds.xMax, BOUNDS.xMax);
+
+            bounds.yMin = std::min(bounds.yMin, BOUNDS.yMin);
+            bounds.yMax = std::max(bounds.yMax, BOUNDS.yMax);
+
+            bounds.zMin = std::min(bounds.zMin, BOUNDS.zMin);
+            bounds.zMax = std::max(bounds.zMax, BOUNDS.zMax);
+        }
+    }
+
+    return bounds;
+}
 
 template<typename VertType>
 AABB<VertType>::AABB(const AABB<VertType>& aabb):

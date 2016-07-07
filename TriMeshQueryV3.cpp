@@ -25,4 +25,6 @@ void TriMeshProxQueryV3::Preprocess()
     {
         m_aabb.emplace_back(t.CalculateAABB());
     });
+
+    AABB3::CalculateAABB(m_aabb);
 }
