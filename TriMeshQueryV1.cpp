@@ -1,4 +1,4 @@
-#include "TriMeshDistBrutForce.h"
+#include "TriMeshQueryV1.h"
 #include "Vec3.h"
 #include "Mesh.h"
 namespace rabbit

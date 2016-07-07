@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Mesh.h"
 #include "TriangularMeshBuildingPolicy.h"
-#include "TriMeshDistBrutForce.h"
+#include "TriMeshQueryV1.h"
 #define BOOST_TEST_MODULE Test_Mesh
 #include <boost/test/unit_test.hpp>
 
