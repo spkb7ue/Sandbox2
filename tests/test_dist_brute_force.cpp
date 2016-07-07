@@ -25,14 +25,14 @@ BOOST_AUTO_TEST_CASE(TestDistQueryBrut_CTor)
     // Test if the object can be constructed
     auto buildingPolicy = GetMeshBuildingPolicy(FILE_NAME);
     std::shared_ptr<TriMesh> mesh = std::make_shared<TriMesh>(buildingPolicy);
-    TriMeshBruteForce proximityQueries(mesh);
+    TriMeshProxQueryV1 proximityQueries(mesh);
 }
 
 BOOST_AUTO_TEST_CASE(TestDistQueryBrut_ClosestPoint)
 {
     auto buildingPolicy = GetMeshBuildingPolicy(FILE_NAME);
     std::shared_ptr<TriMesh> mesh = std::make_shared<TriMesh>(buildingPolicy);
-    TriMeshBruteForce proximityQueries(mesh);
+    TriMeshProxQueryV1 proximityQueries(mesh);
     Vec3 point;
     double dist;
     bool foundPoint;
