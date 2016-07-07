@@ -47,6 +47,18 @@ void TriMeshProxQueryV3::CalculateLeastDistRecursive(const Vec3& point,
                                                      bool& found )
 {
 
+    cout<<node->Data().triIndices.size()<<"\t";
+    if(node->GetLeft() != nullptr)
+    {
+        cout<<node->GetLeft()->Data().triIndices.size()<<"\t";
+    }
+
+    if(node->GetRight() != nullptr)
+    {
+        cout<<node->GetRight()->Data().triIndices.size()<<"\t";
+    }
+    cin.get();
+
     double distToLeft = std::numeric_limits<double>::max();
     double distToRight = std::numeric_limits<double>::max();
     bool canGoLeft = false;
@@ -109,18 +121,20 @@ void TriMeshProxQueryV3::CalculateLeastDistRecursive(const Vec3& point,
                 }
             }
         }
-    }
 
-    if(found)
-    {
-        TriMeshProxQueryV3::AABBNode* parent = node->GetParent();
-        if(parent != nullptr)
+        if(found)
         {
-            parent->Data().dist = minDist;
-            TriMeshProxQueryV3::AABBNode* sisterNode = parent->GetLeft() == node ? parent->GetRight() : parent->GetLeft();
-            if(sisterNode->Data().dist < minDist)
+            // Now we recurse back to the root node.
+            while(node->GetParent() != nullptr)
             {
-                CalculateLeastDistRecursive(point, minDist,sisterNode,closestPoint,found);
+                bool foundWhileRecursingUp = false;
+                TriMeshProxQueryV3::AABBNode* parent = node->GetParent();
+                parent->Data().dist = std::min(parent->Data().dist,minDist);
+                TriMeshProxQueryV3::AABBNode* sisterNode = parent->GetLeft() == node ? parent->GetRight() : parent->GetLeft();
+                if(sisterNode->Data().dist < minDist)
+                {
+                    CalculateLeastDistRecursive(point, minDist,sisterNode,closestPoint,foundWhileRecursingUp);
+                }
             }
         }
     }
@@ -133,6 +147,9 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const
     bool foundPoint = false;
     double minDist = distThreshold;
 
+    TriMeshProxQueryV3::AABBNode* root = m_aabbTree[0];
+    IntersectionResult<Vec3> result = root->Data().aabb.CalcShortestDistanceFrom(point, distThreshold);
+    root->Data().dist = result.Dist;
     CalculateLeastDistRecursive(point, minDist, m_aabbTree[0],closestPoint, foundPoint);
 
     return std::make_tuple(closestPoint, minDist, foundPoint);
