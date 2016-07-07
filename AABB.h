@@ -1,4 +1,5 @@
 #pragma once
+#include "IntersectionResult.h"
 namespace rabbit
 {
 
@@ -56,6 +57,9 @@ public:
     * Also return true if the point is on the face or the
     */
     bool IsPointWithinAABB(const VertType& point)const;
+
+    IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point,
+                                                          double maxDist = std::numeric_limits<double>::max()) const;
 
 private:
     const VertType m_center;
