@@ -12,6 +12,7 @@ public:
     void SetLeft(BNode<T>* left);
     void SetRight(BNode<T>* right);
     void SetChildren(BNode<T>* left, BNode<T>* right);
+	void SetParent(BNode<T>* parent){ m_parent = parent; }
     BNode<T>* GetParent()const;
     BNode<T>* GetLeft()const;
     BNode<T>* GetRight()const;

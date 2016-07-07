@@ -132,7 +132,7 @@ void TriMeshProxQueryV3::CalculateLeastDistRecursive(const Vec3& point,
             {
                 parent->Data().dist = minDist;
                 TriMeshProxQueryV3::AABBNode* sisterNode = parent->GetLeft() == node ? parent->GetRight() : parent->GetLeft();
-                if(sisterNode->Data().dist < minDist)
+                if(sisterNode != nullptr && sisterNode->Data().dist < minDist)
                 {
                     bool foundWhileRecursingUp = false;
                     CalculateLeastDistRecursive(point, minDist,sisterNode,closestPoint,foundWhileRecursingUp);
@@ -184,6 +184,8 @@ void TriMeshProxQueryV3::Preprocess()
     TriMeshProxQueryV3::AABBNode* c2(nullptr);
     std::tie(c1,c2) = GenerateNodes(nd);
     nd->SetChildren(c1, c2);
+	c1->SetParent(nd);
+	c2->SetParent(nd);
 }
 
 TriMeshProxQueryV3::~TriMeshProxQueryV3()
@@ -257,6 +259,14 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         TriMeshProxQueryV3::AABBNode* c2(nullptr);
         std::tie(c1,c2) = GenerateNodes(child1AABBNode);
         child1AABBNode->SetChildren(c1, c2);
+		if (c1 != nullptr)
+		{
+			c1->SetParent(child1AABBNode);
+		}
+		if (c2!=nullptr)
+		{
+			c2->SetParent(child1AABBNode);
+		}		
     }
 
     if(child2AABBNode != nullptr)
@@ -265,6 +275,16 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         TriMeshProxQueryV3::AABBNode* c2(nullptr);
         std::tie(c1,c2) = GenerateNodes(child2AABBNode);
         child2AABBNode->SetChildren(c1, c2);
+		if (c1 != nullptr)
+		{
+			c1->SetParent(child1AABBNode);
+		}
+		
+		if (c2 != nullptr)
+		{
+			c2->SetParent(child1AABBNode);
+		}
+		
     }
 
     return std::make_pair(child1AABBNode, child2AABBNode);

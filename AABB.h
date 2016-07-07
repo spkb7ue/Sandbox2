@@ -63,9 +63,13 @@ public:
     * Also return true if the point is on the face or the
     */
     bool IsPointWithinAABB(const VertType& point)const;
-
-    IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point,
-                                                          double maxDist = std::numeric_limits<double>::max()) const;
+	
+	/**
+	* Calculates the shortest distance between the point and AABB
+	* @param point This is the point from which are are calculating the distance
+	* @param maxDist This is the distance threshold beyond which 
+	*/
+    IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point, double maxDist) const;
 
     static AABB<VertType>
     CalculateAABB(const std::vector<AABB<VertType>>& aabbList);

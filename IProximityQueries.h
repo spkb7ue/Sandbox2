@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include <boost/noncopyable.hpp>
 
 namespace rabbit
 {
@@ -10,7 +9,7 @@ class Mesh;
 
 template<typename PolygonType,
          typename ProximityQueryMethod>
-class IProximityQueries : boost::noncopyable
+class IProximityQueries
 {
 public:
     explicit IProximityQueries(std::shared_ptr<Mesh<PolygonType>> mesh):m_mesh(mesh){}

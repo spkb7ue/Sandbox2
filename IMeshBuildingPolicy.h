@@ -1,13 +1,13 @@
 #pragma once
 
-#include <boost/noncopyable.hpp>
+//#include <boost/noncopyable.hpp>
 #include <vector>
 
 namespace rabbit
 {
 
 template<typename PolygonType>
-class IMeshBuildingPolicy : boost::noncopyable
+class IMeshBuildingPolicy// : boost::noncopyable
 {
 public:
 

@@ -6,14 +6,13 @@
 namespace rabbit
 {
 
+const double EPSILON = (1.0E-12);
 template <class T>
 class Vec3_
 {
     private:
         std::array<T, 3> m_coords;
-    public:
-
-        static constexpr T EPSILON = T(1.0E-12);
+    public:        
 
         // Default constructor
         Vec3_():m_coords({0, 0, 0}){}
