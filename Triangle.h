@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 #include "IntersectionResult.h"
+#include "AABB.h"
 namespace rabbit
 {
 
@@ -25,6 +26,9 @@ class Triangle : public Shape<T, 3, ids>
 {
 public:
 
+    using Shape<T,3,ids>::m_verts;
+    using Shape<T,3,ids>::m_edges;
+
     Triangle(const T& p0, const T& p1, const T& p2):
         Shape<T, 3, ids>({p0, p1, p2}, {p1-p0, p2-p0, p2-p1}),
         m_normal((T::crossProduct(p1-p0,p2-p0).normalise())){}
@@ -38,13 +42,13 @@ public:
     T& Normal(){return m_normal;}
     const T& Normal()const{return m_normal;}
 
-    const T& P0()const{return this->m_verts[0];}
-    const T& P1()const{return this->m_verts[1];}
-    const T& P2()const{return this->m_verts[2];}
+    const T& P0()const{return m_verts[0];}
+    const T& P1()const{return m_verts[1];}
+    const T& P2()const{return m_verts[2];}
 
-    const T& P0P1()const{return this->m_edges[0];}
-    const T& P0P2()const{return this->m_edges[1];}
-    const T& P1P2()const{return this->m_edges[2];}
+    const T& P0P1()const{return m_edges[0];}
+    const T& P0P2()const{return m_edges[1];}
+    const T& P1P2()const{return m_edges[2];}
 
     BarycentricCoords CalcBarycentricCoords(const T& point)const;
 
@@ -59,11 +63,31 @@ public:
                                               const T& seg,
                                               const T& point)const;
 
+
+    AABB<T> CalculateAABB() const;
+
     ~Triangle(){};
 private:
     T m_normal;
 
 };
+
+template<typename T>
+AABB<T> Triangle<T>::CalculateAABB()const
+{
+    double xmin = std::min(std::min(m_verts[0].X(), m_verts[1].X()),m_verts[2].X());
+    double xmax = std::max(std::max(m_verts[0].X(), m_verts[1].X()),m_verts[2].X());
+
+    double ymin = std::min(std::min(m_verts[0].Y(), m_verts[1].Y()),m_verts[2].Y());
+    double ymax = std::max(std::max(m_verts[0].Y(), m_verts[1].Y()),m_verts[2].Y());
+
+    double zmin = std::min(std::min(m_verts[0].Z(), m_verts[1].Z()),m_verts[2].Z());
+    double zmax = std::max(std::max(m_verts[0].Z(), m_verts[1].Z()),m_verts[2].Z());
+
+    T center((xmin + xmax)*0.5, (ymin + ymax)*0.5, (zmin + zmax)*0.5);
+    T halfExtents(xmax - center.X(), ymax - center.Y(), zmax - center.Z());
+    return AABB<T>(center, halfExtents);
+}
 
 template<typename T>
 PointSegIntersection<T> Triangle<T>::CheckPointSegDist(const T& origin,const T& seg,const T& P)const
@@ -119,13 +143,13 @@ IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p, double m
     else
     {
         // Lets check intersection with the other edges now.
-        const auto P0_P1_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[0],projectedPoint);
+        const auto P0_P1_Data = CheckPointSegDist(m_verts[0], m_edges[0],projectedPoint);
         const auto d0 = P0_P1_Data.IRes.Dist;
 
-        const auto P0_P2_Data = CheckPointSegDist(this->m_verts[0], this->m_edges[1], projectedPoint);
+        const auto P0_P2_Data = CheckPointSegDist(m_verts[0], m_edges[1], projectedPoint);
         const auto d1 = P0_P2_Data.IRes.Dist;
 
-        const auto P1_P2_Data = this->CheckPointSegDist(this->m_verts[1],this->m_edges[2],projectedPoint);
+        const auto P1_P2_Data = CheckPointSegDist(m_verts[1],m_edges[2],projectedPoint);
         const auto d2 = P1_P2_Data.IRes.Dist;
         if(d0 < d1)
         {
@@ -159,9 +183,9 @@ IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p, double m
 template<typename T>
 IntersectionResult<T> Triangle<T>::ProjectPointOntoShapePlane(const T& p)const
 {
-    const auto p_P0 = this->m_verts[0] - p;
-    auto signedDist = T::dotProduct(p_P0, this->m_normal);
-    return IntersectionResult<T>(T(p + this->m_normal*signedDist), std::abs(signedDist));
+    const auto p_P0 = m_verts[0] - p;
+    auto signedDist = T::dotProduct(p_P0, m_normal);
+    return IntersectionResult<T>(T(p + m_normal*signedDist), std::abs(signedDist));
 }
 
 template<typename T>
@@ -181,14 +205,14 @@ BarycentricCoords Triangle<T>::CalcBarycentricCoords(const T& P)const
     //  |x| = |a, b||u|
     //  |y| = |c, d||v|
 
-    const auto P0_P = P - this->m_verts[0];
-    const auto x = T::dotProduct(this->m_edges[0],P0_P);
-    const auto y = T::dotProduct(this->m_edges[1],P0_P);
+    const auto P0_P = P - m_verts[0];
+    const auto x = T::dotProduct(m_edges[0],P0_P);
+    const auto y = T::dotProduct(m_edges[1],P0_P);
 
-    const auto a = T::dotProduct(this->m_edges[0],this->m_edges[0]);
-    const auto b = T::dotProduct(this->m_edges[0],this->m_edges[1]);
-    const auto c = T::dotProduct(this->m_edges[1],this->m_edges[0]);
-    const auto d = T::dotProduct(this->m_edges[1],this->m_edges[1]);
+    const auto a = T::dotProduct(m_edges[0],m_edges[0]);
+    const auto b = T::dotProduct(m_edges[0],m_edges[1]);
+    const auto c = T::dotProduct(m_edges[1],m_edges[0]);
+    const auto d = T::dotProduct(m_edges[1],m_edges[1]);
 
     const auto inverseDet = 1.0/(a*d - c*b);
     const auto u = inverseDet * (d*x - b*y);
