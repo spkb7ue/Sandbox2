@@ -6,7 +6,6 @@
 namespace rabbit
 {
 
-template <typename VertType>
 struct Bounds
 {
     Bounds(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax):
@@ -25,6 +24,7 @@ struct Bounds
         zMin(0.0),
         zMax(0.0){}
 
+    template<typename VertType>
     Bounds(const VertType& center, const VertType& halfExtents):
         xMin(center.X() - halfExtents.X()),
         xMax(center.X() + halfExtents.X()),
@@ -55,7 +55,7 @@ public:
         m_bounds(center, halfExtents){}
 
     AABB(const AABB<VertType>&);
-    AABB(const Bounds<VertType>& bounds);
+    AABB(const Bounds& bounds);
 
     /**
     * @param point Point of interest
@@ -72,7 +72,7 @@ public:
 
     VertType Center() const{return m_center;}
     VertType HalfExtents() const{return m_halfExtents;}
-    Bounds<VertType> GetBounds()const{return m_bounds;}
+    Bounds GetBounds()const{return m_bounds;}
 
     std::pair<double, int> GetLargestDim()
     {
@@ -103,11 +103,11 @@ public:
   private:
     VertType m_center;
     VertType m_halfExtents;
-    Bounds<VertType> m_bounds;
+    Bounds m_bounds;
 };
 
 template<typename VertType>
-AABB<VertType>::AABB(const Bounds<VertType>& b):
+AABB<VertType>::AABB(const Bounds& b):
     m_center(VertType((b.xMax + b.xMin)*0.5,
                       (b.yMax + b.yMin)*0.5,
                       (b.zMax + b.zMin)*0.5)),
@@ -122,7 +122,7 @@ AABB<VertType>::AABB(const Bounds<VertType>& b):
 template<typename VertType>
 AABB<VertType> AABB<VertType>::CalculateAABB(const std::vector<AABB<VertType>>& aabbList)
 {
-    Bounds<VertType> bounds;
+    Bounds bounds;
     bool setInitialBounds = false;
     for(const AABB<VertType>& aabb : aabbList)
     {
@@ -134,7 +134,7 @@ AABB<VertType> AABB<VertType>::CalculateAABB(const std::vector<AABB<VertType>>& 
         else
         {
             // Update the bounds as required.
-            const Bounds<VertType> BOUNDS = aabb.GetBounds();
+            const Bounds BOUNDS = aabb.GetBounds();
 
             bounds.xMin = std::min(bounds.xMin, BOUNDS.xMin);
             bounds.xMax = std::max(bounds.xMax, BOUNDS.xMax);
