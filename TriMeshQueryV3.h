@@ -29,6 +29,13 @@ private:
 
     std::pair<AABBNode*, AABBNode*> GenerateNodes(AABBNode* parent);
 
+    Bounds RecalculateBounds(const Bounds& bound, double dim, int index);
+
+    void PopulateChildIndices(std::vector<int>& child1Indices,
+                              std::vector<int>& child2Indices,
+                               const AABB3& child1AABB,
+                               const std::vector<int>& parentIndices);
+
     std::vector<AABB3> m_aabb;
     std::vector<AABBNode*> m_aabbTree;
 };
