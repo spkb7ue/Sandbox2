@@ -61,9 +61,6 @@ BOOST_AUTO_TEST_CASE(TestAABB_CalculateShortestDistance)
     Vec3 displacementDir = centerToHalfExtents.normalise();
     Vec3 pointOutside = center + halfExtents + displacementDir * expectedDistance;
 
-    cout<<aabb.CalcShortestDistanceFrom(pointOutside).Dist<<endl;
-    cout<<expectedDistance<<endl;
-
     // Assert that we do get the expected distance
     BOOST_ASSERT( std::abs(aabb.CalcShortestDistanceFrom(pointOutside).Dist-expectedDistance) < Vec3::EPSILON);
     double LARGE = 1000000000.0;
