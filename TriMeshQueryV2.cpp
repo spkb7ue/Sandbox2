@@ -37,18 +37,20 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const
     {
         IntRes resAABB = m_aabb[i].CalcShortestDistanceFrom(point, minDist);
         if(resAABB.Dist < minDist)
-        {
-            // We only bother looking at the triangle if the distance to
+        {   // We only bother looking at the triangle if the distance to
             // AABB is less than the threshold
 
-            minDist = resAABB.Dist;
             IntersectionResult<Vec3> resTri = triangles[i].CalcShortestDistanceFrom(point, minDist);
             if(resTri.Dist < minDist)
             {
-              //  minDist = res.Dist;
-                //closestPoint = res.Point;
+                // Now that we have found atleast one point to the mesh,
+                // we update the minDist
+                minDist = resTri.Dist;
+                closestPoint = resTri.Point;
                 foundPoint = true;
             }
         }
     }
+
+    return std::make_tuple(closestPoint, minDist, foundPoint);
 }
