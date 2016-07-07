@@ -47,6 +47,83 @@ void TriMeshProxQueryV3::CalculateLeastDistRecursive(const Vec3& point,
                                                      bool& found )
 {
 
+    double distToLeft = std::numeric_limits<double>::max();
+    double distToRight = std::numeric_limits<double>::max();
+    bool canGoLeft = false;
+    bool canGoRight = false;
+    if(node->GetLeft() != nullptr)
+    {
+        IntersectionResult<Vec3> res = node->GetLeft()->Data().aabb.CalcShortestDistanceFrom(point, minDist);
+        node->GetLeft()->Data().dist = res.Dist;
+        canGoLeft = res.Dist < minDist;
+    }
+
+    if(node->GetRight() != nullptr)
+    {
+        IntersectionResult<Vec3> res = node->GetRight()->Data().aabb.CalcShortestDistanceFrom(point, minDist);
+        node->GetRight()->Data().dist = res.Dist;
+        canGoRight = res.Dist < minDist;
+    }
+
+    if(canGoLeft || canGoRight)
+    {
+        if(node->GetLeft()->Data().dist < node->GetRight()->Data().dist)
+        {
+            CalculateLeastDistRecursive(point, minDist, node->GetLeft(), closestPoint, found);
+        }
+        else
+        {
+            CalculateLeastDistRecursive(point, minDist, node->GetRight(), closestPoint, found);
+        }
+    }
+
+
+    if(node->GetLeft() == nullptr && node->GetRight() == nullptr)
+    {
+        // This means we have reached the leaf node.
+        const std::vector<int>& indices = node->Data().triIndices;
+        if(indices.size() == 0)
+        {
+            // something has gone wrong
+            throw;
+        }
+
+        const std::vector<Tri>& triangles = m_mesh->GetPolygons();
+        // Ok so we have calculated the
+
+        for(int i=0;i<indices.size();++i)
+        {
+            // As Before, first do a check with the bounding box
+            IntersectionResult<Vec3> resAABB = m_aabb[i].CalcShortestDistanceFrom(point, minDist);
+            if(resAABB.Dist < minDist)
+            {   // We only bother looking at the triangle if the distance to
+                // AABB is less than the threshold
+                IntersectionResult<Vec3> resTri = triangles[i].CalcShortestDistanceFrom(point, minDist);
+                if(resTri.Dist < minDist)
+                {
+                    // Now that we have found atleast one point to the mesh,
+                    // we update the minDist. This has a cumulative
+                    minDist = resTri.Dist;
+                    closestPoint = resTri.Point;
+                    found = true;
+                }
+            }
+        }
+    }
+
+    if(found)
+    {
+        TriMeshProxQueryV3::AABBNode* parent = node->GetParent();
+        if(parent != nullptr)
+        {
+            parent->Data().dist = minDist;
+            TriMeshProxQueryV3::AABBNode* sisterNode = parent->GetLeft() == node ? parent->GetRight() : parent->GetLeft();
+            if(sisterNode->Data().dist < minDist)
+            {
+                CalculateLeastDistRecursive(point, minDist,sisterNode,closestPoint,found);
+            }
+        }
+    }
 }
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
