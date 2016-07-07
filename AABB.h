@@ -80,22 +80,22 @@ public:
         {
             if(m_halfExtents.X() > m_halfExtents.Z())
             {
-                return std::make_pair(m_halfExtents.X(), 0);
+                return std::make_pair(m_halfExtents.X()*2.0, 0);
             }
             else
             {
-                return std::make_pair(m_halfExtents.Z(), 2);
+                return std::make_pair(m_halfExtents.Z()*2.0, 2);
             }
         }
         else
         {
             if(m_halfExtents.Y() > m_halfExtents.Z())
             {
-                return std::make_pair(m_halfExtents.Y(), 1);
+                return std::make_pair(m_halfExtents.Y()*2.0, 1);
             }
             else
             {
-                return std::make_pair(m_halfExtents.Z(), 2);
+                return std::make_pair(m_halfExtents.Z()*2.0, 2);
             }
         }
     }

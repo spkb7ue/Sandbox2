@@ -24,8 +24,14 @@ private:
   BNode<T> *m_parent;
   BNode<T> *m_left;
   BNode<T> *m_right;
-
 };
+
+template<typename T>
+void BNode<T>::SetChildren(BNode<T>* left, BNode<T>* right)
+{
+    m_left = left;
+    m_right = right;
+}
 
 template<typename T>
 BNode<T>::BNode(const T& data, BNode<T>* parent):

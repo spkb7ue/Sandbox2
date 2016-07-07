@@ -29,19 +29,25 @@ void TriMeshProxQueryV3::Preprocess()
     NodeData rootNode(AABB3::CalculateAABB(m_aabb));
     rootNode.triIndices.resize(triangles.size());
     for(int i=0;i<rootNode.triIndices.size();++i){rootNode.triIndices[i] = i;}
-    m_aabbTree.push_back(new AABBNode(rootNode));
 
+    AABBNode* nd = new AABBNode(rootNode);
+    m_aabbTree.push_back(nd);
+
+    TriMeshProxQueryV3::AABBNode* c1(nullptr);
+    TriMeshProxQueryV3::AABBNode* c2(nullptr);
+    std::tie(c1,c2) = GenerateNodes(nd);
+    nd->SetChildren(c1, c2);
 }
 
 TriMeshProxQueryV3::~TriMeshProxQueryV3()
 {
     std::for_each(m_aabbTree.begin(), m_aabbTree.end(),[this](AABBNode* nd)
     {
-        delete nd;
+        if(nd != nullptr)
+            delete nd;
     });
     m_aabbTree.clear();
 }
-
 
 std::pair<TriMeshProxQueryV3::AABBNode*, TriMeshProxQueryV3::AABBNode*>
 TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
@@ -51,7 +57,6 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
     TriMeshProxQueryV3::AABBNode* child2AABBNode = nullptr;
 
     NodeData parentData = parent->Data();
-    //parentData.aabb.GetBounds();
     double dim;
     int index;
     std::tie(dim,index) = parentData.aabb.GetLargestDim();
@@ -72,12 +77,22 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         throw std::runtime_error("Found a bug. More unit tests....");
     }
 
-    if(child1Indices.size() != parentData.triIndices.size())
+    cout<<dim<<"\t"<<index<<endl;
+    cout<<boundsChild_1.xMin<<", "<<boundsChild_1.xMax<<", "
+    <<boundsChild_1.yMin << ", " <<boundsChild_1.yMax<< ", "
+    <<boundsChild_1.zMin<< ", " <<boundsChild_1.zMax<< endl;
+    cout<<"Parent number of triangles:"<<parent->Data().triIndices.size()<<endl;
+    cout<<"Child 1 number triangles:"<<child1Indices.size()<<endl;
+    cout<<"Child 2 number triangles:"<<child2Indices.size()<<endl;
+    cout<<"-------------------------------------------------------------------\n"<<endl;
+    cin.get();
+
+    if(child1Indices.size() > 0)
     {
         NodeData child1NodeData(aabbChild_1);
         child1NodeData.triIndices = child1Indices;
         child1AABBNode = new TriMeshProxQueryV3::AABBNode(child1NodeData);
-        m_aabbTree.push_back(child2AABBNode);
+        m_aabbTree.push_back(child1AABBNode);
     }
 
     if(child2Indices.size() && child2Indices.size() != parentData.triIndices.size())
