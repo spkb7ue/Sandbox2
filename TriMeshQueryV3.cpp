@@ -132,8 +132,9 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         m_aabbTree.push_back(child1AABBNode);
     }
 
-    if(child2Indices.size() > 0 && child2Indices.size() != parentData.triIndices.size())
+    if(child2Indices.size() > 0)
     {
+
         // Calculate AABB of child 2.
         std::vector<AABB3> child2aabbs;
         std::for_each(child2Indices.begin(), child2Indices.end(),[this, &child2aabbs](const int index)
