@@ -76,7 +76,7 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
     {
         throw std::runtime_error("Found a bug. More unit tests....");
     }
-
+/*
     cout<<dim<<"\t"<<index<<endl;
     cout<<boundsChild_1.xMin<<", "<<boundsChild_1.xMax<<", "
     <<boundsChild_1.yMin << ", " <<boundsChild_1.yMax<< ", "
@@ -86,7 +86,7 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
     cout<<"Child 2 number triangles:"<<child2Indices.size()<<endl;
     cout<<"-------------------------------------------------------------------\n"<<endl;
     cin.get();
-
+*/
     if(child1Indices.size() > 0)
     {
         NodeData child1NodeData(aabbChild_1);
