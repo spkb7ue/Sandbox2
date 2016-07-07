@@ -24,7 +24,11 @@ public:
     std::tuple<Vec3,double,bool> CalculateClosestPointImpl(const Vec3& point,double distThreshold);
     ~TriMeshProxQueryV3();
 private:
+
     void Preprocess();
+
+    std::pair<AABBNode*, AABBNode*> GenerateNodes(AABBNode* parent);
+
     std::vector<AABB3> m_aabb;
     std::vector<AABBNode*> m_aabbTree;
 };

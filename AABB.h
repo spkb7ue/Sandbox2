@@ -74,6 +74,32 @@ public:
     VertType HalfExtents() const{return m_halfExtents;}
     Bounds<VertType> GetBounds()const{return m_bounds;}
 
+    std::pair<double, int> GetLargestDim()
+    {
+        if(m_halfExtents.X() > m_halfExtents.Y())
+        {
+            if(m_halfExtents.X() > m_halfExtents.Z())
+            {
+                return std::make_pair(m_halfExtents.X(), 0);
+            }
+            else
+            {
+                return std::make_pair(m_halfExtents.Z(), 2);
+            }
+        }
+        else
+        {
+            if(m_halfExtents.Y() > m_halfExtents.Z())
+            {
+                return std::make_pair(m_halfExtents.Y(), 1);
+            }
+            else
+            {
+                return std::make_pair(m_halfExtents.Z(), 2);
+            }
+        }
+    }
+
   private:
     VertType m_center;
     VertType m_halfExtents;

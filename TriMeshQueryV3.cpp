@@ -26,11 +26,12 @@ void TriMeshProxQueryV3::Preprocess()
         m_aabb.emplace_back(t.CalculateAABB());
     });
 
-    BNode<
-
+    // Create root node data
     NodeData rootNode(AABB3::CalculateAABB(m_aabb));
     rootNode.triIndices.resize(triangles.size());
     for(int i=0;i<rootNode.triIndices.size();++i){rootNode.triIndices[i] = i;}
+    AABBNode *nd = new AABBNode(rootNode);
+    m_aabbTree.push_back(nd);
 
 }
 
@@ -41,4 +42,12 @@ TriMeshProxQueryV3::~TriMeshProxQueryV3()
         delete nd;
     });
     m_aabbTree.clear();
+}
+
+
+std::pair<TriMeshProxQueryV3::AABBNode*, TriMeshProxQueryV3::AABBNode*>
+TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
+{
+    NodeData parentData = parent->Data();
+    parentData.aabb.GetLargestDim();
 }
