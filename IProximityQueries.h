@@ -16,9 +16,9 @@ public:
     explicit IProximityQueries(std::shared_ptr<Mesh<PolygonType>> mesh):m_mesh(mesh){}
 
     template <typename VertType>
-    std::pair<VertType, double> CalculateClosestPoint(const VertType& point)
+    std::tuple<VertType,double, bool> CalculateClosestPoint(const VertType& point, double distThreshold)
     {
-        return static_cast<ProximityQueryMethod*>(this)->CalculateClosestPointImpl(point);
+        return static_cast<ProximityQueryMethod*>(this)->CalculateClosestPointImpl(point,distThreshold);
     }
 
 protected:

@@ -8,24 +8,26 @@ namespace rabbit
 TriMeshBruteForce::TriMeshBruteForce(std::shared_ptr<Mesh<Triangle<Vec3>>> mesh):
         IProximityQueries<Triangle<Vec3>, TriMeshBruteForce>(mesh){}
 
-std::pair<Vec3, double> TriMeshBruteForce::CalculateClosestPointImpl(const Vec3& point)
+std::tuple<Vec3,double,bool> TriMeshBruteForce::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
-    double minDist = std::numeric_limits<double>::max();
-    Vec3 closestPoint(0.0 ,0.0, 0.0);
-
+    Vec3 closestPoint;
+    double minDist = distThreshold;
+    bool foundPoint = false;
     // Check min distance to each triangle
     for(const Triangle<Vec3>& t : triangles)
     {
-        IntersectionResult<Vec3> res = t.CalcShortestDistanceFrom(point);
+        // Note the distance threshold gets updated if a single point is found.
+        IntersectionResult<Vec3> res = t.CalcShortestDistanceFrom(point, minDist);
         if(res.Dist < minDist)
         {
-            closestPoint = res.Point;
             minDist = res.Dist;
+            closestPoint = res.Point;
+            foundPoint = true;
         }
     }
 
-    return std::make_pair(closestPoint, minDist);
+    return std::make_tuple(closestPoint, minDist, foundPoint);
 }
 
 }
