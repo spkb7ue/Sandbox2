@@ -123,6 +123,14 @@ IntersectionResult<T> Triangle<T>::CalcShortestDistanceFrom(const T& p, double m
 {
     const auto projectedPointData = ProjectPointOntoShapePlane(p);
     const auto pDist = projectedPointData.Dist;
+    if(pDist > maxDist)
+    {
+        // If the perpendicular distance from point to the triangular plane
+        // is greater than the specified threshold, we don't do any other checks
+        // The distance is set to infinity so that no other calculations are performed
+        return IntersectionResult<T>(projectedPointData.Point, std::numeric_limits<double>::max());
+    }
+
     const T& projectedPoint = projectedPointData.Point;
     if(IsPointWithinShapeExtrudedAlongNormal(projectedPoint))
     {

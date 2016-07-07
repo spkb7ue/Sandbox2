@@ -10,6 +10,10 @@ TriMeshBruteForce::TriMeshBruteForce(std::shared_ptr<Mesh<Triangle<Vec3>>> mesh)
 Vec3 TriMeshBruteForce::CalculateClosestPointImpl(const Vec3& point)
 {
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
+    for(const Triangle<Vec3>& t : triangles)
+    {
+        IntersectionResult<Vec3> res = t.CalcShortestDistanceFrom(point);
+    }
 
 }
 
