@@ -64,6 +64,8 @@ private:
 };
 
 template<typename VertType>
-bool AABB<VertType>::IsPointWithinAABB(const VertType& point)const
+bool AABB<VertType>::IsPointWithinAABB(const VertType& point)const{
     return point.X() >= m_bounds.xMin;
 }
+
+} // namespace rabbit
