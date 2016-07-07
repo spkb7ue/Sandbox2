@@ -23,7 +23,7 @@ struct Bounds
 
     Bounds(const VertType& center, const VertType& halfExtents):
         xMin(center.X() - halfExtents.X()),
-        xMax(center.Y() + halfExtents.Y()),
+        xMax(center.X() + halfExtents.X()),
         yMin(center.Y() - halfExtents.Y()),
         yMax(center.Y() + halfExtents.Y()),
         zMin(center.Z() - halfExtents.Z()),
@@ -65,7 +65,9 @@ private:
 
 template<typename VertType>
 bool AABB<VertType>::IsPointWithinAABB(const VertType& point)const{
-    return point.X() >= m_bounds.xMin;
+    return  point.X() >= m_bounds.xMin && point.X() <= m_bounds.xMax &&
+            point.Y() >= m_bounds.yMin && point.Y() <= m_bounds.yMax &&
+            point.Z() >= m_bounds.zMin && point.Z() <= m_bounds.zMax;
 }
 
 } // namespace rabbit
