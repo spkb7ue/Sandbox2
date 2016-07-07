@@ -84,8 +84,8 @@ AABB<T> Triangle<T>::CalculateAABB()const
     double zmin = std::min(std::min(m_verts[0].Z(), m_verts[1].Z()),m_verts[2].Z());
     double zmax = std::max(std::max(m_verts[0].Z(), m_verts[1].Z()),m_verts[2].Z());
 
-    T center((xmin + xmax)*0.5, (ymin + ymax)*0.5, (zmin + zmax)*0.5);
-    T halfExtents(xmax - center.X(), ymax - center.Y(), zmax - center.Z());
+    T center((xmax + xmin)*0.5, (ymax + ymin)*0.5, (zmax + zmin)*0.5);
+    T halfExtents((xmax - xmin)*0.5, (ymax - ymin)*0.5, (zmax - zmin)*0.5);
     return AABB<T>(center, halfExtents);
 }
 

@@ -92,6 +92,21 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
     }
 }
 
+BOOST_AUTO_TEST_CASE(TestTriangle_CalcAABB)
+{
+    const auto& triangles = testData.GetTestTriangles();
+
+    for(const auto& t : triangles)
+    {
+        AABB<Vec3> aabb = t.CalculateAABB();
+
+        // Assert that all the triangle vertices are inside the aabb
+        BOOST_ASSERT(aabb.IsPointWithinAABB(t.P0()));
+        BOOST_ASSERT(aabb.IsPointWithinAABB(t.P1()));
+        BOOST_ASSERT(aabb.IsPointWithinAABB(t.P2()));
+    }
+}
+
 BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
 {
     const auto& triangles = testData.GetTestTriangles();

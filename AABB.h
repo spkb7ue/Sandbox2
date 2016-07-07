@@ -62,7 +62,6 @@ public:
     IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point,
                                                           double maxDist = std::numeric_limits<double>::max()) const;
 
-private:
     const VertType m_center;
     const VertType m_halfExtents;
     const Bounds<VertType> m_bounds;
@@ -70,9 +69,10 @@ private:
 
 template<typename VertType>
 bool AABB<VertType>::IsPointWithinAABB(const VertType& point)const{
-    return  point.X() >= m_bounds.xMin && point.X() <= m_bounds.xMax &&
-            point.Y() >= m_bounds.yMin && point.Y() <= m_bounds.yMax &&
-            point.Z() >= m_bounds.zMin && point.Z() <= m_bounds.zMax;
+    static const double EPSILON = 0.0000000001;
+    return  point.X() >= m_bounds.xMin - EPSILON && point.X() <= m_bounds.xMax + EPSILON &&
+            point.Y() >= m_bounds.yMin - EPSILON && point.Y() <= m_bounds.yMax + EPSILON &&
+            point.Z() >= m_bounds.zMin - EPSILON && point.Z() <= m_bounds.zMax + EPSILON;
 }
 
 template<typename VertType>
