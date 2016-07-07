@@ -80,13 +80,23 @@ public:
     bool IsPointWithinShapeExtrudedAlongNormal(const T& point)const;
 
 	/**
-	* 
+	* @return The intersection of the input point projected onto the
+	* plane of the triangle.
 	*/
     IntersectionResult<T> ProjectPointOntoShapePlane(const T& p)const;
 
+	/**
+	* Calculate the least distance between point and a triangle
+	* @param maxDist if closest point to the triangle is at a distance
+	* greater than maxDist, then IntersectionResult reports infinity
+	*/
     IntersectionResult<T> CalcShortestDistanceFrom(const T& point,
-                                                   double maxDist = std::numeric_limits<double>::max()) const;
+                                                   double maxDist) const;
 
+	/**
+	* Calculates the least distance between point and a segment. See the
+	* documentation for PointSegIntersection for more details
+	*/
     PointSegIntersection<T> CheckPointSegDist(const T& origin,
                                               const T& seg,
                                               const T& point)const;
