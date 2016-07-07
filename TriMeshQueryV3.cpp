@@ -132,7 +132,7 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         m_aabbTree.push_back(child1AABBNode);
     }
 
-    if(child2Indices.size() > 0)
+    if(child2Indices.size() > 0 && child2Indices.size() != parentData.triIndices.size())
     {
 
         // Calculate AABB of child 2.
