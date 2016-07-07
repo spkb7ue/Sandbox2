@@ -74,4 +74,11 @@ bool AABB<VertType>::IsPointWithinAABB(const VertType& point)const{
             point.Z() >= m_bounds.zMin && point.Z() <= m_bounds.zMax;
 }
 
+template<typename VertType>
+IntersectionResult<VertType> AABB<VertType>::CalcShortestDistanceFrom(const VertType& point,
+                                                                      double maxDist) const
+{
+    VertType closestPoint;
+}
+
 } // namespace rabbit
