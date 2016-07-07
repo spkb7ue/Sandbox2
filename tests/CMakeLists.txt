@@ -25,6 +25,11 @@ target_link_libraries(TestTriMeshQueryV1
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
 
+add_executable(TestTriMeshQueryV2 test_tri_mesh_query_v2.cpp)
+target_link_libraries(TestTriMeshQueryV2
+                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                      ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
+
 add_executable(TestAABB test_aabb.cpp)
 target_link_libraries(TestAABB
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
