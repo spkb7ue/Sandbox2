@@ -3,7 +3,7 @@
 #include "Mesh.h"
 #include "TriangularMeshBuildingPolicy.h"
 #include "TriMeshQueryV1.h"
-#define BOOST_TEST_MODULE Test_Mesh
+#define BOOST_TEST_MODULE TestTriMeshQueryV1_Mesh
 #include <boost/test/unit_test.hpp>
 
 using namespace std;
@@ -20,7 +20,7 @@ namespace
     typedef Mesh<Triangle<Vec3>> TriMesh;
 }
 
-BOOST_AUTO_TEST_CASE(TestDistQueryBrut_CTor)
+BOOST_AUTO_TEST_CASE(TestTriMeshQueryV1_CTor)
 {
     // Test if the object can be constructed
     auto buildingPolicy = GetMeshBuildingPolicy(FILE_NAME);
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(TestDistQueryBrut_CTor)
     TriMeshProxQueryV1 proximityQueries(mesh);
 }
 
-BOOST_AUTO_TEST_CASE(TestDistQueryBrut_ClosestPoint)
+BOOST_AUTO_TEST_CASE(TestTriMeshQueryV1_ClosestPoint)
 {
     auto buildingPolicy = GetMeshBuildingPolicy(FILE_NAME);
     std::shared_ptr<TriMesh> mesh = std::make_shared<TriMesh>(buildingPolicy);

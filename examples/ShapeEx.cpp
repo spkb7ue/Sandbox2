@@ -19,8 +19,8 @@ namespace
         float w,x,y,z;
     };
 
-    static mt19937::result_type seed = time(0);
-    static auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
+    mt19937::result_type seed = time(0);
+    auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
 }
 
 int main()
