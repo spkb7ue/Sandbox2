@@ -52,6 +52,8 @@ public:
         m_halfExtents(halfExtents),
         m_bounds(center, halfExtents){}
 
+    AABB(const AABB<VertType>&);
+
     /**
     * @param point Point of interest
     * @return true if the point is within the AABB.
@@ -62,10 +64,22 @@ public:
     IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point,
                                                           double maxDist = std::numeric_limits<double>::max()) const;
 
+    VertType Center() const{return m_center;}
+    VertType HalfExtents() const{return m_halfExtents;}
+    Bounds<VertType> GetBounds()const{return m_bounds;}
+
+  private:
     const VertType m_center;
     const VertType m_halfExtents;
     const Bounds<VertType> m_bounds;
 };
+
+
+template<typename VertType>
+AABB<VertType>::AABB(const AABB<VertType>& aabb):
+    m_center(aabb.Center()),
+    m_halfExtents(aabb.HalfExtents()),
+    m_bounds(aabb.GetBounds()){}
 
 template<typename VertType>
 bool AABB<VertType>::IsPointWithinAABB(const VertType& point)const{

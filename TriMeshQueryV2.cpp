@@ -1,4 +1,5 @@
-#incldue "TriMeshQueryV2.h"
+#include "TriMeshQueryV2.h"
+#include "Mesh.h"
 #include <algorithm>
 
 using namespace rabbit;
@@ -9,7 +10,7 @@ namespace
 }
 
 TriMeshProxQueryV2::TriMeshProxQueryV2(std::shared_ptr<Mesh<Tri>> mesh):
-        IProximityQueries<Tri, TriMeshProxQueryV1>(mesh)
+        IProximityQueries<Tri, TriMeshProxQueryV2>(mesh)
 {
     Preprocess();
 }
@@ -18,15 +19,13 @@ TriMeshProxQueryV2::TriMeshProxQueryV2(std::shared_ptr<Mesh<Tri>> mesh):
 void TriMeshProxQueryV2::Preprocess()
 {
     const std::vector<Tri>& triangles = m_mesh->GetPolygons();
-    m_aabb.resize(triangles.size());
-    unsigned index = 0;
-    std::for_each(triangles.begin(), triangles.end(), [&index](const Tri& t)
+    std::for_each(triangles.begin(), triangles.end(), [this](const Tri& t)
     {
-        m_aabb[index++] = t.CalculateAABB();
+        m_aabb.emplace_back(t.CalculateAABB());
     });
 }
 
-std::tuple<Vec3,double,bool> CalculateClosestPointImpl(const Vec3& point,double distThreshold)
+std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
     Vec3 closestPoint;
