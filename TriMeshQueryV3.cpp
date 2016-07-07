@@ -26,5 +26,19 @@ void TriMeshProxQueryV3::Preprocess()
         m_aabb.emplace_back(t.CalculateAABB());
     });
 
-    AABB3::CalculateAABB(m_aabb);
+    BNode<
+
+    NodeData rootNode(AABB3::CalculateAABB(m_aabb));
+    rootNode.triIndices.resize(triangles.size());
+    for(int i=0;i<rootNode.triIndices.size();++i){rootNode.triIndices[i] = i;}
+
+}
+
+TriMeshProxQueryV3::~TriMeshProxQueryV3()
+{
+    std::for_each(m_aabbTree.begin(), m_aabbTree.end(),[this](AABBNode* nd)
+    {
+        delete nd;
+    });
+    m_aabbTree.clear();
 }

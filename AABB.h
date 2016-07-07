@@ -55,7 +55,6 @@ public:
         m_bounds(center, halfExtents){}
 
     AABB(const AABB<VertType>&);
-
     AABB(const Bounds<VertType>& bounds);
 
     /**
@@ -76,9 +75,9 @@ public:
     Bounds<VertType> GetBounds()const{return m_bounds;}
 
   private:
-    const VertType m_center;
-    const VertType m_halfExtents;
-    const Bounds<VertType> m_bounds;
+    VertType m_center;
+    VertType m_halfExtents;
+    Bounds<VertType> m_bounds;
 };
 
 template<typename VertType>

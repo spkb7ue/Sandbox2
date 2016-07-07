@@ -22,6 +22,7 @@ public:
     }
 
 protected:
+    ~IProximityQueries(){}
     std::shared_ptr<Mesh<PolygonType>> m_mesh;
 };
 
