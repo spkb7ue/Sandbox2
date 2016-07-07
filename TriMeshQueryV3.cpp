@@ -176,7 +176,7 @@ Bounds TriMeshProxQueryV3::RecalculateBounds(const Bounds& bound, double dim, in
     }
     else if (index == 1)
     {
-        val.yMax == val.yMin + dim;
+        val.yMax = val.yMin + dim;
     }
     else if(index == 2)
     {

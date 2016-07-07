@@ -10,7 +10,7 @@ set(STATIC_LIBRARY_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/lib)
 set(STATIC_LIBRARY_HEADERS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/include)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin)
 
-#find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
 add_definitions(-DBOOST_TEST_DYN_LINK)
 
 add_executable(scratch ${Rabbit_Src})
