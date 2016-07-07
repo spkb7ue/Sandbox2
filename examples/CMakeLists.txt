@@ -10,3 +10,6 @@ add_custom_command(TARGET MeshBuilderEx PRE_BUILD COMMAND "${CMAKE_COMMAND}" -E 
 
 add_executable(ShapeEx ShapeEx.cpp)
 target_link_libraries(ShapeEx ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
+
+add_executable(ProxQueryEx ProxQueryEx.cpp)
+target_link_libraries(ProxQueryEx ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
