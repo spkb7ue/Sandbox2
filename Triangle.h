@@ -30,6 +30,12 @@ enum ids : unsigned
     two = 2
 };
 
+/**
+* A triangle class. The following notation is used throughout the
+* triangle related code. The triangle consists of 3 vertices 
+* represented as P0, P1 and P2. The corresponding edges are
+* P0P1, P0P2, P1P2 which completes the triangle description
+*/
 template<typename T>
 class Triangle : public Polygon<T, 3, ids>
 {
@@ -59,7 +65,11 @@ public:
     const T& P0P2()const{return m_edges[1];}
     const T& P1P2()const{return m_edges[2];}
 
-    BarycentricCoords CalcBarycentricCoords(const T& point)const;
+	/**
+	* @param point, point whose bc coords are to be calculated.
+	* @return Returns the barycentric coords of the input point
+	*/
+	BarycentricCoords CalcBarycentricCoords(const T& point)const;
 
     bool IsPointWithinShapeExtrudedAlongNormal(const T& point)const;
 
