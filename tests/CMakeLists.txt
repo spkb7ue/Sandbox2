@@ -20,8 +20,8 @@ target_link_libraries(TestTriangle
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
 
-add_executable(TestDistBruteForce test_dist_brute_force.cpp)
-target_link_libraries(TestDistBruteForce
+add_executable(TestTriMeshQueryV1 test_tri_mesh_query_v1.cpp)
+target_link_libraries(TestTriMeshQueryV1
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       ${STATIC_LIBRARY_OUTPUT_DIR}/libRabbit.a)
 
