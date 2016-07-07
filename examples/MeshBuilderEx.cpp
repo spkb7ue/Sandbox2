@@ -13,7 +13,6 @@ namespace
     // Custom Shape. A quadrilateral with 4 verts of type Point3
     struct Quad
     {
-        typedef Point3 VertType;
         Point3 m_verts[4];
     };
 
