@@ -35,7 +35,7 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const
 
     for(unsigned i = 0; i < m_aabb.size(); ++i)
     {
-        IntRes resAABB = m_aabb.CalcShortestDistanceFrom(point, minDist);
+        IntRes resAABB = m_aabb[i].CalcShortestDistanceFrom(point, minDist);
         if(resAABB.Dist < minDist)
         {
             // We only bother looking at the triangle if the distance to
@@ -45,8 +45,8 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const
             IntersectionResult<Vec3> resTri = triangles[i].CalcShortestDistanceFrom(point, minDist);
             if(resTri.Dist < minDist)
             {
-                minDist = res.Dist;
-                closestPoint = res.Point;
+              //  minDist = res.Dist;
+                //closestPoint = res.Point;
                 foundPoint = true;
             }
         }

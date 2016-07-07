@@ -19,7 +19,7 @@ public:
 private:
 
     void Preprocess();
-    std::vector<AABB<Vec3>> m_aabb;
+    std::vector< AABB<Vec3> > m_aabb;
 };
 
 }
