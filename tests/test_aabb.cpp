@@ -44,3 +44,32 @@ BOOST_AUTO_TEST_CASE(TestAABB_IsPointInsideAABB)
     BOOST_ASSERT(aabb.IsPointWithinAABB(boxVert7));
     BOOST_ASSERT(!aabb.IsPointWithinAABB(center + halfExtents*1.1));
 }
+
+BOOST_AUTO_TEST_CASE(TestAABB_CalculateShortestDistance)
+{
+    Vec3 center(real_rand(),real_rand(),real_rand());
+    Vec3 halfExtents(real_rand(),real_rand(),real_rand());
+    AABB<Vec3> aabb(center, halfExtents);
+    Vec3 boxVert0 = center + Vec3(-halfExtents.X(), -halfExtents.Y(), -halfExtents.Z());
+
+    // Assert that for a point inside, we get a zero distance
+    BOOST_ASSERT(aabb.CalcShortestDistanceFrom(center).Dist < Vec3::EPSILON);
+    BOOST_ASSERT(aabb.CalcShortestDistanceFrom(boxVert0).Dist < Vec3::EPSILON);
+
+    double expectedDistance = std::max(0.01, real_rand());
+    Vec3 centerToHalfExtents = center + halfExtents;
+    Vec3 displacementDir = centerToHalfExtents.normalise();
+    Vec3 pointOutside = center + halfExtents + displacementDir * expectedDistance;
+
+    cout<<aabb.CalcShortestDistanceFrom(pointOutside).Dist<<endl;
+    cout<<expectedDistance<<endl;
+
+    // Assert that we do get the expected distance
+    BOOST_ASSERT( std::abs(aabb.CalcShortestDistanceFrom(pointOutside).Dist-expectedDistance) < Vec3::EPSILON);
+    double LARGE = 1000000000.0;
+    // Assert that if the distance is greater than threshold, we get a large distance
+    BOOST_ASSERT( aabb.CalcShortestDistanceFrom(pointOutside, expectedDistance - std::max(real_rand(),0.0001)).Dist > LARGE);
+
+
+
+}

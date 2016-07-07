@@ -81,8 +81,8 @@ IntersectionResult<VertType> AABB<VertType>::CalcShortestDistanceFrom(const Vert
 {
     // labels for convenience
     const double px = point.X();
-    const double py = point.y();
-    const double pz = point.z();
+    const double py = point.Y();
+    const double pz = point.Z();
 
     double x = (px < m_bounds.xMin) ?  m_bounds.xMin : (px > m_bounds.xMax ? m_bounds.xMax : px);
     double y = (py < m_bounds.yMin) ?  m_bounds.yMin : (py > m_bounds.yMax ? m_bounds.yMax : py);
