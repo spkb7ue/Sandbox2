@@ -1,5 +1,6 @@
 #pragma once
 #include "IntersectionResult.h"
+#include <limits>
 namespace rabbit
 {
 
@@ -78,7 +79,19 @@ template<typename VertType>
 IntersectionResult<VertType> AABB<VertType>::CalcShortestDistanceFrom(const VertType& point,
                                                                       double maxDist) const
 {
-    VertType closestPoint;
+    // labels for convenience
+    const double px = point.X();
+    const double py = point.y();
+    const double pz = point.z();
+
+    double x = (px < m_bounds.xMin) ?  m_bounds.xMin : (px > m_bounds.xMax ? m_bounds.xMax : px);
+    double y = (py < m_bounds.yMin) ?  m_bounds.yMin : (py > m_bounds.yMax ? m_bounds.yMax : py);
+    double z = (pz < m_bounds.zMin) ?  m_bounds.zMin : (pz > m_bounds.zMax ? m_bounds.zMax : pz);
+
+    VertType closestPoint(x,y,z);
+    double dist = (point - closestPoint).magnitude();
+    return dist <= maxDist ? IntersectionResult<VertType>(closestPoint, dist) :
+                             IntersectionResult<VertType>(VertType(), std::numeric_limits<double>::max());
 }
 
 } // namespace rabbit
