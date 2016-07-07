@@ -3,6 +3,7 @@
 #include "Polygon.h"
 #include "IntersectionResult.h"
 #include "AABB.h"
+
 namespace rabbit
 {
 
