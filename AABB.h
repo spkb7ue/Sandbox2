@@ -1,46 +1,15 @@
 #pragma once
 #include "IntersectionResult.h"
+#include "Bounds.h"
 #include <limits>
 #include <vector>
 
 namespace rabbit
 {
 
-struct Bounds
-{
-    Bounds(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax):
-        xMin(xmin),
-        xMax(xmax),
-        yMin(ymin),
-        yMax(ymax),
-        zMin(zmin),
-        zMax(zmax){}
-
-    Bounds():
-        xMin(0.0),
-        xMax(0.0),
-        yMin(0.0),
-        yMax(0.0),
-        zMin(0.0),
-        zMax(0.0){}
-
-    template<typename VertType>
-    Bounds(const VertType& center, const VertType& halfExtents):
-        xMin(center.X() - halfExtents.X()),
-        xMax(center.X() + halfExtents.X()),
-        yMin(center.Y() - halfExtents.Y()),
-        yMax(center.Y() + halfExtents.Y()),
-        zMin(center.Z() - halfExtents.Z()),
-        zMax(center.Z() + halfExtents.Z()){}
-
-    double xMin;
-    double xMax;
-    double yMin;
-    double yMax;
-    double zMin;
-    double zMax;
-};
-
+/*
+* Axis Alinged Bounding Box (AABB)
+*/
 template<typename VertType>
 class AABB
 {
@@ -67,43 +36,29 @@ public:
 	/**
 	* Calculates the shortest distance between the point and AABB
 	* @param point This is the point from which are are calculating the distance
-	* @param maxDist This is the distance threshold beyond which 
+	* @param maxDist This is the distance threshold. If the actual distance from
+	* the point to the AABB is larger than this, the function results infinite distance
+	* @return IntersectionResult If a close point is found within the specified threshold,
+	* then the IntersectionResult gives the point of intersection and the distance to the point
+	* If a point is not found, the returned distance is std::numeric_limits<double>::max();
 	*/
     IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point, double maxDist) const;
 
-    static AABB<VertType>
-    CalculateAABB(const std::vector<AABB<VertType>>& aabbList);
+	/**
+	* Calculates the AABB which completely encloses a vector of aabbs
+	*/
+    static AABB<VertType> CalculateAABB(const std::vector<AABB<VertType>>& aabbList);
 
     VertType Center() const{return m_center;}
     VertType HalfExtents() const{return m_halfExtents;}
     Bounds GetBounds()const{return m_bounds;}
 
-    std::pair<double, int> GetLargestDim()
-    {
-        if(m_halfExtents.X() > m_halfExtents.Y())
-        {
-            if(m_halfExtents.X() > m_halfExtents.Z())
-            {
-                return std::make_pair(m_halfExtents.X()*2.0, 0);
-            }
-            else
-            {
-                return std::make_pair(m_halfExtents.Z()*2.0, 2);
-            }
-        }
-        else
-        {
-            if(m_halfExtents.Y() > m_halfExtents.Z())
-            {
-                return std::make_pair(m_halfExtents.Y()*2.0, 1);
-            }
-            else
-            {
-                return std::make_pair(m_halfExtents.Z()*2.0, 2);
-            }
-        }
-    }
-
+	/** 
+	* @returns the largest dimension of the AABB (std::pair<>::first) and 
+	* the axis index along which the maximum dimension is (std::pair<>::second)
+	*/
+	std::pair<double, int> GetLargestDim();
+    
   private:
     VertType m_center;
     VertType m_halfExtents;
@@ -121,6 +76,33 @@ AABB<VertType>::AABB(const Bounds& b):
     m_bounds(b)
 {
 
+}
+
+template<typename VertType>
+std::pair<double, int> AABB<VertType>::GetLargestDim()
+{
+	if (m_halfExtents.X() > m_halfExtents.Y())
+	{
+		if (m_halfExtents.X() > m_halfExtents.Z())
+		{
+			return std::make_pair(m_halfExtents.X()*2.0, 0);
+		}
+		else
+		{
+			return std::make_pair(m_halfExtents.Z()*2.0, 2);
+		}
+	}
+	else
+	{
+		if (m_halfExtents.Y() > m_halfExtents.Z())
+		{
+			return std::make_pair(m_halfExtents.Y()*2.0, 1);
+		}
+		else
+		{
+			return std::make_pair(m_halfExtents.Z()*2.0, 2);
+		}
+	}
 }
 
 template<typename VertType>
