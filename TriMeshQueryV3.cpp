@@ -10,7 +10,7 @@ namespace
     typedef Triangle<Vec3> Tri;
     typedef IntersectionResult<Vec3> IntRes;
 
-    // Debug function.
+    // Debug function. Just print out the tree to see its structure.
     void printIndices(TriMeshProxQueryV3::AABBNode* node)
     {
         if(node == nullptr)
@@ -29,7 +29,6 @@ namespace
         }
         cout<<"\n------------------\n";
 
-        //cin.get();
         printIndices(node->GetLeft());
         printIndices(node->GetRight());
     }
@@ -61,8 +60,6 @@ void TriMeshProxQueryV3::Preprocess()
     TriMeshProxQueryV3::AABBNode* c2(nullptr);
     std::tie(c1,c2) = GenerateNodes(nd);
     nd->SetChildren(c1, c2);
-
-    printIndices(nd);
 }
 
 TriMeshProxQueryV3::~TriMeshProxQueryV3()
@@ -96,34 +93,16 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
     // Create new bounding box for the child one.
     AABB<Vec3> aabbChild_1(boundsChild_1);
 
-    // of the parent triangles, find out how many fit in the new bounding box
-
     std::vector<int> child1Indices;
     std::vector<int> child2Indices;
 
     PopulateChildIndices(child1Indices, child2Indices, aabbChild_1, parentData.triIndices);
-    /*if(parentData.triIndices.size() == 17)
-    {
-        cout<<"asdfadsf\n";
-        cout<<child1Indices.size()<<endl;
-        cout<<child2Indices.size()<<endl;
-        cin.get();
-    }*/
+
     if(child1Indices.size() + child2Indices.size() != parentData.triIndices.size())
     {
         throw std::runtime_error("Found a bug. More unit tests....");
     }
-/*
-    cout<<dim<<"\t"<<index<<endl;
-    cout<<boundsChild_1.xMin<<", "<<boundsChild_1.xMax<<", "
-    <<boundsChild_1.yMin << ", " <<boundsChild_1.yMax<< ", "
-    <<boundsChild_1.zMin<< ", " <<boundsChild_1.zMax<< endl;
-    cout<<"Parent number of triangles:"<<parent->Data().triIndices.size()<<endl;
-    cout<<"Child 1 number triangles:"<<child1Indices.size()<<endl;
-    cout<<"Child 2 number triangles:"<<child2Indices.size()<<endl;
-    cout<<"-------------------------------------------------------------------\n"<<endl;
-    cin.get();
-*/
+
     if(child1Indices.size() > 0)
     {
         NodeData child1NodeData(aabbChild_1);
