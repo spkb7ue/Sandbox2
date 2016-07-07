@@ -4,17 +4,17 @@ namespace rabbit
 {
 
 template<typename T, unsigned N, typename AccessIDs>
-class Shape
+class Polygon
 {
 public:
-    Shape(std::initializer_list<T> verts,
+	Polygon(std::initializer_list<T> verts,
           std::initializer_list<T> edges)
     {
         std::copy(verts.begin(), verts.end(), m_verts);
         std::copy(edges.begin(), edges.end(), m_edges);
     }
 
-    Shape(){}
+	Polygon(){}
 
     unsigned GetNVerts(){return N;}
 

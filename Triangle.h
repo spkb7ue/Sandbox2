@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Shape.h"
+#include "Polygon.h"
 #include "IntersectionResult.h"
 #include "AABB.h"
 namespace rabbit
@@ -22,21 +22,21 @@ enum ids : unsigned
 };
 
 template<typename T>
-class Triangle : public Shape<T, 3, ids>
+class Triangle : public Polygon<T, 3, ids>
 {
 public:
 
-    using Shape<T,3,ids>::m_verts;
-    using Shape<T,3,ids>::m_edges;
+	using Polygon<T, 3, ids>::m_verts;
+	using Polygon<T, 3, ids>::m_edges;
 
     Triangle(const T& p0, const T& p1, const T& p2):
-        Shape<T, 3, ids>({p0, p1, p2}, {p1-p0, p2-p0, p2-p1}),
+        Polygon<T, 3, ids>({p0, p1, p2}, {p1-p0, p2-p0, p2-p1}),
         m_normal((T::crossProduct(p1-p0,p2-p0).normalise())){}
 
     Triangle(const T& p0, const T& p1, const T& p2,
                const T& e0, const T& e1, const T& e2,
                const T& normal):
-        Shape<T, 3, ids>({p0, p1, p2}, {e0, e1, e2}),
+        Polygon<T, 3, ids>({p0, p1, p2}, {e0, e1, e2}),
         m_normal(normal){}
 
     T& Normal(){return m_normal;}
