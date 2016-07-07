@@ -45,7 +45,7 @@ namespace
         auto PointWithinTriangle = GenerateTriangleInternalPoint(t);
         auto ExtrudedPoint = PointWithinTriangle + t.Normal()*distance;
         return std::make_tuple(PointWithinTriangle, ExtrudedPoint, distance);
-    };
+    }
 
     Point GeneratePointOutsideExtrudedTriangle(const Triangle<Vec3>& t)
     {
