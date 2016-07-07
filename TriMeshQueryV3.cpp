@@ -103,7 +103,7 @@ void TriMeshProxQueryV3::CalculateLeastDistRecursive(const Vec3& point,
         const std::vector<Tri>& triangles = m_mesh->GetPolygons();
         // Ok so we have calculated the
 
-        for(int i=0;i<indices.size();++i)
+        for(unsigned i=0;i<indices.size();++i)
         {
             // As Before, first do a check with the bounding box
             IntersectionResult<Vec3> resAABB = m_aabb[i].CalcShortestDistanceFrom(point, minDist);
@@ -266,7 +266,7 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
 		if (c2!=nullptr)
 		{
 			c2->SetParent(child1AABBNode);
-		}		
+		}
     }
 
     if(child2AABBNode != nullptr)
@@ -279,12 +279,12 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
 		{
 			c1->SetParent(child1AABBNode);
 		}
-		
+
 		if (c2 != nullptr)
 		{
 			c2->SetParent(child1AABBNode);
 		}
-		
+
     }
 
     return std::make_pair(child1AABBNode, child2AABBNode);

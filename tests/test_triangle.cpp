@@ -81,13 +81,13 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
         {   /// Test P0 with P0P1
             auto px = t.CheckPointSegDist(t.P0(),t.P0P1(),t.P0());
             BOOST_ASSERT(px.IsWithinExtrudedNormal);
-            BOOST_ASSERT(std::abs(px.IRes.Dist) < Vec3::EPSILON);
+            BOOST_ASSERT(std::abs(px.IRes.Dist) < EPSILON);
         }
 
         {   /// Test P0 with P0P2
             auto px = t.CheckPointSegDist(t.P0(),t.P0P2(),t.P0());
             BOOST_ASSERT(px.IsWithinExtrudedNormal);
-            BOOST_ASSERT(std::abs(px.IRes.Dist) < Vec3::EPSILON);
+            BOOST_ASSERT(std::abs(px.IRes.Dist) < EPSILON);
         }
     }
 }
@@ -114,10 +114,10 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CTor)
     for(const Triangle<Vec3>& t : triangles)
     {
         // Ensure that the the triangles on construction are set up correctly
-        BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P1())) < Vec3::EPSILON);
-        BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P2())) < Vec3::EPSILON);
-        BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P1P2())) < Vec3::EPSILON);
-        BOOST_ASSERT(std::abs(t.Normal().magnitude()-1.0f) < Vec3::EPSILON);
+        BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P1())) < EPSILON);
+        BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P0P2())) < EPSILON);
+        BOOST_ASSERT(std::abs(Vec3::dotProduct(t.Normal(), t.P1P2())) < EPSILON);
+        BOOST_ASSERT(std::abs(t.Normal().magnitude()-1.0f) < EPSILON);
     }
 }
 
@@ -131,20 +131,20 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
         // for all the 3 vertices
         {   // Test vertex P0
             auto coords = t.CalcBarycentricCoords(t.P0());
-            BOOST_ASSERT(std::abs(coords.u)<Vec3::EPSILON);
-            BOOST_ASSERT(std::abs(coords.v)<Vec3::EPSILON);
+            BOOST_ASSERT(std::abs(coords.u)<EPSILON);
+            BOOST_ASSERT(std::abs(coords.v)<EPSILON);
         }
 
         {   // Test vertex P1
             auto coords = t.CalcBarycentricCoords(t.P1());
-            BOOST_ASSERT(std::abs(coords.u-1.0f)<Vec3::EPSILON);
-            BOOST_ASSERT(std::abs(coords.v)<Vec3::EPSILON);
+            BOOST_ASSERT(std::abs(coords.u-1.0f)<EPSILON);
+            BOOST_ASSERT(std::abs(coords.v)<EPSILON);
         }
 
         {   // Test vertex P2
             auto coords = t.CalcBarycentricCoords(t.P2());
-            BOOST_ASSERT(std::abs(coords.u)<Vec3::EPSILON);
-            BOOST_ASSERT(std::abs(coords.v-1.0f)<Vec3::EPSILON);
+            BOOST_ASSERT(std::abs(coords.u)<EPSILON);
+            BOOST_ASSERT(std::abs(coords.v-1.0f)<EPSILON);
         }
 
         const double TOLERANCE = 0.005f;

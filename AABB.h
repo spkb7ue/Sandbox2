@@ -32,7 +32,7 @@ public:
     * Also return true if the point is on the face or the
     */
     bool IsPointWithinAABB(const VertType& point)const;
-	
+
 	/**
 	* Calculates the shortest distance between the point and AABB
 	* @param point This is the point from which are are calculating the distance
@@ -42,7 +42,7 @@ public:
 	* then the IntersectionResult gives the point of intersection and the distance to the point
 	* If a point is not found, the returned distance is std::numeric_limits<double>::max();
 	*/
-    IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point, double maxDist) const;
+    IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point, double maxDist = std::numeric_limits<double>::max()) const;
 
 	/**
 	* Calculates the AABB which completely encloses a vector of aabbs
@@ -53,12 +53,12 @@ public:
     VertType HalfExtents() const{return m_halfExtents;}
     Bounds GetBounds()const{return m_bounds;}
 
-	/** 
-	* @returns the largest dimension of the AABB (std::pair<>::first) and 
+	/**
+	* @returns the largest dimension of the AABB (std::pair<>::first) and
 	* the axis index along which the maximum dimension is (std::pair<>::second)
 	*/
 	std::pair<double, int> GetLargestDim();
-    
+
   private:
     VertType m_center;	///< Center of the AABB
     VertType m_halfExtents;	///< halfExtents

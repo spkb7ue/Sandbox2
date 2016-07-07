@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE(TestVec3_Normalize)
 
         const Vec3 v1(a, b, c);
         const Vec3 v2(d, e, f);
-        BOOST_ASSERT(std::abs((v1.normalise()).magnitude()-1.0) < Vec3::EPSILON);
-        BOOST_ASSERT(std::abs((v2.normalise()).magnitude()-1.0) < Vec3::EPSILON);
+        BOOST_ASSERT(std::abs((v1.normalise()).magnitude()-1.0) < EPSILON);
+        BOOST_ASSERT(std::abs((v2.normalise()).magnitude()-1.0) < EPSILON);
     }
 }
 
