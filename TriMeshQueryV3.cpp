@@ -29,7 +29,7 @@ namespace
         }
         cout<<"\n------------------\n";
 
-        cin.get();
+        //cin.get();
         printIndices(node->GetLeft());
         printIndices(node->GetRight());
     }
@@ -61,6 +61,8 @@ void TriMeshProxQueryV3::Preprocess()
     TriMeshProxQueryV3::AABBNode* c2(nullptr);
     std::tie(c1,c2) = GenerateNodes(nd);
     nd->SetChildren(c1, c2);
+
+    printIndices(nd);
 }
 
 TriMeshProxQueryV3::~TriMeshProxQueryV3()
@@ -79,6 +81,10 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
 
     TriMeshProxQueryV3::AABBNode* child1AABBNode = nullptr;
     TriMeshProxQueryV3::AABBNode* child2AABBNode = nullptr;
+    if(parent == nullptr || parent->Data().triIndices.size() == 1)
+    {
+        return std::make_pair(nullptr, nullptr);
+    }
 
     NodeData parentData = parent->Data();
     double dim;
@@ -96,6 +102,13 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
     std::vector<int> child2Indices;
 
     PopulateChildIndices(child1Indices, child2Indices, aabbChild_1, parentData.triIndices);
+    /*if(parentData.triIndices.size() == 17)
+    {
+        cout<<"asdfadsf\n";
+        cout<<child1Indices.size()<<endl;
+        cout<<child2Indices.size()<<endl;
+        cin.get();
+    }*/
     if(child1Indices.size() + child2Indices.size() != parentData.triIndices.size())
     {
         throw std::runtime_error("Found a bug. More unit tests....");
@@ -119,7 +132,7 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         m_aabbTree.push_back(child1AABBNode);
     }
 
-    if(child2Indices.size() && child2Indices.size() != parentData.triIndices.size())
+    if(child2Indices.size() > 0 && child2Indices.size() != parentData.triIndices.size())
     {
         // Calculate AABB of child 2.
         std::vector<AABB3> child2aabbs;
@@ -139,11 +152,7 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         TriMeshProxQueryV3::AABBNode* c1(nullptr);
         TriMeshProxQueryV3::AABBNode* c2(nullptr);
         std::tie(c1,c2) = GenerateNodes(child1AABBNode);
-        if(c1 != nullptr)
-        {
-            child1AABBNode->SetLeft(c1);
-            child1AABBNode->SetRight(c2);
-        }
+        child1AABBNode->SetChildren(c1, c2);
     }
 
     if(child2AABBNode != nullptr)
@@ -151,11 +160,7 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
         TriMeshProxQueryV3::AABBNode* c1(nullptr);
         TriMeshProxQueryV3::AABBNode* c2(nullptr);
         std::tie(c1,c2) = GenerateNodes(child2AABBNode);
-        if(c1 != nullptr)
-        {
-            child2AABBNode->SetLeft(c1);
-            child2AABBNode->SetRight(c2);
-        }
+        child2AABBNode->SetChildren(c1, c2);
     }
 
     return std::make_pair(child1AABBNode, child2AABBNode);
