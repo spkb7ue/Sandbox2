@@ -16,7 +16,7 @@ public:
     explicit IProximityQueries(std::shared_ptr<Mesh<PolygonType>> mesh):m_mesh(mesh){}
 
     template <typename VertType>
-    VertType CalculateClosestPoint(const VertType& point)
+    std::pair<VertType, double> CalculateClosestPoint(const VertType& point)
     {
         return static_cast<ProximityQueryMethod*>(this)->CalculateClosestPointImpl(point);
     }

@@ -13,7 +13,7 @@ class TriMeshBruteForce : public IProximityQueries<Triangle<Vec3>, TriMeshBruteF
 public:
     TriMeshBruteForce(std::shared_ptr<Mesh<Triangle<Vec3>>> mesh);
 
-    Vec3 CalculateClosestPointImpl(const Vec3& point);
+    std::pair<Vec3,double> CalculateClosestPointImpl(const Vec3& point);
 };
 
 }

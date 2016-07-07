@@ -8,7 +8,7 @@ namespace rabbit
 TriMeshBruteForce::TriMeshBruteForce(std::shared_ptr<Mesh<Triangle<Vec3>>> mesh):
         IProximityQueries<Triangle<Vec3>, TriMeshBruteForce>(mesh){}
 
-Vec3 TriMeshBruteForce::CalculateClosestPointImpl(const Vec3& point)
+std::pair<Vec3, double> TriMeshBruteForce::CalculateClosestPointImpl(const Vec3& point)
 {
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
     double minDist = std::numeric_limits<double>::max();
@@ -25,7 +25,7 @@ Vec3 TriMeshBruteForce::CalculateClosestPointImpl(const Vec3& point)
         }
     }
 
-    return closestPoint;
+    return std::make_pair(closestPoint, minDist);
 }
 
 }
