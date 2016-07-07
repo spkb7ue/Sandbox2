@@ -60,9 +60,9 @@ public:
 	std::pair<double, int> GetLargestDim();
     
   private:
-    VertType m_center;
-    VertType m_halfExtents;
-    Bounds m_bounds;
+    VertType m_center;	///< Center of the AABB
+    VertType m_halfExtents;	///< halfExtents
+	Bounds m_bounds; ///< Absolute bounds for ease of access
 };
 
 template<typename VertType>

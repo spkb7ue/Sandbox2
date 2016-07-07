@@ -7,13 +7,21 @@
 namespace rabbit
 {
 
+/**
+* struct used to represent a point inside the triangle
+* including all the three edges.
+*/
 struct BarycentricCoords
 {
     BarycentricCoords(double a, double b):u(a),v(b){}
+
+	// If a triangle has 3 vertices P0,P1 and P2
+	// any point inside the Triangle can be written as
+	// P = P0 + u*(P1-P0) + v*(P2-P0) with the condition
+	// 0 <= u,v <= 1 && (u + v <= 1)
     double u;
     double v;
 };
-
 
 enum ids : unsigned
 {

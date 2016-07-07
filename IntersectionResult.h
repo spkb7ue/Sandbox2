@@ -3,6 +3,11 @@
 namespace rabbit
 {
 
+/**
+* @tparam T struct used for representing a point. 
+* IntersectionResult is a helper struct, could have gotten
+* away with an std::pair<T,double> instead.
+*/
 template<typename T>
 struct IntersectionResult
 {
@@ -13,6 +18,9 @@ struct IntersectionResult
     double Dist;
 };
 
+/**
+* @tparam T struct used for representing a point.
+*/
 template<typename T>
 struct PointSegIntersection
 {
@@ -22,8 +30,10 @@ struct PointSegIntersection
         IsWithinExtrudedNormal(isWithinExtrudedNormal),
         IRes(intersectionPoint, dist){}
 
-    bool IsWithinExtrudedNormal;
-    IntersectionResult<T> IRes;
+    bool IsWithinExtrudedNormal; ///< true if point of interest lies within the cylindrical volume
+								 ///< formed by the segment as an axis and the largest normal to it.
+
+    IntersectionResult<T> IRes; ///< Intersection result. See above
 };
 
 }

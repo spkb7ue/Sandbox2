@@ -3,6 +3,9 @@
 namespace rabbit
 {
 
+/**
+* @tparam TA simply binary node holding data of type T
+*/
 template <typename T>
 class BNode
 {
