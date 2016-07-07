@@ -124,17 +124,26 @@ void TriMeshProxQueryV3::CalculateLeastDistRecursive(const Vec3& point,
 
         if(found)
         {
+            node->Data().dist = minDist;
             // Now we recurse back to the root node.
-            while(node->GetParent() != nullptr)
+            TriMeshProxQueryV3::AABBNode* currentNode = node;
+            TriMeshProxQueryV3::AABBNode* parent = currentNode->GetParent();
+            while(parent != nullptr)
             {
-                bool foundWhileRecursingUp = false;
-                TriMeshProxQueryV3::AABBNode* parent = node->GetParent();
-                parent->Data().dist = std::min(parent->Data().dist,minDist);
+                parent->Data().dist = minDist;
                 TriMeshProxQueryV3::AABBNode* sisterNode = parent->GetLeft() == node ? parent->GetRight() : parent->GetLeft();
                 if(sisterNode->Data().dist < minDist)
                 {
+                    bool foundWhileRecursingUp = false;
                     CalculateLeastDistRecursive(point, minDist,sisterNode,closestPoint,foundWhileRecursingUp);
+                    if(sisterNode->Data().dist > parent->Data().dist)
+                    {
+                        break;
+                    }
                 }
+
+                currentNode = parent;
+                parent = currentNode->GetParent();
             }
         }
     }

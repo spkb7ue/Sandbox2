@@ -46,7 +46,6 @@ int main()
 
     std::tie(point, dist, foundPoint) = proximityQueries.CalculateClosestPoint(testPoint, 10.6);
     cout<<point<<endl;
-    cout<<foundPoint<<endl;
     cout<<testPoint<<endl;
     cout<<dist<<endl;
 }
