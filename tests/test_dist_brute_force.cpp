@@ -25,4 +25,6 @@ BOOST_AUTO_TEST_CASE(TestMesh_TestasdfadsfCtorV)
     auto buildingPolicy = GetMeshBuildingPolicy(FILE_NAME);
     std::shared_ptr<TriMesh> mesh = std::make_shared<TriMesh>(buildingPolicy);
     TriMeshBruteForce proximityQueries(mesh);
+    Vec3 point = proximityQueries.CalculateClosestPoint(Vec3(0.5204630973461957,   0.7220916475699011,   0.0396895110889990));
+    cout<<point<<endl;
 }
