@@ -29,8 +29,7 @@ void TriMeshProxQueryV3::Preprocess()
     NodeData rootNode(AABB3::CalculateAABB(m_aabb));
     rootNode.triIndices.resize(triangles.size());
     for(int i=0;i<rootNode.triIndices.size();++i){rootNode.triIndices[i] = i;}
-    AABBNode *nd = new AABBNode(rootNode);
-    m_aabbTree.push_back(nd);
+    m_aabbTree.push_back(new AABBNode(rootNode));
 
 }
 
@@ -68,11 +67,22 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
     std::vector<int> child2Indices;
 
     PopulateChildIndices(child1Indices, child2Indices, aabbChild_1, parentData.triIndices);
-
-    // At this stage, it is guaranteed that child1Indices lie within aabbChild_1
-    // Lets calculate the bounding box for child2indices
-    if(child2Indices.size())
+    if(child1Indices.size() + child2Indices.size() != parentData.triIndices.size())
     {
+        throw std::runtime_error("Found a bug. More unit tests....");
+    }
+
+    if(child1Indices.size() != parentData.triIndices.size())
+    {
+        NodeData child1NodeData(aabbChild_1);
+        child1NodeData.triIndices = child1Indices;
+        child1AABBNode = new TriMeshProxQueryV3::AABBNode(child1NodeData);
+        m_aabbTree.push_back(child2AABBNode);
+    }
+
+    if(child2Indices.size() && child2Indices.size() != parentData.triIndices.size())
+    {
+        // Calculate AABB of child 2.
         std::vector<AABB3> child2aabbs;
         std::for_each(child2Indices.begin(), child2Indices.end(),[this, &child2aabbs](const int index)
         {
@@ -81,8 +91,35 @@ TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
 
         NodeData child2Node(AABB3::CalculateAABB(child2aabbs));
         child2Node.triIndices = child2Indices;
+        child2AABBNode = new TriMeshProxQueryV3::AABBNode(child2Node);
+        m_aabbTree.push_back(child2AABBNode);
     }
 
+    if(child1AABBNode != nullptr)
+    {
+        TriMeshProxQueryV3::AABBNode* c1(nullptr);
+        TriMeshProxQueryV3::AABBNode* c2(nullptr);
+        std::tie(c1,c2) = GenerateNodes(child1AABBNode);
+        if(c1 != nullptr)
+        {
+            child1AABBNode->SetLeft(c1);
+            child1AABBNode->SetRight(c2);
+        }
+    }
+
+    if(child2AABBNode != nullptr)
+    {
+        TriMeshProxQueryV3::AABBNode* c1(nullptr);
+        TriMeshProxQueryV3::AABBNode* c2(nullptr);
+        std::tie(c1,c2) = GenerateNodes(child2AABBNode);
+        if(c1 != nullptr)
+        {
+            child2AABBNode->SetLeft(c1);
+            child2AABBNode->SetRight(c2);
+        }
+    }
+
+    return std::make_pair(child1AABBNode, child2AABBNode);
 }
 
 void TriMeshProxQueryV3::PopulateChildIndices(std::vector<int>& child1Indices,
