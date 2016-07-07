@@ -40,6 +40,27 @@ TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
     Preprocess();
 }
 
+void TriMeshProxQueryV3::CalculateLeastDistRecursive(const Vec3& point,
+                                                     double& minDist,
+                                                     TriMeshProxQueryV3::AABBNode* node,
+                                                     Vec3& closestPoint,
+                                                     bool& found )
+{
+
+}
+
+std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
+{
+    const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
+    Vec3 closestPoint;
+    bool foundPoint = false;
+    double minDist = distThreshold;
+
+    CalculateLeastDistRecursive(point, minDist, m_aabbTree[0],closestPoint, foundPoint);
+
+    return std::make_tuple(closestPoint, minDist, foundPoint);
+}
+
 void TriMeshProxQueryV3::Preprocess()
 {
     const std::vector<Tri>& triangles = m_mesh->GetPolygons();

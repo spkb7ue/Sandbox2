@@ -14,6 +14,7 @@ struct NodeData
 
     AABB<Vec3> aabb;
     std::vector<int> triIndices;
+    double dist;
 };
 
 }
