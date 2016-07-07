@@ -9,6 +9,7 @@
 #include <string>
 #include "AABB.h"
 #include "Vec3.h"
+#include "TriMeshQueryV2.h"
 using namespace std;
 using namespace rabbit;
 namespace
