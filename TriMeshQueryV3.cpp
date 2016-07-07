@@ -17,7 +17,6 @@ TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
     Preprocess();
 }
 
-
 void TriMeshProxQueryV3::Preprocess()
 {
     const std::vector<Tri>& triangles = m_mesh->GetPolygons();
@@ -49,5 +48,7 @@ std::pair<TriMeshProxQueryV3::AABBNode*, TriMeshProxQueryV3::AABBNode*>
 TriMeshProxQueryV3::GenerateNodes(AABBNode* parent)
 {
     NodeData parentData = parent->Data();
-    parentData.aabb.GetLargestDim();
+    double dim;
+    int index;
+    std::tie(dim,index) = parentData.aabb.GetLargestDim();
 }
