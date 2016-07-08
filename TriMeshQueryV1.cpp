@@ -13,6 +13,7 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV1::CalculateClosestPointImpl(const
     Vec3 closestPoint;
     double minDist = distThreshold;
     bool foundPoint = false;
+
     // Check min distance to each triangle
     for(const Triangle<Vec3>& t : triangles)
     {

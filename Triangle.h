@@ -25,7 +25,8 @@ struct BarycentricCoords
 
 /**
 * @brief Ids that can be used to access vertices/edges of the triangle.
-*
+* Attempting to access vert/edge using an int will result in compile time
+* error. This ensures automatic bounds checking for the underlying arrays
 */
 enum ids : unsigned
 {
