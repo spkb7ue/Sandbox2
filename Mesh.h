@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <boost/noncopyable.hpp>
 
 namespace rabbit
 {
@@ -16,7 +17,7 @@ template<typename Polygon> class IMeshBuildingPolicy;
 */
 
 template<typename PolygonType>
-class Mesh
+class Mesh : boost::noncopyable
 {
 public:
 	/**

@@ -1,6 +1,6 @@
 #pragma once
 
-//#include <boost/noncopyable.hpp>
+#include <boost/noncopyable.hpp>
 #include <vector>
 
 namespace rabbit
@@ -12,7 +12,7 @@ namespace rabbit
 * @tparam PolygonType Type of polygon comprising the mesh
 */
 template<typename PolygonType>
-class IMeshBuildingPolicy// : boost::noncopyable
+class IMeshBuildingPolicy : boost::noncopyable
 {
 public:
 	/**
