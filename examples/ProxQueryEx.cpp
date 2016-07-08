@@ -25,7 +25,7 @@ int main()
 {
     auto buildingPolicy = GetMeshBuildingPolicy(FILE_NAME);
     std::shared_ptr<TriMesh> mesh = std::make_shared<TriMesh>(buildingPolicy);
-    TriMeshProxQueryV1 proximityQueries(mesh);
+    TriMeshProxQueryV1 proximityQueriesV1(mesh);
     TriMeshProxQueryV2 proximityQueriesV2(mesh);
     Vec3 point;
     double dist;
@@ -37,8 +37,13 @@ int main()
     Vec3 expectedClosestPoint = Vec3(0.0693250000000000,   0.5797399900000000,  -0.1722300000000000);
     double expectedDist = 0.518362283032093;
 
-    std::tie(point, dist, foundPoint) = proximityQueries.CalculateClosestPoint(testPoint, 0.6);
-    cout<<expectedDist<<endl;
-    cout<<dist<<endl;
+    std::tie(point, dist, foundPoint) = proximityQueriesV1.CalculateClosestPoint(testPoint, 0.6);
+    cout<<"Expected Dist:"<<expectedDist<<endl;
+    cout<<"Calculated Dist using V1:"<<dist<<endl;
+
+    // Now calculate using V2
+    std::tie(point, dist, foundPoint) = proximityQueriesV2.CalculateClosestPoint(testPoint, 0.6);
+    cout<<"Calculated Dist using V2:"<<dist<<endl;
+
 
 }

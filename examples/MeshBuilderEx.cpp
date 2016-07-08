@@ -29,8 +29,7 @@ class CustomShapeMeshBuildingPolicy : public IMeshBuildingPolicy<Quad>
 
 int main()
 {
-    {
-        // Here we create a mesh consisting of polygon Quad.
+    {   // Here we create a mesh consisting of polygon Quad.
         std::shared_ptr< IMeshBuildingPolicy<Quad> > quadMeshBuilder = std::make_shared<CustomShapeMeshBuildingPolicy>();
         std::shared_ptr<Mesh<Quad>> mesh = std::make_shared<Mesh<Quad>>(quadMeshBuilder);
     }
