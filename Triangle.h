@@ -23,6 +23,10 @@ struct BarycentricCoords
     double v;
 };
 
+/**
+* @brief Ids that can be used to access vertices/edges of the triangle.
+*
+*/
 enum ids : unsigned
 {
     zero = 0,
