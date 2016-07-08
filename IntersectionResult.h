@@ -4,8 +4,8 @@ namespace rabbit
 {
 
 /**
-* @tparam T struct used for representing a point. 
-* IntersectionResult is a helper struct, could have gotten
+* @tparam T struct used for representing a point.
+* @brief IntersectionResult is a helper struct, could have gotten
 * away with an std::pair<T,double> instead.
 */
 template<typename T>

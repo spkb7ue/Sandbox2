@@ -4,6 +4,8 @@ namespace rabbit
 {
 
 /**
+* @brief A binary node which can be used to build a tree data structure.
+* Required for partitioning the 3D model into bounding volume hierarchies.
 * @tparam TA simply binary node holding data of type T
 */
 template <typename T>

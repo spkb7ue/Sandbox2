@@ -6,8 +6,8 @@
 namespace rabbit
 {
 
-/** 
-* An abstract interface to the mesh building policy. Users are expected to provide
+/**
+* @brief An abstract interface to the mesh building policy. Users are expected to provide
 * their own implementation to create the mesh in different ways.
 * @tparam PolygonType Type of polygon comprising the mesh
 */

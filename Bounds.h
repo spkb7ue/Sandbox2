@@ -3,8 +3,8 @@
 namespace rabbit
 {
 
-/** 
-* A simple helper struct to keep track of bounding boxes a bit more easily.
+/**
+* @brief A simple helper struct to keep track of bounding boxes a bit more easily.
 */
 struct Bounds
 {

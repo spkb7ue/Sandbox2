@@ -3,8 +3,8 @@
 namespace rabbit
 {
 
-/** 
-* This class represents a closed polygon and assumes that the number
+/**
+* @brief This class represents a closed polygon and assumes that the number
 * of vertices and edges are the same.
 * @tparam T class representing the vertices/edges of the polygon.
 * @tparam N Number of vertices/edges of this polygon
@@ -15,7 +15,7 @@ template<typename T, unsigned N, typename AccessIDs>
 class Polygon
 {
 public:
-	
+
 	/**
 	* @param verts vertices of this polygon
 	* @param edges of this polygon
