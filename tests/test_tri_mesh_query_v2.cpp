@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Mesh.h"
 #include "TriangularMeshBuildingPolicy.h"
-#include "TriMeshQueryV2.h"
+#include "TriMeshProxQueryV2.h"
 #define BOOST_TEST_MODULE Test_TriMeshQueryV2
 #include <boost/test/unit_test.hpp>
 

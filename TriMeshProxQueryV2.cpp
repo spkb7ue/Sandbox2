@@ -1,4 +1,4 @@
-#include "TriMeshQueryV2.h"
+#include "TriMeshProxQueryV2.h"
 #include "Mesh.h"
 #include <algorithm>
 #include <iostream>

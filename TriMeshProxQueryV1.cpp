@@ -1,4 +1,4 @@
-#include "TriMeshQueryV1.h"
+#include "TriMeshProxQueryV1.h"
 #include "Vec3.h"
 #include "Mesh.h"
 namespace rabbit

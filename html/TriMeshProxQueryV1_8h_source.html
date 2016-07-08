@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Proximity Queries: TriangularMeshBuildingPolicy.h Source File</title>
+<title>Proximity Queries: TriMeshProxQueryV1.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -80,34 +80,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">TriangularMeshBuildingPolicy.h</div>  </div>
+<div class="title">TriMeshProxQueryV1.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;IMeshBuildingPolicy.h&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;Triangle.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;Vec3.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>rabbit</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classrabbit_1_1TriangularMeshBuilingPolicy.html">   13</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classrabbit_1_1TriangularMeshBuilingPolicy.html">TriangularMeshBuilingPolicy</a> : <span class="keyword">public</span> <a class="code" href="classrabbit_1_1IMeshBuildingPolicy.html">IMeshBuildingPolicy</a>&lt;Triangle&lt;Vec3&gt;&gt;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="classrabbit_1_1TriangularMeshBuilingPolicy.html#a8763e613af051823fe07a5bd180e13a5">TriangularMeshBuilingPolicy</a>(std::string fileName);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classrabbit_1_1TriangularMeshBuilingPolicy.html#a3fc09cc48e04a576bc8602c87229517d">GeneratePolygons</a>(std::vector&lt;<a class="code" href="classrabbit_1_1Triangle.html">Triangle&lt;Vec3&gt;</a>&gt;&amp; triangles) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        std::string m_fileName; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    };</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
-<div class="ttc" id="classrabbit_1_1IMeshBuildingPolicy_html"><div class="ttname"><a href="classrabbit_1_1IMeshBuildingPolicy.html">rabbit::IMeshBuildingPolicy</a></div><div class="ttdoc">An abstract interface to the mesh building policy. Users are expected to provide their own implementa...</div><div class="ttdef"><b>Definition:</b> IMeshBuildingPolicy.h:15</div></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#include &quot;IProximityQueries.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;Triangle.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;Vec3.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span>rabbit</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;{</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> PolygonType&gt; <span class="keyword">class </span>Mesh;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classrabbit_1_1TriMeshProxQueryV1.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classrabbit_1_1TriMeshProxQueryV1.html">TriMeshProxQueryV1</a> : <span class="keyword">public</span> <a class="code" href="classrabbit_1_1IProximityQueries.html">IProximityQueries</a>&lt;Triangle&lt;Vec3&gt;, TriMeshProxQueryV1&gt;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classrabbit_1_1TriMeshProxQueryV1.html">TriMeshProxQueryV1</a>(std::shared_ptr&lt;<a class="code" href="classrabbit_1_1Mesh.html">Mesh</a>&lt;<a class="code" href="classrabbit_1_1Triangle.html">Triangle&lt;Vec3&gt;</a>&gt;&gt; mesh);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::tuple&lt;Vec3,double,bool&gt; <a class="code" href="classrabbit_1_1TriMeshProxQueryV1.html#ac8a12c814ac4ff631056e9cc08445bcb">CalculateClosestPointImpl</a>(<span class="keyword">const</span> <a class="code" href="classrabbit_1_1Vec3__.html">Vec3</a>&amp; point,<span class="keywordtype">double</span> distThreshold);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="ttc" id="classrabbit_1_1TriMeshProxQueryV1_html"><div class="ttname"><a href="classrabbit_1_1TriMeshProxQueryV1.html">rabbit::TriMeshProxQueryV1</a></div><div class="ttdoc">This class implements the proximity query between point and a triangular mesh by calculating the dist...</div><div class="ttdef"><b>Definition:</b> TriMeshProxQueryV1.h:15</div></div>
+<div class="ttc" id="classrabbit_1_1IProximityQueries_html"><div class="ttname"><a href="classrabbit_1_1IProximityQueries.html">rabbit::IProximityQueries</a></div><div class="ttdoc">A simple interface for proximity queries methods. All proximity query methods are expected to derive ...</div><div class="ttdef"><b>Definition:</b> IProximityQueries.h:19</div></div>
+<div class="ttc" id="classrabbit_1_1TriMeshProxQueryV1_html_ac8a12c814ac4ff631056e9cc08445bcb"><div class="ttname"><a href="classrabbit_1_1TriMeshProxQueryV1.html#ac8a12c814ac4ff631056e9cc08445bcb">rabbit::TriMeshProxQueryV1::CalculateClosestPointImpl</a></div><div class="ttdeci">std::tuple&lt; Vec3, double, bool &gt; CalculateClosestPointImpl(const Vec3 &amp;point, double distThreshold)</div><div class="ttdef"><b>Definition:</b> TriMeshProxQueryV1.cpp:10</div></div>
+<div class="ttc" id="classrabbit_1_1Mesh_html"><div class="ttname"><a href="classrabbit_1_1Mesh.html">rabbit::Mesh</a></div><div class="ttdoc">A uniform mesh consisting of a vector of polgons. Assumption is made that the mesh has all polygons o...</div><div class="ttdef"><b>Definition:</b> IProximityQueries.h:8</div></div>
 <div class="ttc" id="classrabbit_1_1Triangle_html"><div class="ttname"><a href="classrabbit_1_1Triangle.html">rabbit::Triangle</a></div><div class="ttdoc">A triangle class. The following notation is used throughout the triangle related code. The triangle consists of 3 vertices represented as P0, P1 and P2. The corresponding edges are P0P1, P0P2, P1P2 which completes the triangle description. </div><div class="ttdef"><b>Definition:</b> Triangle.h:45</div></div>
-<div class="ttc" id="classrabbit_1_1TriangularMeshBuilingPolicy_html_a8763e613af051823fe07a5bd180e13a5"><div class="ttname"><a href="classrabbit_1_1TriangularMeshBuilingPolicy.html#a8763e613af051823fe07a5bd180e13a5">rabbit::TriangularMeshBuilingPolicy::TriangularMeshBuilingPolicy</a></div><div class="ttdeci">TriangularMeshBuilingPolicy(std::string fileName)</div><div class="ttdef"><b>Definition:</b> TriangularMeshBuildingPolicy.cpp:7</div></div>
-<div class="ttc" id="classrabbit_1_1TriangularMeshBuilingPolicy_html_a3fc09cc48e04a576bc8602c87229517d"><div class="ttname"><a href="classrabbit_1_1TriangularMeshBuilingPolicy.html#a3fc09cc48e04a576bc8602c87229517d">rabbit::TriangularMeshBuilingPolicy::GeneratePolygons</a></div><div class="ttdeci">virtual void GeneratePolygons(std::vector&lt; Triangle&lt; Vec3 &gt;&gt; &amp;triangles) override</div><div class="ttdef"><b>Definition:</b> TriangularMeshBuildingPolicy.cpp:9</div></div>
-<div class="ttc" id="classrabbit_1_1TriangularMeshBuilingPolicy_html"><div class="ttname"><a href="classrabbit_1_1TriangularMeshBuilingPolicy.html">rabbit::TriangularMeshBuilingPolicy</a></div><div class="ttdoc">This builder can be used to extract triangle coordinates from a plain text file. Look at the file rab...</div><div class="ttdef"><b>Definition:</b> TriangularMeshBuildingPolicy.h:13</div></div>
+<div class="ttc" id="classrabbit_1_1Vec3___html"><div class="ttname"><a href="classrabbit_1_1Vec3__.html">rabbit::Vec3_</a></div><div class="ttdef"><b>Definition:</b> Vec3.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

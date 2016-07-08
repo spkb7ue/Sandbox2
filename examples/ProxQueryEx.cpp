@@ -4,8 +4,8 @@
 #include <memory>
 #include <Mesh.h>
 #include <TriangularMeshBuildingPolicy.h>
-#include <TriMeshQueryV1.h>
-#include <TriMeshQueryV2.h>
+#include <TriMeshProxQueryV1.h>
+#include <TriMeshProxQueryV2.h>
 using namespace std;
 using namespace rabbit;
 
