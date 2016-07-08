@@ -51,4 +51,6 @@ BOOST_AUTO_TEST_CASE(TestTriMeshDistQueryV2_ProximityQuery)
     BOOST_ASSERT(foundPoint);
     BOOST_ASSERT(std::abs(dist-expectedDist) < 0.000000001);
     BOOST_ASSERT(expectedClosestPoint.isSameAs(point));
+
+    // We need more test data for a useful test
 }

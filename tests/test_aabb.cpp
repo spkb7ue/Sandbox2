@@ -14,9 +14,9 @@ namespace
     auto real_rand = std::bind(std::uniform_real_distribution<double>(0.0,1), mt19937(seed));
 }
 
+// Tests if the point is inside AABB
 BOOST_AUTO_TEST_CASE(TestAABB_IsPointInsideAABB)
 {
-    // Test if the object can be constructed
     Vec3 center(real_rand(),real_rand(),real_rand());
     Vec3 halfExtents(real_rand(),real_rand(),real_rand());
 
@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE(TestAABB_IsPointInsideAABB)
 
     AABB<Vec3> aabb(center, halfExtents);
 
+    // We expect all the vertices of the bounding box lie within it.
     BOOST_ASSERT(aabb.IsPointWithinAABB(center));
     BOOST_ASSERT(aabb.IsPointWithinAABB(boxVert0));
     BOOST_ASSERT(aabb.IsPointWithinAABB(boxVert1));
@@ -42,6 +43,9 @@ BOOST_AUTO_TEST_CASE(TestAABB_IsPointInsideAABB)
     BOOST_ASSERT(aabb.IsPointWithinAABB(boxVert5));
     BOOST_ASSERT(aabb.IsPointWithinAABB(boxVert6));
     BOOST_ASSERT(aabb.IsPointWithinAABB(boxVert7));
+
+    // Just perturb a point beyond the half extents and ensure that it
+    // is reported as being outside the box.
     BOOST_ASSERT(!aabb.IsPointWithinAABB(center + halfExtents*1.1));
 }
 

@@ -19,9 +19,13 @@ namespace
         return std::make_shared<TriangularMeshBuilingPolicy>(FILE_NAME);
     }
 
-    static mt19937::result_type seed = time(0);
-    static auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
+    mt19937::result_type seed = time(0);
+    auto real_rand = std::bind(std::uniform_real_distribution<double>(0,1), mt19937(seed));
 
+    /**
+    * Generates a point in the triangle plane and inside the
+    * triangle.
+    */
     Point GenerateTriangleInternalPoint(const Triangle<Vec3>& t)
     {
         // Point (p) internal to triangle can be represented as r0*P0 + r1*P1 + r2*P3
@@ -70,26 +74,6 @@ namespace
     TestData testData;
 
     const unsigned NUM_ITERATIONS = 100;
-}
-
-BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
-{
-    const auto& triangles = testData.GetTestTriangles();
-
-    for(const Triangle<Vec3>& t : triangles)
-    {
-        {   /// Test P0 with P0P1
-            auto px = t.CheckPointSegDist(t.P0(),t.P0P1(),t.P0());
-            BOOST_ASSERT(px.IsWithinExtrudedNormal);
-            BOOST_ASSERT(std::abs(px.IRes.Dist) < EPSILON);
-        }
-
-        {   /// Test P0 with P0P2
-            auto px = t.CheckPointSegDist(t.P0(),t.P0P2(),t.P0());
-            BOOST_ASSERT(px.IsWithinExtrudedNormal);
-            BOOST_ASSERT(std::abs(px.IRes.Dist) < EPSILON);
-        }
-    }
 }
 
 BOOST_AUTO_TEST_CASE(TestTriangle_CalcAABB)
@@ -147,7 +131,7 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
             BOOST_ASSERT(std::abs(coords.v-1.0f)<EPSILON);
         }
 
-        const double TOLERANCE = 0.005f;
+        const double TOLERANCE = 0.005;
 
         // This loop tests a internal point for the triangle
         for(unsigned i = 0; i < NUM_ITERATIONS; ++i)
@@ -158,8 +142,8 @@ BOOST_AUTO_TEST_CASE(TestTriangle_CalcBarycentricCoords)
                 // a point internal to a triangle
                 std::stringstream error_msg;
                 error_msg << "u:"<<coords.u<<"\tv:"<<coords.v;
-                BOOST_ASSERT_MSG(coords.u >= 0.0f - TOLERANCE && coords.u <= 1.0f + TOLERANCE, error_msg.str().c_str());
-                BOOST_ASSERT_MSG(coords.v >= 0.0f - TOLERANCE && coords.v <= 1.0f + TOLERANCE, error_msg.str().c_str());
+                BOOST_ASSERT_MSG(coords.u >= 0.0 - TOLERANCE && coords.u <= 1.0 + TOLERANCE, error_msg.str().c_str());
+                BOOST_ASSERT_MSG(coords.v >= 0.0 - TOLERANCE && coords.v <= 1.0 + TOLERANCE, error_msg.str().c_str());
                 BOOST_ASSERT_MSG(coords.u + coords.v < 1.0f + TOLERANCE, error_msg.str().c_str());
             }
 
@@ -241,6 +225,26 @@ BOOST_AUTO_TEST_CASE(TestTriangle_IsPointWithinExtrudedTriangle)
             BOOST_ASSERT(t.IsPointWithinShapeExtrudedAlongNormal(extrudedPoint));
             BOOST_ASSERT(!t.IsPointWithinShapeExtrudedAlongNormal(GeneratePointOutsideExtrudedTriangle(t)));
 
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(TestTriangle_CheckPointSegDist_Internal)
+{
+    const auto& triangles = testData.GetTestTriangles();
+
+    for(const Triangle<Vec3>& t : triangles)
+    {
+        {   /// Test P0 with P0P1
+            auto px = t.CheckPointSegDist(t.P0(),t.P0P1(),t.P0());
+            BOOST_ASSERT(px.IsWithinExtrudedNormal);
+            BOOST_ASSERT(std::abs(px.IRes.Dist) < EPSILON);
+        }
+
+        {   /// Test P0 with P0P2
+            auto px = t.CheckPointSegDist(t.P0(),t.P0P2(),t.P0());
+            BOOST_ASSERT(px.IsWithinExtrudedNormal);
+            BOOST_ASSERT(std::abs(px.IRes.Dist) < EPSILON);
         }
     }
 }
