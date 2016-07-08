@@ -1,0 +1,65 @@
+Building and Navigating the Code: CMakelists are provided with the code. 
+BOOST unit testing framework is required to build the unit tests. If you 
+do not have boost installed, just comment the add_directory(tests) line 
+in the root CMakelists.txt. If building in release, on a successful 
+build you will get an include folder with the headers, lib folder with 
+the static library, tests folder with the unit tests and examples folder 
+where there are some worked examples.
+
+Documentation for the code (generated using doxygen) can be found in the 
+src_root_directory/html. Start with the file index.html which can be 
+found at src_root_dir/html/index.html
+
+Below is the methodology followed during the software development work 
+over the last week.
+
+Objective: To efficiently compute least distance between point and a 
+Mesh. It is assumed that the mesh is made up of triangles.
+
+Solution Procedure: A quick literature survey tells me that the fastest 
+way to sequentially compute least distance is to partition the soup of 
+triangles into Bounding Volume Hierarchies (BVH). The popular bounding 
+volumes are Spheres, Axis Aligned Bounding Boxes (AABB) and Orientated 
+Bounding Boxes (OBB). An abstract algorithm will be as below.
+
+Algorithm: Partition the Mesh into binary tree, where each node is a 
+bounding box which completely encloses all the bounding boxes of the 
+nodes below it. Balance the tree. If the object is not deformable, mesh 
+partition can be done in a preprocessing step and have zero overhead 
+during runtime. Traversing the tree from the root towards the leaves 
+helps in rapidly eliminating large portions of the Mesh as candidates 
+for collision detection. Next compute a fast method to calculate 
+distance between point and the chosen bounding box. This method will be 
+useful in traversing the tree and eliminating portions of the tree. 
+Finally on reaching the leaves, calculate the least distance between the 
+point and a triangle.
+
+Objective Breakdown (Critical path to the final objective)
+
+1. Vector class for algebraic operations (Status: done)
+
+2. Least distance between point and a triangle (Status: done ,At this 
+stage we have a minimum viable product. Cycling through all the 
+triangles, we can get the least distance, albeit very inefficiently. See 
+class TriMeshProxQueryV1)
+
+3. Compute bounding box for a triangle (Status: done)
+
+4. Least distance between point and the bounding box (Status: done, Now 
+we can do a quick check with the bounding box first before checking the 
+least distance between point and a triangle which is more expensive. See 
+TriMeshProxQueryV2, This is better than V1 but still requires cycling 
+through all the bounding boxes. The method is at best linear in checking 
+box point collision distance)
+
+5. Compute the variance of the sample data (triangle vertices) if using 
+OBB. (skipped, I am using AABB. Time permitting, I would have definitely 
+gone for OBB.)
+
+6. Generate a BVH starting with computing the bounding volume for the 
+whole mesh and then recursively breaking it down into smaller bounding 
+volumes. (Status: Done with generating a tree. The tree is not balanced 
+yet. This work is on a branch and not on master.)
+
+7. Traversing the hierarchy to find the point at least distance. (In 
+progress)
