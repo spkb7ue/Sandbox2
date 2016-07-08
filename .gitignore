@@ -2,5 +2,4 @@ build/
 .kateproject
 .kateproject.d
 /latex
-/html
 /config_file
