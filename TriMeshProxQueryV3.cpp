@@ -8,8 +8,10 @@ using namespace std;
 using namespace rabbit;
 namespace
 {
-    typedef Triangle<Vec3> Tri;
     typedef IntersectionResult<Vec3> IntRes;
+    typedef AABB<Vec3> AABB3;
+    typedef Triangle<Vec3> Tri;
+    typedef BNode<NodeData> BVHNode;
 }
 
 TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
@@ -57,7 +59,7 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
 
     // bounds for child 1
     Bounds boundsChild1 = RecalculateBounds(nodeDat.aabb.GetBounds(), dim/2.0, index);
-    AABB3 aabb_child1(boundsChild1);
+    TriMeshProxQueryV3::AABB3 aabb_child1(boundsChild1);
     std::vector<int> triangleIndicesChild1;
     std::vector<int> triangleIndicesChild2;
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
@@ -66,15 +68,29 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
     for(unsigned i=0;i<nodeDat.indices.size();++i)
     {
         int triangleIndex = nodeDat.indices[i];
-        if(triangles[triangleIndex].IsTriangleInsideAABB(aabb_child1))
-        {
+        if(triangles[triangleIndex].IsTriangleInsideAABB(aabb_child1)){
             triangleIndicesChild1.push_back(triangleIndex);
         }
-        else
-        {
+        else{
             triangleIndicesChild2.push_back(triangleIndex);
         }
     }
+
+    AABB3 aabb_child2 = CalculateBoundingBoxForTriangles(triangleIndicesChild2);
+
+}
+
+TriMeshProxQueryV3::AABB3 TriMeshProxQueryV3::CalculateBoundingBoxForTriangles(const std::vector<int>& indices)const
+{
+    std::vector<TriMeshProxQueryV3::AABB3> aabb;
+    const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
+    for(unsigned i=0;i<indices.size();++i)
+    {
+        int triangleIndex = indices[i];
+        aabb.push_back(triangles[triangleIndex].CalculateAABB());
+    }
+
+    return AABB<Vec3>::CalculateAABB(aabb);
 }
 
 void TriMeshProxQueryV3::PartitionMesh()
