@@ -109,11 +109,21 @@ public:
 
     AABB<T> CalculateAABB() const;
 
+    bool IsTriangleInsideAABB(const AABB<T>& aabb)const;
+
     ~Triangle(){};
 private:
     T m_normal;
 
 };
+
+template<typename T>
+bool Triangle<T>::IsTriangleInsideAABB(const AABB<T>& aabb)const
+{
+    return  aabb.IsPointWithinAABB(P0()) &&
+            aabb.IsPointWithinAABB(P1()) &&
+            aabb.IsPointWithinAABB(P2());
+}
 
 template<typename T>
 AABB<T> Triangle<T>::CalculateAABB()const

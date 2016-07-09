@@ -58,7 +58,12 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
     // bounds for child 1
     Bounds boundsChild1 = RecalculateBounds(nodeDat.aabb.GetBounds(), dim/2.0, index);
     AABB3 aabb_child1(boundsChild1);
+    std::vector<int> triangleIndicesChild1;
+    std::vector<int> triangleIndicesChild2;
+    for(unsigned i=0;i<nodeDat.polygons.size();++i)
+    {
 
+    }
 
 }
 
