@@ -167,7 +167,10 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const
 	throw;
 }
 
-void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, double& minDist, const Vec3& point)
+void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, 
+											double& minDist, 
+											const Vec3& point, 
+											double distThreshold)
 {
 	if (node == nullptr){return;}
 	NodeData& nodeDat = node->Data();
@@ -176,6 +179,12 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, double& minDist, cons
 		IRes res = nodeDat.aabb.CalcShortestDistanceFrom(point);
 		nodeDat.dist = res.Dist;
 		nodeDat.distUpdated = true;
+		if (nodeDat.dist > distThreshold)
+		{
+			minDist = nodeDat.dist;
+			// nothing else to do in this tree.
+			return;
+		}
 	}
 	BVHNode* leftNode = node->GetLeft();
 	BVHNode* rightNode = node->GetRight();
@@ -207,7 +216,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, double& minDist, cons
 	if (leftNode == nullptr && rightNode == nullptr)
 	{
 		// Here goes the iteration over all the triangles in the cell
-		// to find the least distance
+		// to find the least distance		
 		minDist = nodeDat.dist;
 	}
 
@@ -216,24 +225,40 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, double& minDist, cons
 	{
 		if (leftNode->Data().dist < rightNode->Data().dist)
 		{
-			// This means the left node is closer than the right node to the point
-			UpdateNodeDistDown(leftNode, minDist, point);
+			if (leftNode->Data().dist > distThreshold)
+			{
+				minDist = leftNode->Data().dist;
+				return;
+			}
+			else
+			{
+				// This means the left node is closer than the right node to the point
+				UpdateNodeDistDown(leftNode, minDist, point, distThreshold);
+			}
 		}
 		else
 		{
-			UpdateNodeDistDown(rightNode, minDist, point);
+			if (rightNode->Data().dist > distThreshold)
+			{
+				minDist = rightNode->Data().dist;
+				return;
+			}
+			else
+			{
+				UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
+			}			
 		}
 	}
 
 	// Case 3: Left node is not null, right node is null
 	if (leftNode != nullptr && rightNode == nullptr)
 	{
-		UpdateNodeDistDown(rightNode, minDist, point);
+		UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
 	}
 
 	// Case 4: :Left node is null, right node is not null
 	if (leftNode == nullptr && rightNode != nullptr)
 	{
-		UpdateNodeDistDown(rightNode, minDist, point);
+		UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
 	}
 }

@@ -40,7 +40,10 @@ private:
 
     std::vector<BVHNode*> m_bvhTreeNodes;
 
-	void UpdateNodeDistDown(BVHNode* node, double& minDist, const Vec3& point);
+	void UpdateNodeDistDown(BVHNode* node, 
+							double& minDist, 
+							const Vec3& point,
+							double distThreshold);
 
 };
 
