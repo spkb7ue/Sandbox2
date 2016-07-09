@@ -121,6 +121,7 @@ void TriMeshProxQueryV3::PartitionMesh()
         for(unsigned i=0;i<m_aabb.size();++i){rootNodeData.indices.push_back(i);}
         BVHNode *rootNode = new BVHNode(rootNodeData);
         m_bvhTreeNodes.push_back(rootNode);
+        RecursivePartition(rootNode);
     }
 }
 
