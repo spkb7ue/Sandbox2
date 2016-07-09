@@ -76,8 +76,28 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
         }
     }
 
-    AABB3 aabb_child2 = CalculateBoundingBoxForTriangles(triangleIndicesChild2);
+    if(triangleIndicesChild1.size() != 0)
+    {
+        NodeData child1NodeData(aabb_child1);
+        child1NodeData.indices = triangleIndicesChild1;
+        BVHNode* child1 = new BVHNode(child1NodeData);
+        node->SetLeft(child1);
+        child1->SetParent(node);
+        m_bvhTreeNodes.push_back(child1);
+        RecursivePartition(child1);
+    }
 
+    if(triangleIndicesChild2.size() != 0 && triangleIndicesChild2.size() != nodeDat.indices.size())
+    {
+        AABB3 aabb_child2 = CalculateBoundingBoxForTriangles(triangleIndicesChild2);
+        NodeData child2NodeData(aabb_child2);
+        child2NodeData.indices = triangleIndicesChild2;
+        BVHNode *child2 = new BVHNode(child2NodeData);
+        node->SetRight(child2);
+        child2->SetParent(node);
+        m_bvhTreeNodes.push_back(child2);
+        RecursivePartition(child2);
+    }
 }
 
 TriMeshProxQueryV3::AABB3 TriMeshProxQueryV3::CalculateBoundingBoxForTriangles(const std::vector<int>& indices)const
