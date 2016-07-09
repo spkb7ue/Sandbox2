@@ -40,6 +40,8 @@ private:
 
     std::vector<BVHNode*> m_bvhTreeNodes;
 
+	void RecursivelySetNodeLevel(unsigned level, BVHNode* node);
+
 	void UpdateNodeDistDown(BVHNode* node, 
 							double& minDist, 
 							const Vec3& point,

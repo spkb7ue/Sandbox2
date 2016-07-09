@@ -159,6 +159,7 @@ void TriMeshProxQueryV3::Preprocess()
     });
 
     PartitionMesh();
+	RecursivelySetNodeLevel(0, m_bvhTreeNodes[0]);
 }
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
@@ -232,6 +233,10 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		// to find the least distance		
 		minDist = tmp;
 		nodeDat.dist = tmp;
+		if (minDist>distThreshold)
+		{
+			return;
+		}
 
 		// Now that we have calculated min dist, its time to recurse back to the root node and see if
 		// we have violated any constraints
@@ -328,4 +333,20 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
 		}
 	}
+}
+
+
+void TriMeshProxQueryV3::RecursivelySetNodeLevel(unsigned level, BVHNode* node)
+{
+	if (node == nullptr)
+	{
+		return;
+	}
+	node->SetNodeID(level);
+
+	auto leftNode = node->GetLeft();
+	auto rightNode = node->GetRight();
+
+	RecursivelySetNodeLevel(level + 1, leftNode);
+	RecursivelySetNodeLevel(level + 1, rightNode);
 }

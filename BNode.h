@@ -23,14 +23,21 @@ public:
     BNode<T>* GetRight()const;
     const T& Data()const;
     T& Data();
+	void SetNodeID(unsigned id);
 
 private:
-
-  T m_data;
-  BNode<T> *m_parent;
-  BNode<T> *m_left;
-  BNode<T> *m_right;
+	unsigned m_nodeID;
+	T m_data;
+	BNode<T> *m_parent;
+	BNode<T> *m_left;
+	BNode<T> *m_right;
 };
+
+template<typename T>
+void BNode<T>::SetNodeID(unsigned id)
+{
+	m_nodeID = id;
+}
 
 template<typename T>
 void BNode<T>::SetChildren(BNode<T>* left, BNode<T>* right)
