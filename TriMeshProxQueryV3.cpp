@@ -253,12 +253,29 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	// Case 3: Left node is not null, right node is null
 	if (leftNode != nullptr && rightNode == nullptr)
 	{
-		UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
+		if (leftNode->Data().dist > distThreshold)
+		{
+			minDist = leftNode->Data().dist;
+			return;
+		}
+		else
+		{
+			// This means the left node is closer than the right node to the point
+			UpdateNodeDistDown(leftNode, minDist, point, distThreshold);
+		}
 	}
 
 	// Case 4: :Left node is null, right node is not null
 	if (leftNode == nullptr && rightNode != nullptr)
 	{
-		UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
+		if (rightNode->Data().dist > distThreshold)
+		{
+			minDist = rightNode->Data().dist;
+			return;
+		}
+		else
+		{
+			UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
+		}
 	}
 }
