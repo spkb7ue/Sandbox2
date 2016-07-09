@@ -12,6 +12,7 @@ namespace
     typedef AABB<Vec3> AABB3;
     typedef Triangle<Vec3> Tri;
     typedef BNode<NodeData> BVHNode;
+	typedef IntersectionResult<Vec3> IRes;
 
 	void PrintNodeTriangles(BVHNode *node)
 	{
@@ -164,4 +165,17 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const
 {
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 	throw;
+}
+
+void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, const Vec3& point)
+{
+	if (node == nullptr){return;}
+	NodeData& nodeDat = node->Data();
+	if (!nodeDat.distUpdated)
+	{
+		IRes res = nodeDat.aabb.CalcShortestDistanceFrom(point);
+		nodeDat.dist = res.Dist;
+		nodeDat.distUpdated = true;
+	}
+
 }
