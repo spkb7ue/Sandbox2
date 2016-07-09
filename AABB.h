@@ -45,7 +45,7 @@ public:
     IntersectionResult<VertType> CalcShortestDistanceFrom(const VertType& point, double maxDist = std::numeric_limits<double>::max()) const;
 
 	/**
-	* Calculates the AABB which completely encloses a vector of aabbs
+	* @brief Calculates the AABB which completely encloses a vector of aabbs
 	*/
     static AABB<VertType> CalculateAABB(const std::vector<AABB<VertType>>& aabbList);
 

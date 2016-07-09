@@ -1,5 +1,6 @@
 #include "TriMeshProxQueryV3.h"
 #include "Mesh.h"
+#include "NodeData.h"
 #include <algorithm>
 #include <iostream>
 using namespace std;
@@ -17,6 +18,22 @@ TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
     Preprocess();
 }
 
+TriMeshProxQueryV3::~TriMeshProxQueryV3()
+{
+    std::for_each(m_bvhTreeNodes.begin(), m_bvhTreeNodes.end(),[](BVHNode* nd){
+        if(nd != nullptr) delete nd;
+    });
+    m_bvhTreeNodes.clear();
+}
+
+void TriMeshProxQueryV3::PartitionMesh()
+{
+    // bounding box for the whole mesh
+    AABB3 totalBoundingBox = AABB<Vec3>::CalculateAABB(m_aabb);
+    NodeData rootNodeData(totalBoundingBox);
+    for(unsigned i=0;i<m_aabb.size();++i){rootNodeData.polygons.push_back(i);}
+
+}
 
 void TriMeshProxQueryV3::Preprocess()
 {
@@ -25,6 +42,8 @@ void TriMeshProxQueryV3::Preprocess()
     {
         m_aabb.emplace_back(t.CalculateAABB());
     });
+
+    PartitionMesh();
 }
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)

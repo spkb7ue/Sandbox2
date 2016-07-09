@@ -18,4 +18,4 @@ set_target_properties(Rabbit PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${STATIC_LIBRAR
 file(COPY ${Rabbit_Inc} DESTINATION ${STATIC_LIBRARY_HEADERS_DIR})
 
 add_subdirectory(examples)
-add_subdirectory(tests)
+#add_subdirectory(tests)
