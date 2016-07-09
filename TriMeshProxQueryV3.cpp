@@ -75,7 +75,6 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
             triangleIndicesChild2.push_back(triangleIndex);
         }
     }
-
 }
 
 void TriMeshProxQueryV3::PartitionMesh()
