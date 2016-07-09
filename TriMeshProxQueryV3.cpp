@@ -167,7 +167,7 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const
 	throw;
 }
 
-void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, const Vec3& point)
+void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, double& minDist, const Vec3& point)
 {
 	if (node == nullptr){return;}
 	NodeData& nodeDat = node->Data();
@@ -177,5 +177,63 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, const Vec3& point)
 		nodeDat.dist = res.Dist;
 		nodeDat.distUpdated = true;
 	}
+	BVHNode* leftNode = node->GetLeft();
+	BVHNode* rightNode = node->GetRight();
 
+	auto updateNode = [&point](BVHNode* nd)
+	{
+		NodeData& nodeData = nd->Data();
+		if (nodeData.distUpdated)
+		{
+			// Can never happen
+			throw;
+		}
+		IRes res = nodeData.aabb.CalcShortestDistanceFrom(point);
+		nodeData.dist = res.Dist;
+		nodeData.distUpdated = true;
+	};
+
+	if (leftNode != nullptr)
+	{
+		updateNode(leftNode);
+	}
+
+	if (rightNode != nullptr)
+	{
+		updateNode(rightNode);
+	}
+
+	// Case 1: Both left and right nodes are null
+	if (leftNode == nullptr && rightNode == nullptr)
+	{
+		// Here goes the iteration over all the triangles in the cell
+		// to find the least distance
+		minDist = nodeDat.dist;
+	}
+
+	// Case 2: Both left and right nodes are not null
+	if (leftNode != nullptr && rightNode != nullptr)
+	{
+		if (leftNode->Data().dist < rightNode->Data().dist)
+		{
+			// This means the left node is closer than the right node to the point
+			UpdateNodeDistDown(leftNode, minDist, point);
+		}
+		else
+		{
+			UpdateNodeDistDown(rightNode, minDist, point);
+		}
+	}
+
+	// Case 3: Left node is not null, right node is null
+	if (leftNode != nullptr && rightNode == nullptr)
+	{
+		UpdateNodeDistDown(rightNode, minDist, point);
+	}
+
+	// Case 4: :Left node is null, right node is not null
+	if (leftNode == nullptr && rightNode != nullptr)
+	{
+		UpdateNodeDistDown(rightNode, minDist, point);
+	}
 }
