@@ -28,11 +28,13 @@ TriMeshProxQueryV3::~TriMeshProxQueryV3()
 
 void TriMeshProxQueryV3::PartitionMesh()
 {
-    // bounding box for the whole mesh
-    AABB3 totalBoundingBox = AABB<Vec3>::CalculateAABB(m_aabb);
-    NodeData rootNodeData(totalBoundingBox);
-    for(unsigned i=0;i<m_aabb.size();++i){rootNodeData.polygons.push_back(i);}
-
+    {   // Create root node
+        AABB3 totalBoundingBox = AABB<Vec3>::CalculateAABB(m_aabb);
+        NodeData rootNodeData(totalBoundingBox);
+        for(unsigned i=0;i<m_aabb.size();++i){rootNodeData.polygons.push_back(i);}
+        BVHNode *rootNode = new BVHNode(rootNodeData);
+        m_bvhTreeNodes.push_back(rootNode);
+    }
 }
 
 void TriMeshProxQueryV3::Preprocess()
