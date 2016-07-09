@@ -42,7 +42,7 @@ TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
         IProximityQueries<Tri, TriMeshProxQueryV3>(mesh)
 {
     Preprocess();
-	PrintNodeTriangles(m_bvhTreeNodes[0]);
+	//PrintNodeTriangles(m_bvhTreeNodes[0]);
 }
 
 TriMeshProxQueryV3::~TriMeshProxQueryV3()
@@ -164,6 +164,12 @@ void TriMeshProxQueryV3::Preprocess()
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
+	
+	double minDist;
+	UpdateNodeDistDown(m_bvhTreeNodes[0], minDist, point, std::numeric_limits<double>::max());
+	cout << minDist << endl;
+
+	cin.get();
 	throw;
 }
 
@@ -215,9 +221,51 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	// Case 1: Both left and right nodes are null
 	if (leftNode == nullptr && rightNode == nullptr)
 	{
+		const std::vector<Tri3>& triangles = m_mesh->GetPolygons();
+		double tmp = std::numeric_limits<double>::max();
+		for (unsigned i = 0; i < nodeDat.indices.size(); ++i)
+		{
+			IRes res = triangles[nodeDat.indices[i]].CalcShortestDistanceFrom(point, std::numeric_limits<double>::max());
+			tmp = std::min(tmp, res.Dist);
+		}
 		// Here goes the iteration over all the triangles in the cell
 		// to find the least distance		
-		minDist = nodeDat.dist;
+		minDist = tmp;
+		nodeDat.dist = tmp;
+
+		// Now that we have calculated min dist, its time to recurse back to the root node and see if
+		// we have violated any constraints
+		BVHNode* parent = node->GetParent();
+		BVHNode* current = node;
+		while (parent != nullptr)
+		{
+			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
+
+			// Has sister node
+			if (sisterNode != nullptr)
+			{
+				if (sisterNode->Data().dist < minDist)
+				{
+					double updatedSisterNodeDist;
+					UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist);
+					sisterNode->Data().dist = updatedSisterNodeDist;
+					minDist = std::min(updatedSisterNodeDist, minDist);
+					parent->Data().dist = minDist;
+
+					current = parent;
+					parent = current->GetParent();
+				}
+				else
+				{
+					return;
+				}
+			}
+			else if (sisterNode == nullptr)
+			{
+				return;
+			}
+		}
+		
 	}
 
 	// Case 2: Both left and right nodes are not null
@@ -234,6 +282,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			{
 				// This means the left node is closer than the right node to the point
 				UpdateNodeDistDown(leftNode, minDist, point, distThreshold);
+				return;
 			}
 		}
 		else
@@ -246,6 +295,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			else
 			{
 				UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
+				return;
 			}			
 		}
 	}
