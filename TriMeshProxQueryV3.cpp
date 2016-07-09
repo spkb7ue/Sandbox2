@@ -63,9 +63,9 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 
     // Check which triangles are in first box, and which are in the second
-    for(unsigned i=0;i<nodeDat.polygons.size();++i)
+    for(unsigned i=0;i<nodeDat.indices.size();++i)
     {
-        int triangleIndex = nodeDat.polygons[i];
+        int triangleIndex = nodeDat.indices[i];
         if(triangles[triangleIndex].IsTriangleInsideAABB(aabb_child1))
         {
             triangleIndicesChild1.push_back(triangleIndex);
@@ -82,7 +82,7 @@ void TriMeshProxQueryV3::PartitionMesh()
     {   // Create root node
         AABB3 totalBoundingBox = AABB<Vec3>::CalculateAABB(m_aabb);
         NodeData rootNodeData(totalBoundingBox);
-        for(unsigned i=0;i<m_aabb.size();++i){rootNodeData.polygons.push_back(i);}
+        for(unsigned i=0;i<m_aabb.size();++i){rootNodeData.indices.push_back(i);}
         BVHNode *rootNode = new BVHNode(rootNodeData);
         m_bvhTreeNodes.push_back(rootNode);
     }
