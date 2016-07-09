@@ -168,10 +168,8 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const
 	
 	double minDist;
 	UpdateNodeDistDown(m_bvhTreeNodes[0], minDist, point, std::numeric_limits<double>::max());
-	cout << minDist << endl;
-
-	cin.get();
-	throw;
+	Flush(m_bvhTreeNodes[0]);
+	return std::make_tuple(point, minDist, true);
 }
 
 void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, 
@@ -262,7 +260,9 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 				}
 				else
 				{
-					return;
+					parent->Data().dist = minDist;
+					current = parent;
+					parent = current->GetParent();
 				}
 			}
 			else if (sisterNode == nullptr)
@@ -349,4 +349,17 @@ void TriMeshProxQueryV3::RecursivelySetNodeLevel(unsigned level, BVHNode* node)
 
 	RecursivelySetNodeLevel(level + 1, leftNode);
 	RecursivelySetNodeLevel(level + 1, rightNode);
+}
+
+void TriMeshProxQueryV3::Flush(BVHNode *node)
+{
+	if (node == nullptr)
+	{
+		return;
+	}
+
+	node->Data().distUpdated = false;
+	node->Data().dist = std::numeric_limits<double>::max();
+	Flush(node->GetLeft());
+	Flush(node->GetRight());
 }

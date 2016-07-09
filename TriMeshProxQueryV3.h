@@ -42,6 +42,8 @@ private:
 
 	void RecursivelySetNodeLevel(unsigned level, BVHNode* node);
 
+	void Flush(BVHNode *node);
+
 	void UpdateNodeDistDown(BVHNode* node, 
 							double& minDist, 
 							const Vec3& point,
