@@ -9,12 +9,10 @@ namespace rabbit
 
 struct NodeData
 {
-    NodeData(const AABB<Vec3>& aabb3):
-        aabb(aabb3){}
+    NodeData(const AABB<Vec3>& aabb3):aabb(aabb3){}
 
     AABB<Vec3> aabb;
-    std::vector<int> triIndices;
-    double dist;
+    std::vector<int> polygons;
 };
 
 }

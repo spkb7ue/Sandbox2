@@ -23,6 +23,7 @@ private:
 
     std::vector<AABB<Vec3>> m_aabb; ///< vector of bounding boxes for all the triangles in the mesh.
 									  ///< These are precomputed so that no run-time costs are incurred.
+
 };
 
 }
