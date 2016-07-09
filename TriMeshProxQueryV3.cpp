@@ -33,7 +33,7 @@ Bounds TriMeshProxQueryV3::RecalculateBounds(const Bounds& bounds, double dim, i
     Bounds bd = bounds; // Create a copy first
     if(index == 0)
     {
-        bd.xMax = bd.xMax + dim;
+        bd.xMax = bd.xMin + dim;
     }
     else if(index == 1)
     {
