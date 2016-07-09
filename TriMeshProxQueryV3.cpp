@@ -54,7 +54,12 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
     double dim; int index;
     NodeData& nodeDat = node->Data();
     std::tie(dim, index) = nodeDat.aabb.GetLargestDim();
-    Bounds bounds = RecalculateBounds(nodeDat.aabb.GetBounds(), dim/2.0, index);
+
+    // bounds for child 1
+    Bounds boundsChild1 = RecalculateBounds(nodeDat.aabb.GetBounds(), dim/2.0, index);
+    AABB3 aabb_child1(boundsChild1);
+
+
 }
 
 void TriMeshProxQueryV3::PartitionMesh()
