@@ -14,9 +14,6 @@ class TriMeshProxQueryV3 : public IProximityQueries<Triangle<Vec3>, TriMeshProxQ
 public:
     TriMeshProxQueryV3(std::shared_ptr<Mesh<Triangle<Vec3>>> mesh);
 
-   /**
-	* See documentation for IProximityQueries<PolygonType, ProximityQueryMethod>::CalculateClosestPoint
-	*/
     std::tuple<Vec3,double,bool> CalculateClosestPointImpl(const Vec3& point,double distThreshold);
 
 private:
