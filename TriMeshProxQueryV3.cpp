@@ -12,12 +12,36 @@ namespace
     typedef AABB<Vec3> AABB3;
     typedef Triangle<Vec3> Tri;
     typedef BNode<NodeData> BVHNode;
+
+	void PrintNodeTriangles(BVHNode *node)
+	{
+		if (node == nullptr)
+		{
+			return;
+		}
+		cout << node->Data().indices.size();
+		BVHNode* left = node->GetLeft();
+		BVHNode* right = node->GetRight();
+		if (left != nullptr)
+		{
+			cout << "\t" << left->Data().indices.size();
+		}
+		if (right != nullptr)
+		{
+			cout << "\t" << right->Data().indices.size();
+		}
+		cout << "\n----------------\n";
+		cin.get();
+		PrintNodeTriangles(left);
+		PrintNodeTriangles(right);
+	}
 }
 
 TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
         IProximityQueries<Tri, TriMeshProxQueryV3>(mesh)
 {
     Preprocess();
+	PrintNodeTriangles(m_bvhTreeNodes[0]);
 }
 
 TriMeshProxQueryV3::~TriMeshProxQueryV3()
