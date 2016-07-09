@@ -26,6 +26,37 @@ TriMeshProxQueryV3::~TriMeshProxQueryV3()
     m_bvhTreeNodes.clear();
 }
 
+Bounds TriMeshProxQueryV3::RecalculateBounds(const Bounds& bounds, double dim, int index)const
+{
+    Bounds bd = bounds; // Create a copy first
+    if(index == 0)
+    {
+        bd.xMax = bd.xMax + dim;
+    }
+    else if(index == 1)
+    {
+        bd.yMax = bd.yMin + dim;
+    }
+    else if(index == 2)
+    {
+        bd.zMax = bd.zMin + dim;
+    }
+    else
+    {
+        // should never get here.
+        throw;
+    }
+    return bd;
+}
+
+void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
+{
+    double dim; int index;
+    NodeData& nodeDat = node->Data();
+    std::tie(dim, index) = nodeDat.aabb.GetLargestDim();
+    Bounds bounds = RecalculateBounds(nodeDat.aabb.GetBounds(), dim/2.0, index);
+}
+
 void TriMeshProxQueryV3::PartitionMesh()
 {
     {   // Create root node
