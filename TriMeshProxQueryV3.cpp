@@ -295,12 +295,10 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		{
 			if (leftNode->Data().dist > distThreshold)
 			{
-				minDist = leftNode->Data().dist;
 				return;
 			}
 			else
 			{
-				minDist = leftNode->Data().dist;
 				// This means the left node is closer than the right node to the point
 				UpdateNodeDistDown(leftNode, minDist, point, distThreshold, terminalNode);
 				return;
@@ -310,12 +308,10 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		{
 			if (rightNode->Data().dist > distThreshold)
 			{
-				minDist = rightNode->Data().dist;
 				return;
 			}
 			else
 			{
-				minDist = rightNode->Data().dist;
 				UpdateNodeDistDown(rightNode, minDist, point, distThreshold, terminalNode);
 				return;
 			}			
@@ -327,7 +323,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	{
 		if (leftNode->Data().dist > distThreshold)
 		{
-			minDist = leftNode->Data().dist;
 			return;
 		}
 		else
