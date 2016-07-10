@@ -36,7 +36,7 @@ void TriMeshProxQueryV3::PrintNodes(const Vec3& point, BVHNode* node)
 				current = parent;
 				parent = current->GetParent();
 			}			
-			cin.get();
+			cout << "\n----------" << "Done printing nodes\n";
 		}
 	}
 	else
@@ -172,11 +172,12 @@ void TriMeshProxQueryV3::Preprocess()
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
 	PrintNodes(point, m_bvhTreeNodes[0]);
+	PrintPathToRoot(m_bvhTreeNodes[118]);
 	Verify(point, m_bvhTreeNodes[0]);
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 	
 	double minDist;
-	UpdateNodeDistDown(m_bvhTreeNodes[0], minDist, point, std::numeric_limits<double>::max());
+	UpdateNodeDistDown(m_bvhTreeNodes[0], minDist, point, std::numeric_limits<double>::max(), m_bvhTreeNodes[0]);
 	Flush(m_bvhTreeNodes[0]);
 	return std::make_tuple(point, minDist, true);
 }
@@ -184,22 +185,28 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const
 void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node, 
 											double& minDist, 
 											const Vec3& point, 
-											double distThreshold)
+											double distThreshold,
+											BVHNode* terminalNode)
 {
-	if (node == nullptr){return;}
+	if (node == nullptr){return;}	
+	if (node->m_nodeID == 132)
+	{
+		cin.get();
+	}
 	NodeData& nodeDat = node->Data();
 	if (!nodeDat.distUpdated)
 	{
 		IRes res = nodeDat.aabb.CalcShortestDistanceFrom(point);
 		nodeDat.dist = res.Dist;
-		nodeDat.distUpdated = true;
-		if (nodeDat.dist > distThreshold)
-		{
-			minDist = nodeDat.dist;
-			// nothing else to do in this tree.
-			return;
-		}
+		nodeDat.distUpdated = true;		
 	}
+	if (nodeDat.dist > distThreshold)
+	{
+		minDist = nodeDat.dist;
+		// nothing else to do in this tree.
+		return;
+	}
+
 	BVHNode* leftNode = node->GetLeft();
 	BVHNode* rightNode = node->GetRight();
 
@@ -229,6 +236,13 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	// Case 1: Both left and right nodes are null
 	if (leftNode == nullptr && rightNode == nullptr)
 	{
+		if (node->m_nodeID == 136)
+		{
+			cin.get();
+		}
+		PrintPathToRoot(node);
+		cout << minDist << endl;
+		cin.get();
 		const std::vector<Tri3>& triangles = m_mesh->GetPolygons();
 		double tmp = std::numeric_limits<double>::max();
 		//cout << "\nTriangleIndices: ";
@@ -244,26 +258,29 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		// to find the least distance		
 		minDist = tmp;
 		nodeDat.dist = tmp;
-		if (minDist>distThreshold)
+		/*if (minDist>distThreshold)
 		{
 			return;
-		}
+		}*/
 
 		// Now that we have calculated min dist, its time to recurse back to the root node and see if
 		// we have violated any constraints
 		BVHNode* parent = node->GetParent();
 		BVHNode* current = node;
-		while (parent != nullptr)
+		while (parent != terminalNode)
 		{
 			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
-
+			if (parent->m_nodeID == 132)
+			{
+				cin.get();
+			}
 			// Has sister node
 			if (sisterNode != nullptr)
 			{
 				if (sisterNode->Data().dist < minDist)
 				{
 					double updatedSisterNodeDist;
-					UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist);
+					UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, parent);
 					sisterNode->Data().dist = updatedSisterNodeDist;
 					minDist = std::min(updatedSisterNodeDist, minDist);
 					parent->Data().dist = minDist;
@@ -297,8 +314,9 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			}
 			else
 			{
+				minDist = leftNode->Data().dist;
 				// This means the left node is closer than the right node to the point
-				UpdateNodeDistDown(leftNode, minDist, point, distThreshold);
+				UpdateNodeDistDown(leftNode, minDist, point, distThreshold, terminalNode);
 				return;
 			}
 		}
@@ -311,7 +329,8 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			}
 			else
 			{
-				UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
+				minDist = rightNode->Data().dist;
+				UpdateNodeDistDown(rightNode, minDist, point, distThreshold, terminalNode);
 				return;
 			}			
 		}
@@ -328,7 +347,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		else
 		{
 			// This means the left node is closer than the right node to the point
-			UpdateNodeDistDown(leftNode, minDist, point, distThreshold);
+			UpdateNodeDistDown(leftNode, minDist, point, distThreshold, terminalNode);
 		}
 	}
 
@@ -342,7 +361,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		}
 		else
 		{
-			UpdateNodeDistDown(rightNode, minDist, point, distThreshold);
+			UpdateNodeDistDown(rightNode, minDist, point, distThreshold, terminalNode);
 		}
 	}
 }
@@ -412,4 +431,17 @@ void TriMeshProxQueryV3::Verify(const Vec3& point, BVHNode* node)
 
 	Verify(point, node->GetLeft());
 	Verify(point, node->GetRight());
+}
+
+void TriMeshProxQueryV3::PrintPathToRoot(BVHNode* node)
+{
+	auto current = node;
+	auto parent = node->GetParent();
+	while (parent != nullptr)
+	{
+		cout << current->m_nodeID << "-";
+		current = parent;
+		parent = current->GetParent();
+	}
+	cout << endl;
 }

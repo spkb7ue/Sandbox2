@@ -25,8 +25,6 @@ public:
 
     ~TriMeshProxQueryV3();
 
-private:
-
 	// Calculate the bounding box for all the triangles in the mesh
     void Preprocess();
 
@@ -48,10 +46,13 @@ private:
 
 	void PrintNodes(const Vec3& point, BVHNode* node);
 
+	void PrintPathToRoot(BVHNode* node);
+
 	void UpdateNodeDistDown(BVHNode* node, 
 							double& minDist, 
 							const Vec3& point,
-							double distThreshold);
+							double distThreshold,
+							BVHNode* terminalNode);
 
 };
 
