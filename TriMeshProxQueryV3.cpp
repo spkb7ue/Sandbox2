@@ -229,8 +229,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 
 	// Case 1: Both left and right nodes are null
 	if (leftNode == nullptr && rightNode == nullptr)
-	{
-		PrintPathToRoot(node, terminalNode);
+	{		
 		const std::vector<Tri3>& triangles = m_mesh->GetPolygons();
 		double tmp = std::numeric_limits<double>::max();
 		for (unsigned i = 0; i < nodeDat.indices.size(); ++i)
@@ -251,10 +250,10 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		while (current != terminalNode)
 		{	
 			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
-			if (sisterNode != nullptr && sisterNode->Data().dist < minDist)
+			if (sisterNode->Data().dist < current->Data().dist)
 			{
 				double updatedSisterNodeDist;
-				UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, sisterNode);
+				UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, distThreshold, sisterNode);
 				sisterNode->Data().dist = updatedSisterNodeDist;
 				minDist = std::min(updatedSisterNodeDist, minDist);
 			}
