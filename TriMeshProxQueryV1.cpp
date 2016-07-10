@@ -15,23 +15,18 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV1::CalculateClosestPointImpl(const
     bool foundPoint = false;
 
     // Check min distance to each triangle
-	unsigned triId = 0;
-	int i = 0;
     for(const Triangle<Vec3>& t : triangles)
     {
         // Note the distance threshold gets updated if a single point is found.
         IntersectionResult<Vec3> res = t.CalcShortestDistanceFrom(point, minDist);
         if(res.Dist < minDist)
         {
-			triId = i;
             minDist = res.Dist;
             closestPoint = res.Point;
             foundPoint = true;
         }
-		++i;
     }
 
-	std::cout << "V1 Triangle id:" << triId << std::endl;
     return std::make_tuple(closestPoint, minDist, foundPoint);
 }
 

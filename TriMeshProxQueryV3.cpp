@@ -15,37 +15,6 @@ namespace
 	typedef IntersectionResult<Vec3> IRes;
 }
 
-void TriMeshProxQueryV3::PrintNodes(const Vec3& point, BVHNode* node)
-{
-	if (node == nullptr)
-	{
-		return;
-	}
-	if (node->GetLeft() == nullptr && node->GetRight() == nullptr)
-	{
-		auto it = std::find(node->Data().indices.begin(), node->Data().indices.end(), 2063);
-		if (it != node->Data().indices.end())
-		{
-			BVHNode *current = node;
-			while (current != nullptr)
-			{
-				// found triangle of interest, recurse back to the root
-				IRes res = current->Data().aabb.CalcShortestDistanceFrom(point, 10000.0);
-				cout << "Node ID: " << current->m_nodeID << "\t AABB: " << res.Dist << endl;
-				current = current->GetParent();
-			}			
-			IRes res = m_mesh->GetPolygons()[2063].CalcShortestDistanceFrom(point, 10000.0);
-			cout << "V3Dist: " << res.Dist;
-			cout << "\n----------" << "Done printing nodes\n";
-		}
-	}
-	else
-	{
-		PrintNodes(point, node->GetLeft());
-		PrintNodes(point, node->GetRight());
-	}	
-}
-
 TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
         IProximityQueries<Tri, TriMeshProxQueryV3>(mesh)
 {
@@ -327,15 +296,4 @@ void TriMeshProxQueryV3::Verify(const Vec3& point, BVHNode* node)
 
 	Verify(point, node->GetLeft());
 	Verify(point, node->GetRight());
-}
-
-void TriMeshProxQueryV3::PrintPathToRoot(BVHNode* node, BVHNode* terminal)
-{
-	auto current = node;
-	while (current != terminal->GetParent())
-	{
-		cout << current->m_nodeID << "-";
-		current = current->GetParent();
-	}
-	cout << endl;
 }
