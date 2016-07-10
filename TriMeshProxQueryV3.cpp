@@ -171,9 +171,9 @@ void TriMeshProxQueryV3::Preprocess()
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
-	PrintNodes(point, m_bvhTreeNodes[0]);
-	PrintPathToRoot(m_bvhTreeNodes[118]);
-	Verify(point, m_bvhTreeNodes[0]);
+	//PrintNodes(point, m_bvhTreeNodes[0]);
+	//PrintPathToRoot(m_bvhTreeNodes[118]);
+	//Verify(point, m_bvhTreeNodes[0]);
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 	
 	double minDist;
@@ -189,10 +189,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 											BVHNode* terminalNode)
 {
 	if (node == nullptr){return;}	
-	if (node->m_nodeID == 132)
-	{
-		cin.get();
-	}
 	NodeData& nodeDat = node->Data();
 	if (!nodeDat.distUpdated)
 	{
@@ -236,13 +232,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	// Case 1: Both left and right nodes are null
 	if (leftNode == nullptr && rightNode == nullptr)
 	{
-		if (node->m_nodeID == 136)
-		{
-			cin.get();
-		}
 		PrintPathToRoot(node);
-		cout << minDist << endl;
-		cin.get();
 		const std::vector<Tri3>& triangles = m_mesh->GetPolygons();
 		double tmp = std::numeric_limits<double>::max();
 		//cout << "\nTriangleIndices: ";
@@ -270,10 +260,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		while (parent != terminalNode)
 		{
 			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
-			if (parent->m_nodeID == 132)
-			{
-				cin.get();
-			}
 			// Has sister node
 			if (sisterNode != nullptr)
 			{
@@ -435,6 +421,7 @@ void TriMeshProxQueryV3::Verify(const Vec3& point, BVHNode* node)
 
 void TriMeshProxQueryV3::PrintPathToRoot(BVHNode* node)
 {
+	return;
 	auto current = node;
 	auto parent = node->GetParent();
 	while (parent != nullptr)

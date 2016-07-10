@@ -55,6 +55,5 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const
         }
     }
 
-	cout << "V2 Triangle id:" << triId << endl;
     return std::make_tuple(closestPoint, minDist, foundPoint);
 }
