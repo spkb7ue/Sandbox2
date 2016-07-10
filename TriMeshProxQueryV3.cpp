@@ -198,21 +198,20 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	BVHNode* leftNode = node->GetLeft();
 	BVHNode* rightNode = node->GetRight();
 
-	auto updateNode = [&point](BVHNode* nd)
-	{
-		NodeData& nodeData = nd->Data();
-		if (nodeData.distUpdated)
-		{
-			// Can never happen
-			throw;
-		}
-		IRes res = nodeData.aabb.CalcShortestDistanceFrom(point);
-		nodeData.dist = res.Dist;
-		nodeData.distUpdated = true;
-	};
-
 	if (leftNode != nullptr && rightNode != nullptr)
 	{
+		auto updateNode = [&point](BVHNode* nd)
+		{
+			NodeData& nodeData = nd->Data();
+			if (nodeData.distUpdated)
+			{
+				// Can never happen
+				throw;
+			}
+			IRes res = nodeData.aabb.CalcShortestDistanceFrom(point);
+			nodeData.dist = res.Dist;
+			nodeData.distUpdated = true;
+		};
 		updateNode(leftNode);
 		updateNode(rightNode);
 		if (leftNode->Data().dist < rightNode->Data().dist)
@@ -277,11 +276,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			current = parent;
 			parent = current->GetParent();
 		}
-	}
-
-	// Case 2: Both left and right nodes are not null
-	if (leftNode != nullptr && rightNode != nullptr)
-	{		
 	}
 }
 
