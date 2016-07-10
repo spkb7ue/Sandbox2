@@ -198,8 +198,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	}
 	if (nodeDat.dist > distThreshold)
 	{
-		minDist = nodeDat.dist;
-		// nothing else to do in this tree.
 		return;
 	}
 
@@ -235,10 +233,8 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		PrintPathToRoot(node, terminalNode);
 		const std::vector<Tri3>& triangles = m_mesh->GetPolygons();
 		double tmp = std::numeric_limits<double>::max();
-		//cout << "\nTriangleIndices: ";
 		for (unsigned i = 0; i < nodeDat.indices.size(); ++i)
 		{
-			//cout << nodeDat.indices[i] << ", ";
 			IRes res = triangles[nodeDat.indices[i]].CalcShortestDistanceFrom(point, std::numeric_limits<double>::max());
 			tmp = std::min(tmp, res.Dist);
 		}
@@ -252,13 +248,13 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		// we have violated any constraints
 		BVHNode* parent = node->GetParent();
 		BVHNode* current = node;
-		while (parent != terminalNode->GetParent())
+		while (current != terminalNode)
 		{	
 			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
-			if (sisterNode->Data().dist < minDist)
+			if (sisterNode != nullptr && sisterNode->Data().dist < minDist)
 			{
 				double updatedSisterNodeDist;
-				UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, current);
+				UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, sisterNode);
 				sisterNode->Data().dist = updatedSisterNodeDist;
 				minDist = std::min(updatedSisterNodeDist, minDist);
 			}
@@ -296,33 +292,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 				UpdateNodeDistDown(rightNode, minDist, point, distThreshold, terminalNode);
 				return;
 			}			
-		}
-	}
-
-	// Case 3: Left node is not null, right node is null
-	if (leftNode != nullptr && rightNode == nullptr)
-	{
-		if (leftNode->Data().dist > distThreshold)
-		{
-			return;
-		}
-		else
-		{
-			// This means the left node is closer than the right node to the point
-			UpdateNodeDistDown(leftNode, minDist, point, distThreshold, terminalNode);
-		}
-	}
-
-	// Case 4: :Left node is null, right node is not null
-	if (leftNode == nullptr && rightNode != nullptr)
-	{
-		if (rightNode->Data().dist > distThreshold)
-		{
-			return;
-		}
-		else
-		{
-			UpdateNodeDistDown(rightNode, minDist, point, distThreshold, terminalNode);
 		}
 	}
 }
