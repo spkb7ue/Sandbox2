@@ -23,18 +23,16 @@ void TriMeshProxQueryV3::PrintNodes(const Vec3& point, BVHNode* node)
 	}
 	if (node->GetLeft() == nullptr && node->GetRight() == nullptr)
 	{
-		auto it = std::find(node->Data().indices.begin(), node->Data().indices.end(), 2086);
+		auto it = std::find(node->Data().indices.begin(), node->Data().indices.end(), 539);
 		if (it != node->Data().indices.end())
 		{
 			BVHNode *current = node;
-			BVHNode *parent = node->GetParent();
-			while (parent != nullptr)
+			while (current != nullptr)
 			{
 				// found triangle of interest, recurse back to the root
 				IRes res = current->Data().aabb.CalcShortestDistanceFrom(point, 10000.0);
 				cout << "Node ID: " << current->m_nodeID << "\t AABB: " << res.Dist << endl;
-				current = parent;
-				parent = current->GetParent();
+				current = current->GetParent();
 			}			
 			cout << "\n----------" << "Done printing nodes\n";
 		}
@@ -166,13 +164,13 @@ void TriMeshProxQueryV3::Preprocess()
     });
 
     PartitionMesh();
-	RecursivelySetNodeLevel(0, m_bvhTreeNodes[0]);
 }
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
-	//PrintNodes(point, m_bvhTreeNodes[0]);
-	//PrintPathToRoot(m_bvhTreeNodes[118]);
+	PrintNodes(point, m_bvhTreeNodes[0]);
+	cin.get();
+	PrintPathToRoot(m_bvhTreeNodes[734]);
 	//Verify(point, m_bvhTreeNodes[0]);
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 	
@@ -189,6 +187,10 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 											BVHNode* terminalNode)
 {
 	if (node == nullptr){return;}	
+	if (node->m_nodeID == 1 || node->m_nodeID == 496)
+	{
+		cin.get();
+	}
 	NodeData& nodeDat = node->Data();
 	if (!nodeDat.distUpdated)
 	{
@@ -257,16 +259,20 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		// we have violated any constraints
 		BVHNode* parent = node->GetParent();
 		BVHNode* current = node;
-		while (parent != terminalNode)
-		{
+		while (parent != terminalNode->GetParent())
+		{	
 			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
+			if (current->m_nodeID == 1 || sisterNode->m_nodeID == 496)
+			{
+				cin.get();
+			}
 			// Has sister node
 			if (sisterNode != nullptr)
 			{
 				if (sisterNode->Data().dist < minDist)
 				{
 					double updatedSisterNodeDist;
-					UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, parent);
+					UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, current);
 					sisterNode->Data().dist = updatedSisterNodeDist;
 					minDist = std::min(updatedSisterNodeDist, minDist);
 					parent->Data().dist = minDist;
@@ -352,23 +358,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	}
 }
 
-
-void TriMeshProxQueryV3::RecursivelySetNodeLevel(unsigned level, BVHNode* node)
-{
-	return;
-	if (node == nullptr)
-	{
-		return;
-	}
-	
-
-	auto leftNode = node->GetLeft();
-	auto rightNode = node->GetRight();
-
-	RecursivelySetNodeLevel(level + 1, leftNode);
-	RecursivelySetNodeLevel(level + 1, rightNode);
-}
-
 void TriMeshProxQueryV3::Flush(BVHNode *node)
 {
 	if (node == nullptr)
@@ -421,7 +410,6 @@ void TriMeshProxQueryV3::Verify(const Vec3& point, BVHNode* node)
 
 void TriMeshProxQueryV3::PrintPathToRoot(BVHNode* node)
 {
-	return;
 	auto current = node;
 	auto parent = node->GetParent();
 	while (parent != nullptr)
