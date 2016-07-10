@@ -46,7 +46,7 @@ public:
 
 	void PrintNodes(const Vec3& point, BVHNode* node);
 
-	void PrintPathToRoot(BVHNode* node);
+	void PrintPathToRoot(BVHNode* node, BVHNode *terminal);
 
 	void UpdateNodeDistDown(BVHNode* node, 
 							double& minDist, 

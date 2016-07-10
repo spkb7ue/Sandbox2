@@ -23,7 +23,7 @@ void TriMeshProxQueryV3::PrintNodes(const Vec3& point, BVHNode* node)
 	}
 	if (node->GetLeft() == nullptr && node->GetRight() == nullptr)
 	{
-		auto it = std::find(node->Data().indices.begin(), node->Data().indices.end(), 539);
+		auto it = std::find(node->Data().indices.begin(), node->Data().indices.end(), 2063);
 		if (it != node->Data().indices.end())
 		{
 			BVHNode *current = node;
@@ -34,6 +34,8 @@ void TriMeshProxQueryV3::PrintNodes(const Vec3& point, BVHNode* node)
 				cout << "Node ID: " << current->m_nodeID << "\t AABB: " << res.Dist << endl;
 				current = current->GetParent();
 			}			
+			IRes res = m_mesh->GetPolygons()[2063].CalcShortestDistanceFrom(point, 10000.0);
+			cout << "V3Dist: " << res.Dist;
 			cout << "\n----------" << "Done printing nodes\n";
 		}
 	}
@@ -170,7 +172,7 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const
 {
 	PrintNodes(point, m_bvhTreeNodes[0]);
 	cin.get();
-	PrintPathToRoot(m_bvhTreeNodes[734]);
+	PrintPathToRoot(m_bvhTreeNodes[491], m_bvhTreeNodes[0]);
 	//Verify(point, m_bvhTreeNodes[0]);
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 	
@@ -187,10 +189,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 											BVHNode* terminalNode)
 {
 	if (node == nullptr){return;}	
-	if (node->m_nodeID == 1 || node->m_nodeID == 496)
-	{
-		cin.get();
-	}
 	NodeData& nodeDat = node->Data();
 	if (!nodeDat.distUpdated)
 	{
@@ -234,7 +232,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	// Case 1: Both left and right nodes are null
 	if (leftNode == nullptr && rightNode == nullptr)
 	{
-		PrintPathToRoot(node);
+		PrintPathToRoot(node, terminalNode);
 		const std::vector<Tri3>& triangles = m_mesh->GetPolygons();
 		double tmp = std::numeric_limits<double>::max();
 		//cout << "\nTriangleIndices: ";
@@ -259,38 +257,34 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		// we have violated any constraints
 		BVHNode* parent = node->GetParent();
 		BVHNode* current = node;
+		if (terminalNode->GetParent() != nullptr)
+		{
+			cout << "Terminal id: " << terminalNode->GetParent()->m_nodeID << endl;
+		}
+		else
+		{
+			cout << "Terminal id: nullptr" << endl;
+		}
 		while (parent != terminalNode->GetParent())
 		{	
 			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
-			if (current->m_nodeID == 1 || sisterNode->m_nodeID == 496)
+			if (parent == m_bvhTreeNodes[0])
 			{
 				cin.get();
 			}
-			// Has sister node
-			if (sisterNode != nullptr)
+			
+			if (sisterNode->Data().dist < minDist)
 			{
-				if (sisterNode->Data().dist < minDist)
-				{
-					double updatedSisterNodeDist;
-					UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, current);
-					sisterNode->Data().dist = updatedSisterNodeDist;
-					minDist = std::min(updatedSisterNodeDist, minDist);
-					parent->Data().dist = minDist;
+				double updatedSisterNodeDist;
+				UpdateNodeDistDown(sisterNode, updatedSisterNodeDist, point, minDist, current);
+				sisterNode->Data().dist = updatedSisterNodeDist;
+				minDist = std::min(updatedSisterNodeDist, minDist);
+			}
+			
+			parent->Data().dist = minDist;
 
-					current = parent;
-					parent = current->GetParent();
-				}
-				else
-				{
-					parent->Data().dist = minDist;
-					current = parent;
-					parent = current->GetParent();
-				}
-			}
-			else if (sisterNode == nullptr)
-			{
-				return;
-			}
+			current = parent;
+			parent = current->GetParent();
 		}
 	}
 
@@ -408,15 +402,13 @@ void TriMeshProxQueryV3::Verify(const Vec3& point, BVHNode* node)
 	Verify(point, node->GetRight());
 }
 
-void TriMeshProxQueryV3::PrintPathToRoot(BVHNode* node)
+void TriMeshProxQueryV3::PrintPathToRoot(BVHNode* node, BVHNode* terminal)
 {
 	auto current = node;
-	auto parent = node->GetParent();
-	while (parent != nullptr)
+	while (current != terminal->GetParent())
 	{
 		cout << current->m_nodeID << "-";
-		current = parent;
-		parent = current->GetParent();
+		current = current->GetParent();
 	}
 	cout << endl;
 }
