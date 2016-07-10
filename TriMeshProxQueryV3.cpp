@@ -170,9 +170,9 @@ void TriMeshProxQueryV3::Preprocess()
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
-	PrintNodes(point, m_bvhTreeNodes[0]);
-	cin.get();
-	PrintPathToRoot(m_bvhTreeNodes[491], m_bvhTreeNodes[0]);
+	//PrintNodes(point, m_bvhTreeNodes[0]);
+	//cin.get();
+	//PrintPathToRoot(m_bvhTreeNodes[491], m_bvhTreeNodes[0]);
 	//Verify(point, m_bvhTreeNodes[0]);
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 	
