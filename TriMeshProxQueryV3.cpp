@@ -169,13 +169,7 @@ void TriMeshProxQueryV3::Preprocess()
 }
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
-{
-	//PrintNodes(point, m_bvhTreeNodes[0]);
-	//cin.get();
-	//PrintPathToRoot(m_bvhTreeNodes[491], m_bvhTreeNodes[0]);
-	//Verify(point, m_bvhTreeNodes[0]);
-    const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
-	
+{	
 	double minDist;
 	UpdateNodeDistDown(m_bvhTreeNodes[0], minDist, point, std::numeric_limits<double>::max(), m_bvhTreeNodes[0]);
 	Flush(m_bvhTreeNodes[0]);
@@ -217,14 +211,35 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 		nodeData.distUpdated = true;
 	};
 
-	if (leftNode != nullptr)
+	if (leftNode != nullptr && rightNode != nullptr)
 	{
 		updateNode(leftNode);
-	}
-
-	if (rightNode != nullptr)
-	{
 		updateNode(rightNode);
+		if (leftNode->Data().dist < rightNode->Data().dist)
+		{
+			if (leftNode->Data().dist > distThreshold)
+			{
+				return;
+			}
+			else
+			{
+				// This means the left node is closer than the right node to the point
+				UpdateNodeDistDown(leftNode, minDist, point, distThreshold, terminalNode);
+				return;
+			}
+		}
+		else
+		{
+			if (rightNode->Data().dist > distThreshold)
+			{
+				return;
+			}
+			else
+			{
+				UpdateNodeDistDown(rightNode, minDist, point, distThreshold, terminalNode);
+				return;
+			}
+		}
 	}
 
 	// Case 1: Both left and right nodes are null
@@ -266,32 +281,7 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 
 	// Case 2: Both left and right nodes are not null
 	if (leftNode != nullptr && rightNode != nullptr)
-	{
-		if (leftNode->Data().dist < rightNode->Data().dist)
-		{
-			if (leftNode->Data().dist > distThreshold)
-			{
-				return;
-			}
-			else
-			{
-				// This means the left node is closer than the right node to the point
-				UpdateNodeDistDown(leftNode, minDist, point, distThreshold, terminalNode);
-				return;
-			}
-		}
-		else
-		{
-			if (rightNode->Data().dist > distThreshold)
-			{
-				return;
-			}
-			else
-			{
-				UpdateNodeDistDown(rightNode, minDist, point, distThreshold, terminalNode);
-				return;
-			}			
-		}
+	{		
 	}
 }
 
