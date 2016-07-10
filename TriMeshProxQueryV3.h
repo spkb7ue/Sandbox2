@@ -44,6 +44,10 @@ private:
 
 	void Flush(BVHNode *node);
 
+	void Verify(const Vec3& point, BVHNode* node);
+
+	void PrintNodes(const Vec3& point, BVHNode* node);
+
 	void UpdateNodeDistDown(BVHNode* node, 
 							double& minDist, 
 							const Vec3& point,

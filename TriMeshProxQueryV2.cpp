@@ -34,7 +34,7 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const
 
     double minDist = distThreshold;
     bool foundPoint = false;
-
+	unsigned triId = 0;
     for(unsigned i = 0; i < m_aabb.size(); ++i)
     {
         IntRes resAABB = m_aabb[i].CalcShortestDistanceFrom(point, minDist);
@@ -50,9 +50,11 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const
                 minDist = resTri.Dist;
                 closestPoint = resTri.Point;
                 foundPoint = true;
+				triId = i;
             }
         }
     }
 
+	cout << "V2 Triangle id:" << triId << endl;
     return std::make_tuple(closestPoint, minDist, foundPoint);
 }

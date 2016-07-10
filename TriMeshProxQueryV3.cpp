@@ -13,36 +13,39 @@ namespace
     typedef Triangle<Vec3> Tri;
     typedef BNode<NodeData> BVHNode;
 	typedef IntersectionResult<Vec3> IRes;
+}
 
-	void PrintNodeTriangles(BVHNode *node)
+void TriMeshProxQueryV3::PrintNodes(const Vec3& point, BVHNode* node)
+{
+	if (node == nullptr)
 	{
-		if (node == nullptr)
-		{
-			return;
-		}
-		cout << node->Data().indices.size();
-		BVHNode* left = node->GetLeft();
-		BVHNode* right = node->GetRight();
-		if (left != nullptr)
-		{
-			cout << "\t" << left->Data().indices.size();
-		}
-		if (right != nullptr)
-		{
-			cout << "\t" << right->Data().indices.size();
-		}
-		cout << "\n----------------\n";
-		cin.get();
-		PrintNodeTriangles(left);
-		PrintNodeTriangles(right);
+		return;
 	}
+	if (node->GetLeft() == nullptr && node->GetRight() == nullptr)
+	{
+		auto it = std::find(node->Data().indices.begin(), node->Data().indices.end(), 2086);
+		if (it != node->Data().indices.end())
+		{
+			auto& triangles = m_mesh->GetPolygons();
+			cout << *it << endl;
+			IRes res = triangles[*it].CalcShortestDistanceFrom(point, 100000000.0);
+			cout << res.Dist << endl;
+			IRes res1 = node->Data().aabb.CalcShortestDistanceFrom(point, 100000.0);
+			cout << res.Dist << endl;
+			cout << "\nFrom V3\n";
+		}
+	}
+	else
+	{
+		PrintNodes(point, node->GetLeft());
+		PrintNodes(point, node->GetRight());
+	}	
 }
 
 TriMeshProxQueryV3::TriMeshProxQueryV3(std::shared_ptr<Mesh<Tri>> mesh):
         IProximityQueries<Tri, TriMeshProxQueryV3>(mesh)
 {
-    Preprocess();
-	//PrintNodeTriangles(m_bvhTreeNodes[0]);
+    Preprocess();	
 }
 
 TriMeshProxQueryV3::~TriMeshProxQueryV3()
@@ -101,7 +104,7 @@ void TriMeshProxQueryV3::RecursivePartition(BVHNode* node)
         }
     }
 
-    if(triangleIndicesChild1.size() != 0)
+	if (triangleIndicesChild1.size() != 0 && triangleIndicesChild1.size() != nodeDat.indices.size())
     {
         NodeData child1NodeData(aabb_child1);
         child1NodeData.indices = triangleIndicesChild1;
@@ -164,6 +167,8 @@ void TriMeshProxQueryV3::Preprocess()
 
 std::tuple<Vec3,double,bool> TriMeshProxQueryV3::CalculateClosestPointImpl(const Vec3& point,double distThreshold)
 {
+	PrintNodes(point, m_bvhTreeNodes[0]);
+	Verify(point, m_bvhTreeNodes[0]);
     const std::vector<Triangle<Vec3>>& triangles = m_mesh->GetPolygons();
 	
 	double minDist;
@@ -222,11 +227,15 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	{
 		const std::vector<Tri3>& triangles = m_mesh->GetPolygons();
 		double tmp = std::numeric_limits<double>::max();
+		//cout << "\nTriangleIndices: ";
 		for (unsigned i = 0; i < nodeDat.indices.size(); ++i)
 		{
+			//cout << nodeDat.indices[i] << ", ";
 			IRes res = triangles[nodeDat.indices[i]].CalcShortestDistanceFrom(point, std::numeric_limits<double>::max());
 			tmp = std::min(tmp, res.Dist);
 		}
+		//cout << endl;
+		//cin.get();
 		// Here goes the iteration over all the triangles in the cell
 		// to find the least distance		
 		minDist = tmp;
@@ -270,7 +279,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 				return;
 			}
 		}
-		
 	}
 
 	// Case 2: Both left and right nodes are not null
@@ -338,11 +346,12 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 
 void TriMeshProxQueryV3::RecursivelySetNodeLevel(unsigned level, BVHNode* node)
 {
+	return;
 	if (node == nullptr)
 	{
 		return;
 	}
-	node->SetNodeID(level);
+	
 
 	auto leftNode = node->GetLeft();
 	auto rightNode = node->GetRight();
@@ -362,4 +371,41 @@ void TriMeshProxQueryV3::Flush(BVHNode *node)
 	node->Data().dist = std::numeric_limits<double>::max();
 	Flush(node->GetLeft());
 	Flush(node->GetRight());
+}
+
+void TriMeshProxQueryV3::Verify(const Vec3& point, BVHNode* node)
+{
+	double distNode, distLeft, distRight;
+	if (node != nullptr)
+	{
+		IRes res = node->Data().aabb.CalcShortestDistanceFrom(point, std::numeric_limits<double>::max());
+		distNode = res.Dist;
+	}
+	else
+	{
+		return;
+	}
+
+	if (node->GetLeft() != nullptr)
+	{
+		IRes res = node->GetLeft()->Data().aabb.CalcShortestDistanceFrom(point, std::numeric_limits<double>::max());
+		distLeft = res.Dist;
+		if (distNode > distLeft)
+		{
+			throw;
+		}
+	}
+
+	if (node->GetRight() != nullptr)
+	{
+		IRes res = node->GetRight()->Data().aabb.CalcShortestDistanceFrom(point, std::numeric_limits<double>::max());
+		distRight = res.Dist;
+		if (distNode > distRight)
+		{
+			throw;
+		}
+	}
+
+	Verify(point, node->GetLeft());
+	Verify(point, node->GetRight());
 }
