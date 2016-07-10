@@ -56,7 +56,7 @@ BNode<T>::BNode(const T& data, BNode<T>* parent):
     m_parent(parent),
     m_left(nullptr),
     m_right(nullptr),
-	m_nodeID(counter++){}
+    m_nodeID(counter++){}
 
 template<typename T>
 void BNode<T>::SetLeft(BNode<T>* left){
