@@ -242,37 +242,19 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			IRes res = triangles[nodeDat.indices[i]].CalcShortestDistanceFrom(point, std::numeric_limits<double>::max());
 			tmp = std::min(tmp, res.Dist);
 		}
-		//cout << endl;
-		//cin.get();
+		
 		// Here goes the iteration over all the triangles in the cell
 		// to find the least distance		
 		minDist = tmp;
 		nodeDat.dist = tmp;
-		/*if (minDist>distThreshold)
-		{
-			return;
-		}*/
 
 		// Now that we have calculated min dist, its time to recurse back to the root node and see if
 		// we have violated any constraints
 		BVHNode* parent = node->GetParent();
 		BVHNode* current = node;
-		if (terminalNode->GetParent() != nullptr)
-		{
-			cout << "Terminal id: " << terminalNode->GetParent()->m_nodeID << endl;
-		}
-		else
-		{
-			cout << "Terminal id: nullptr" << endl;
-		}
 		while (parent != terminalNode->GetParent())
 		{	
 			BVHNode * sisterNode = parent->GetLeft() == current ? parent->GetRight() : parent->GetLeft();
-			if (parent == m_bvhTreeNodes[0])
-			{
-				cin.get();
-			}
-			
 			if (sisterNode->Data().dist < minDist)
 			{
 				double updatedSisterNodeDist;
@@ -282,7 +264,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 			}
 			
 			parent->Data().dist = minDist;
-
 			current = parent;
 			parent = current->GetParent();
 		}
@@ -337,7 +318,6 @@ void TriMeshProxQueryV3::UpdateNodeDistDown(BVHNode* node,
 	{
 		if (rightNode->Data().dist > distThreshold)
 		{
-			minDist = rightNode->Data().dist;
 			return;
 		}
 		else
