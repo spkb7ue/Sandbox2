@@ -24,9 +24,10 @@ public:
     const T& Data()const;
     T& Data();;
 	static unsigned counter;
+	unsigned m_nodeID;
 private:
 	
-	unsigned m_nodeID;
+
 	T m_data;
 	BNode<T> *m_parent;
 	BNode<T> *m_left;

@@ -26,13 +26,17 @@ void TriMeshProxQueryV3::PrintNodes(const Vec3& point, BVHNode* node)
 		auto it = std::find(node->Data().indices.begin(), node->Data().indices.end(), 2086);
 		if (it != node->Data().indices.end())
 		{
-			auto& triangles = m_mesh->GetPolygons();
-			cout << *it << endl;
-			IRes res = triangles[*it].CalcShortestDistanceFrom(point, 100000000.0);
-			cout << res.Dist << endl;
-			IRes res1 = node->Data().aabb.CalcShortestDistanceFrom(point, 100000.0);
-			cout << res.Dist << endl;
-			cout << "\nFrom V3\n";
+			BVHNode *current = node;
+			BVHNode *parent = node->GetParent();
+			while (parent != nullptr)
+			{
+				// found triangle of interest, recurse back to the root
+				IRes res = current->Data().aabb.CalcShortestDistanceFrom(point, 10000.0);
+				cout << "Node ID: " << current->m_nodeID << "\t AABB: " << res.Dist << endl;
+				current = parent;
+				parent = current->GetParent();
+			}			
+			cin.get();
 		}
 	}
 	else
