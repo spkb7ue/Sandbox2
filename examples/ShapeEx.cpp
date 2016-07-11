@@ -1,6 +1,7 @@
 #include <Vec3.h>
 #include <Triangle.h>
 #include <random>
+#include <functional>
 using namespace std;
 using namespace rabbit;
 
