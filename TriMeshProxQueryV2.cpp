@@ -34,7 +34,6 @@ std::tuple<Vec3,double,bool> TriMeshProxQueryV2::CalculateClosestPointImpl(const
 
     double minDist = distThreshold;
     bool foundPoint = false;
-
     for(unsigned i = 0; i < m_aabb.size(); ++i)
     {
         IntRes resAABB = m_aabb[i].CalcShortestDistanceFrom(point, minDist);

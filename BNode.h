@@ -23,14 +23,25 @@ public:
     BNode<T>* GetRight()const;
     const T& Data()const;
     T& Data();
-
+	unsigned GetNodeID()const;
+	static unsigned counter;	
 private:
-
-  T m_data;
-  BNode<T> *m_parent;
-  BNode<T> *m_left;
-  BNode<T> *m_right;
+	
+	unsigned m_nodeID;
+	T m_data;
+	BNode<T> *m_parent;
+	BNode<T> *m_left;
+	BNode<T> *m_right;
 };
+
+template<typename T>
+unsigned BNode<T>::counter = 0;
+
+template<typename T>
+unsigned BNode<T>::GetNodeID() const
+{
+	return m_nodeID;
+}
 
 template<typename T>
 void BNode<T>::SetChildren(BNode<T>* left, BNode<T>* right)
@@ -44,7 +55,8 @@ BNode<T>::BNode(const T& data, BNode<T>* parent):
     m_data(data),
     m_parent(parent),
     m_left(nullptr),
-    m_right(nullptr){}
+    m_right(nullptr),
+    m_nodeID(counter++){}
 
 template<typename T>
 void BNode<T>::SetLeft(BNode<T>* left){
